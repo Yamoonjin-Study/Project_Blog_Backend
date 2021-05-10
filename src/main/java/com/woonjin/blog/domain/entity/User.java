@@ -11,10 +11,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
@@ -22,11 +22,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	
 	@Column(nullable = false, length = 30, unique = true)
@@ -41,12 +41,13 @@ public class User {
 	@Column(nullable = false, length = 11)
 	private String phone;
 	
-	@Enumerated(EnumType.STRING)
+	@Enumerated(value = EnumType.STRING)
 	private RoleType role;
 	
 	@CreationTimestamp
 	private Timestamp createDate;
 
+	@Getter
 	public enum RoleType{
 		USER("USER"),
 		ADMIN("ADMIN");

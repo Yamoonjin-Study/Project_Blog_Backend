@@ -13,10 +13,10 @@ spring:
       read-only: false
       connection-timeout: 20000
       data-source-properties:
-      stringtype: unspecified
+        stringtype: unspecified
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect

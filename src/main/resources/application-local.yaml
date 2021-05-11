@@ -1,4 +1,10 @@
 spring:
+  devtools:
+    restart:
+      enabled: true
+    thymeleaf:
+      cache: false
+      prefix: file:src/main/resources/
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/blog

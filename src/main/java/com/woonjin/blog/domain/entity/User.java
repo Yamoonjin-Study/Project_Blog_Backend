@@ -2,25 +2,16 @@ package com.woonjin.blog.domain.entity;
 
 import java.sql.Timestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
 
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class User {
@@ -47,6 +38,46 @@ public class User {
 	@CreationTimestamp
 	private Timestamp createDate;
 
+	@Enumerated(value = EnumType.STRING)
+	private Status status;
+
+	@OneToOne(mappedBy = "user")
+	private Blog blog;
+
+	private User(
+			String email,
+			String password,
+			String username,
+			String phone,
+			Status status,
+			RoleType role
+	) {
+		this.email = email;
+		this.password = password;
+		this.username = username;
+		this.phone = phone;
+		this.status = status;
+		this.role = role;
+	}
+
+	public static User of(
+			String email,
+			String password,
+			String username,
+			String phone,
+			Status status,
+			RoleType role
+	) {
+		return new User(
+				email,
+				password,
+				username,
+				phone,
+				status,
+				role
+		);
+	}
+
 	@Getter
 	public enum RoleType{
 		USER("USER"),
@@ -55,6 +86,18 @@ public class User {
 		private final String name;
 
 		RoleType(String name) {
+			this.name = name;
+		}
+	}
+
+	@Getter
+	public enum Status{
+		ACTIVE("ACTIVE"),
+		INACTIVE("INACTIVE");
+
+		private final String name;
+
+		Status(String name) {
 			this.name = name;
 		}
 	}

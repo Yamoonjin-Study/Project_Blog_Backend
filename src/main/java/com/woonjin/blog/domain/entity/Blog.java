@@ -2,29 +2,15 @@ package com.woonjin.blog.domain.entity;
 
 import java.sql.Timestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "blog")
 public class Blog {
@@ -39,7 +25,7 @@ public class Blog {
 	@Column(nullable = true, length = 30, unique = true)
 	private String nickname;
 	
-	@Column(nullable = true, length = 50)
+	@Column(nullable = true, length = 100)
 	private String info;
 	
 	@Column(nullable = true, length = 100)
@@ -47,11 +33,59 @@ public class Blog {
 	
 	@CreationTimestamp
 	private Timestamp createDate;
-	
-	@Column(nullable = false, length = 1)
-	private String status;
-	
+
+	@Enumerated(value = EnumType.STRING)
+	private Status status;
+
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="user_id", foreignKey = @ForeignKey(name = "fk_user_blog_id"))
+	@JoinColumn(name="user_id", foreignKey = @ForeignKey(name = "fk_user_blog_id"), unique = true)
 	private User user;
+
+
+
+	public Blog(
+			String blogname,
+			String nickname,
+			String info,
+			String icon,
+			Status status,
+			User user
+	) {
+		this.id = id;
+		this.blogname = blogname;
+		this.nickname = nickname;
+		this.info = info;
+		this.icon = icon;
+		this.status = status;
+		this.user = user;
+	}
+
+	public static Blog of(
+			String blogname,
+			String nickname,
+			String info,
+			String icon,
+			Status status,
+			User user
+	){
+		return new Blog(
+				blogname,
+				nickname,
+				info,
+				icon,
+				status,
+				user
+		);
+	}
+
+	@Getter
+	public enum Status{
+		ACTIVE("ACTIVE"),
+		INACTIVE("INACTIVE");
+
+		private final String name;
+		Status(String name) {
+			this.name = name;
+		}
+	}
 }

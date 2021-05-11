@@ -11,16 +11,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
 
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class User {
@@ -47,6 +45,9 @@ public class User {
 	@CreationTimestamp
 	private Timestamp createDate;
 
+	@Enumerated(value = EnumType.STRING)
+	private Status status;
+
 	@Getter
 	public enum RoleType{
 		USER("USER"),
@@ -55,6 +56,18 @@ public class User {
 		private final String name;
 
 		RoleType(String name) {
+			this.name = name;
+		}
+	}
+
+	@Getter
+	public enum Status{
+		ACTIVE("ACTIVE"),
+		INACTIVE("INACTIVE");
+
+		private final String name;
+
+		Status(String name) {
 			this.name = name;
 		}
 	}

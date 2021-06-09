@@ -6,6 +6,8 @@ import javax.persistence.*;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Getter
 @Setter
@@ -38,7 +40,7 @@ public class Blog {
 	private Status status;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="user_id", foreignKey = @ForeignKey(name = "fk_user_blog_id"), unique = true)
+	@JoinColumn(name="user_id", foreignKey = @ForeignKey(name = "fk_user_blog_id"), unique = true, nullable = false)
 	private User user;
 
 
@@ -51,7 +53,6 @@ public class Blog {
 			Status status,
 			User user
 	) {
-		this.id = id;
 		this.blogname = blogname;
 		this.nickname = nickname;
 		this.info = info;

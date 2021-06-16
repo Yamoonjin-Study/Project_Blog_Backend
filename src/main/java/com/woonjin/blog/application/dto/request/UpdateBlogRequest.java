@@ -1,11 +1,10 @@
-package com.woonjin.blog.application.dto;
+package com.woonjin.blog.application.dto.request;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UpdateBlogRequest {
 
     private String blogname;

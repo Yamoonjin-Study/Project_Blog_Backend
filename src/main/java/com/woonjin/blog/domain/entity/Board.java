@@ -29,34 +29,34 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "board")
+@Table(name = "boards")
 public class Board {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@Column(nullable = false, length = 30, unique = true)
-	private String title;
+    @Column(nullable = false, length = 30, unique = true)
+    private String title;
 
-	@Lob
-	private String content;
+    @Lob
+    private String content;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_board_id"))
-	private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_board_id"))
+    private User user;
 
-	@CreationTimestamp
-	private Timestamp createDate;
+    @CreationTimestamp
+    private Timestamp createDate;
 
-	@ColumnDefault("0")
-	private int count;
+    @ColumnDefault("0")
+    private int count;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "fk_category_board_id"))
-	private Category category;
-	
-	@OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
-	private List<Like> like;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "fk_category_board_id"))
+    private Category category;
+
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    private List<Like> like;
 
 }

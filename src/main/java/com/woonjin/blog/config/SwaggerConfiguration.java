@@ -16,20 +16,20 @@ public class SwaggerConfiguration {
 
     private ApiInfo commonInfo() {
         return new ApiInfoBuilder()
-                .title("Blog Api")
-                .version("1.0.0")
-                .build();
+            .title("Blog Api")
+            .version("1.0.0")
+            .build();
     }
 
     @Bean
     public Docket allApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("USER")
-                .useDefaultResponseMessages(false)
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
-                .build()
-                .apiInfo(commonInfo());
+            .groupName("USER")
+            .useDefaultResponseMessages(false)
+            .select()
+            .apis(RequestHandlerSelectors.any())
+            .paths(PathSelectors.any())
+            .build()
+            .apiInfo(commonInfo());
     }
 }

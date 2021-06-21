@@ -15,8 +15,8 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Entity
-@Table(name = "portfolios")
-public class Portfolio implements Serializable {
+@Table(name = "profiles")
+public class Profile implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

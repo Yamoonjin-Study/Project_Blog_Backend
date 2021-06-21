@@ -1,6 +1,6 @@
 package com.woonjin.blog.application.dto.response;
 
-import com.woonjin.blog.domain.entity.Profile;
+import com.woonjin.blog.domain.entity.Blog;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,14 +11,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CreatePortfolioResponse {
+public class ShowBlogResponse {
 
     private String responseMessage;
 
-    private Profile portfolio;
+    private Blog blog;
 
-    public static CreatePortfolioResponse of(String responseMessage,
-        Profile portfolio) {
-        return new CreatePortfolioResponse(responseMessage, portfolio);
+    public static ShowBlogResponse of(String responseMessage, Blog blog) {
+        return new ShowBlogResponse(responseMessage, blog);
     }
 }

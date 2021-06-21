@@ -8,4 +8,6 @@ import com.woonjin.blog.domain.entity.Blog;
 public interface BlogRepository extends JpaRepository<Blog, Integer> {
 
     Blog findByUser_Id(int id);
+
+    Blog findByName(String name);
 }

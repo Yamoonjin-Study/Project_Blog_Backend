@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
@@ -23,23 +24,33 @@ public class Blog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = true, length = 30, unique = true)
-    private String blogname;
+    @Column(nullable = false, length = 30, unique = true)
+    private String name;
 
-    @Column(nullable = true, length = 30, unique = true)
-    private String nickname;
+    @Column(name = "nick_name", nullable = false, length = 30, unique = true)
+    private String nick_name;
 
-    @Column(nullable = true, length = 100)
+    @Column(nullable = true, length = 200)
     private String info;
 
-    @Column(nullable = true, length = 100)
+    @Column(nullable = true, length = 200)
     private String icon;
 
     @CreationTimestamp
-    private Timestamp createDate;
+    private Timestamp create_date;
 
     @Enumerated(value = EnumType.STRING)
     private Status status;
+
+    @Column(name = "logo_image", nullable = true, length = 200)
+    private String logo_image;
+
+    @Column(nullable = false)
+    @ColumnDefault("1")
+    private int design_form;
+
+    @Enumerated(value = EnumType.STRING)
+    private Category category;
 
     @OneToOne
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_blog_id"), unique = true, nullable = false)
@@ -47,35 +58,47 @@ public class Blog {
 
 
     public Blog(
-        String blogname,
-        String nickname,
+        String name,
+        String nick_name,
         String info,
         String icon,
         Status status,
+        String logo_image,
+        int design_form,
+        Category category,
         User user
     ) {
-        this.blogname = blogname;
-        this.nickname = nickname;
+        this.name = name;
+        this.nick_name = nick_name;
         this.info = info;
         this.icon = icon;
         this.status = status;
+        this.logo_image = logo_image;
+        this.design_form = design_form;
+        this.category = category;
         this.user = user;
     }
 
     public static Blog of(
-        String blogname,
-        String nickname,
+        String name,
+        String nick_name,
         String info,
         String icon,
         Status status,
+        String logo_image,
+        int design_form,
+        Category category,
         User user
     ) {
         return new Blog(
-            blogname,
-            nickname,
+            name,
+            nick_name,
             info,
             icon,
             status,
+            logo_image,
+            design_form,
+            category,
             user
         );
     }
@@ -88,6 +111,19 @@ public class Blog {
         private final String name;
 
         Status(String name) {
+            this.name = name;
+        }
+    }
+
+    @Getter
+    public enum Category {
+        BUSINESS("BUSINESS"),
+        PERSONAL("PERSONAL");
+
+
+        private final String name;
+
+        Category(String name) {
             this.name = name;
         }
     }

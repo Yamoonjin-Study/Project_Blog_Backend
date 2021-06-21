@@ -4,12 +4,15 @@ import com.woonjin.blog.application.dto.response.ActivateBlogResponse;
 import com.woonjin.blog.application.dto.response.CreateBlogResponse;
 import com.woonjin.blog.application.dto.response.DeleteBlogResponse;
 import com.woonjin.blog.application.dto.response.InactivateBlogResponse;
+import com.woonjin.blog.application.dto.response.SearchBlogResponse;
 import com.woonjin.blog.application.dto.response.ShowBlogResponse;
 import com.woonjin.blog.application.dto.response.UpdateBlogResponse;
 import com.woonjin.blog.application.service.BlogService;
 import com.woonjin.blog.application.dto.request.CreateBlogRequest;
 import com.woonjin.blog.application.dto.request.UpdateBlogRequest;
+import com.woonjin.blog.domain.entity.Visitor;
 import io.swagger.annotations.Api;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,9 +31,16 @@ public class BlogController {
         this.blogService = blogService;
     }
 
+    @GetMapping("/blog-search/{name}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public SearchBlogResponse 블로그검색(@PathVariable String name) {
+        return blogService.searchBlog(name);
+    }
+
     @GetMapping("/blog/{name}")
     @ResponseStatus(value = HttpStatus.OK)
     public ShowBlogResponse 블로그조회(@PathVariable String name) {
+        blogService.addVisitors(name); //해당 블로그의 접속자에 기록 저장
         return blogService.showBlog(name);
     }
 
@@ -64,5 +74,10 @@ public class BlogController {
         return blogService.deleteBlog();
     }
 
+    @GetMapping("blog/{name}/visitors")
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<Visitor> 방문자확인(@PathVariable String name){
+        return blogService.blogVisitors(name);
+    }
 
 }

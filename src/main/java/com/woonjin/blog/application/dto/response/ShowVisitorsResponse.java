@@ -20,12 +20,10 @@ public class ShowVisitorsResponse {
 
     private String blogname;
 
-    private List<Timestamp> date;
-
-    private List<String> user_nickname;
+    private List<VisitorInfo> visitorInfo;
 
 
-    public static ShowVisitorsResponse of(String responseMessage, String blogname, List<Timestamp> date, List<String> user_nickname) {
-        return new ShowVisitorsResponse(responseMessage, blogname, date, user_nickname);
+    public static ShowVisitorsResponse of(String responseMessage, String blogname, List<VisitorInfo> visitorInfo) {
+        return new ShowVisitorsResponse(responseMessage, blogname, visitorInfo);
     }
 }

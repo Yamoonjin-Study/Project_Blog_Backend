@@ -2,6 +2,7 @@ package com.woonjin.blog.application.service;
 
 import com.woonjin.blog.application.dto.request.CreateBlogRequest;
 import com.woonjin.blog.application.dto.request.UpdateBlogRequest;
+import com.woonjin.blog.application.dto.request.WriteGuestBookRequest;
 import com.woonjin.blog.application.dto.response.ActivateBlogResponse;
 import com.woonjin.blog.application.dto.response.CreateBlogResponse;
 import com.woonjin.blog.application.dto.response.DeleteBlogResponse;
@@ -10,10 +11,15 @@ import com.woonjin.blog.application.dto.response.SearchBlogResponse;
 import com.woonjin.blog.application.dto.response.ShowBlogResponse;
 import com.woonjin.blog.application.dto.response.ShowVisitorsResponse;
 import com.woonjin.blog.application.dto.response.UpdateBlogResponse;
+import com.woonjin.blog.application.dto.response.VisitorInfo;
+import com.woonjin.blog.application.dto.response.WriteGuestBookResponse;
 import com.woonjin.blog.domain.entity.Blog;
+import com.woonjin.blog.domain.entity.GuestBook;
 import com.woonjin.blog.domain.entity.User;
 import com.woonjin.blog.domain.entity.Visitor;
 import com.woonjin.blog.domain.repository.BlogRepository;
+import com.woonjin.blog.domain.repository.GuestBookRepository;
+import com.woonjin.blog.domain.repository.UserRepository;
 import com.woonjin.blog.domain.repository.VisitorRepository;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -22,18 +28,24 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 public class BlogService {
 
     private final BlogRepository blogRepository;
     private final VisitorRepository visitorRepository;
+    private final GuestBookRepository guestBookRepository;
+    private final UserRepository userRepository;
     private final HttpSession session;
 
     public BlogService(BlogRepository blogRepository, VisitorRepository visitorRepository,
+        GuestBookRepository guestBookRepository, UserRepository userRepository,
         HttpSession session) {
         this.blogRepository = blogRepository;
         this.visitorRepository = visitorRepository;
+        this.guestBookRepository = guestBookRepository;
+        this.userRepository = userRepository;
         this.session = session;
     }
 
@@ -133,18 +145,26 @@ public class BlogService {
         List<Visitor> visitorList = visitorRepository.findByBlog_id(blogId);
         String blogName = visitorList.get(0).getBlog().getName();
 
-        List<Timestamp> visitDate = new ArrayList<Timestamp>();
+        List<VisitorInfo> visitorInfo = new ArrayList<VisitorInfo>();
 
-        for (int i = 0; i < visitorList.size(); i++) {
-            visitDate.add(visitorList.get(i).getDate());
+        for(int i = 0; i < visitorList.size(); i++){
+            visitorInfo.add(i, VisitorInfo.of(visitorList.get(i).getUser().getNick_name(), visitorList.get(i).getDate()));
         }
 
-        List<String> visitors = new ArrayList<String>();
+        return ShowVisitorsResponse
+            .of("Results of ShowVisitorsList", blogName, visitorInfo);
+    }
 
-        for (int i = 0; i < visitorList.size(); i++) {
-            visitors.add(visitorList.get(i).getUser().getNick_name());
-        }
-
-        return ShowVisitorsResponse.of("Results of ShowVisitorsList", blogName, visitDate, visitors);
+    @Transactional
+    public WriteGuestBookResponse writeGuestBook(String name,
+        WriteGuestBookRequest writeGuestBookRequest) {
+        GuestBook writeGuestBook = this.guestBookRepository.save(
+            GuestBook.of(
+                blogRepository.findByName(name),
+                writeGuestBookRequest.getComment(),
+                (User) session.getAttribute("user")
+            )
+        );
+        return WriteGuestBookResponse.of("", writeGuestBook);
     }
 }

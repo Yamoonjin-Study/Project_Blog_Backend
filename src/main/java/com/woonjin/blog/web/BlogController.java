@@ -1,5 +1,6 @@
 package com.woonjin.blog.web;
 
+import com.woonjin.blog.application.dto.request.WriteGuestBookRequest;
 import com.woonjin.blog.application.dto.response.ActivateBlogResponse;
 import com.woonjin.blog.application.dto.response.CreateBlogResponse;
 import com.woonjin.blog.application.dto.response.DeleteBlogResponse;
@@ -8,6 +9,7 @@ import com.woonjin.blog.application.dto.response.SearchBlogResponse;
 import com.woonjin.blog.application.dto.response.ShowBlogResponse;
 import com.woonjin.blog.application.dto.response.ShowVisitorsResponse;
 import com.woonjin.blog.application.dto.response.UpdateBlogResponse;
+import com.woonjin.blog.application.dto.response.WriteGuestBookResponse;
 import com.woonjin.blog.application.service.BlogService;
 import com.woonjin.blog.application.dto.request.CreateBlogRequest;
 import com.woonjin.blog.application.dto.request.UpdateBlogRequest;
@@ -84,4 +86,9 @@ public class BlogController {
         return blogService.showVisitors(name);
     }
 
+    @PostMapping("blog/{name}/guestbook")
+    @ResponseStatus(value = HttpStatus.OK)
+    public WriteGuestBookResponse 방명록작성(@PathVariable String name, @RequestBody WriteGuestBookRequest writeGuestBookRequest){
+        return blogService.writeGuestBook(name, writeGuestBookRequest);
+    }
 }

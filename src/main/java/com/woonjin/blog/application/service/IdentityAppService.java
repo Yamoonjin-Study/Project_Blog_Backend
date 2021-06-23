@@ -29,15 +29,15 @@ public class IdentityAppService {
     public LogInResponse login(LogInRequest logInRequest) {
 
         User userLogin = userRepository
-            .findByUsernameAndPassword(logInRequest.getUsername(), logInRequest.getPassword());
+            .findByEmailAndPassword(logInRequest.getEmail(), logInRequest.getPassword());
 
         if (userLogin == null) {
-            return LogInResponse.of("login fail", userLogin);
+            return LogInResponse.of("Login Fail", userLogin);
         } else {
             userLogin.activate(userLogin);
             userRepository.save(userLogin);
             session.setAttribute("user", userLogin);
-            return LogInResponse.of("login success", userLogin);
+            return LogInResponse.of("Login Success", userLogin);
         }
     }
 
@@ -47,7 +47,7 @@ public class IdentityAppService {
         userLogout.inactivate(userLogout);
         userRepository.save(userLogout);
         session.removeAttribute("user");
-        return LogOutResponse.of("logout success", userLogout);
+        return LogOutResponse.of("Logout Success", userLogout);
     }
 
     @Transactional
@@ -58,14 +58,15 @@ public class IdentityAppService {
                     signUpRequest.getEmail(),
                     signUpRequest.getPassword(),
                     signUpRequest.getUsername(),
+                    signUpRequest.getNick_name(),
                     signUpRequest.getPhone(),
                     User.Status.INACTIVE,
                     User.RoleType.USER
                 )
             );
-            return SignUpResponse.of("signup success", signUpRequest);
+            return SignUpResponse.of("Signup Success", signUpRequest);
         } else {
-            return SignUpResponse.of("signup fail", signUpRequest);
+            return SignUpResponse.of("Signup Fail", signUpRequest);
         }
     }
 
@@ -74,6 +75,6 @@ public class IdentityAppService {
         User memberOut = (User) session.getAttribute("user");
         userRepository.delete(memberOut);
         session.removeAttribute("user");
-        return MemberOutResponse.of("memberout success", memberOut);
+        return MemberOutResponse.of("Memberout Success", memberOut);
     }
 }

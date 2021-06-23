@@ -8,12 +8,15 @@ import com.woonjin.blog.application.dto.response.DeleteBlogResponse;
 import com.woonjin.blog.application.dto.response.InactivateBlogResponse;
 import com.woonjin.blog.application.dto.response.SearchBlogResponse;
 import com.woonjin.blog.application.dto.response.ShowBlogResponse;
+import com.woonjin.blog.application.dto.response.ShowVisitorsResponse;
 import com.woonjin.blog.application.dto.response.UpdateBlogResponse;
 import com.woonjin.blog.domain.entity.Blog;
 import com.woonjin.blog.domain.entity.User;
 import com.woonjin.blog.domain.entity.Visitor;
 import com.woonjin.blog.domain.repository.BlogRepository;
 import com.woonjin.blog.domain.repository.VisitorRepository;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +42,7 @@ public class BlogService {
         if (blogRepository.findByName(name) != null) {
             return ShowBlogResponse.of("Look Up Success", blogRepository.findByName(name));
         } else {
-            return ShowBlogResponse.of("Look Up Fail", blogRepository.findByName(name));
+            return ShowBlogResponse.of("No Result", blogRepository.findByName(name));
         }
     }
 
@@ -56,7 +59,6 @@ public class BlogService {
         Blog createBlog = this.blogRepository.save(
             Blog.of(
                 createBlogRequest.getName(),
-                createBlogRequest.getNick_name(),
                 createBlogRequest.getInfo(),
                 createBlogRequest.getIcon(),
                 Blog.Status.ACTIVE,
@@ -76,7 +78,6 @@ public class BlogService {
         Blog updateBlog = (Blog) blogRepository.findByUser_Id(user.getId());
 
         updateBlog.setName(updateBlogRequest.getName());
-        updateBlog.setNick_name(updateBlogRequest.getNick_name());
         updateBlog.setIcon(updateBlogRequest.getIcon());
         updateBlog.setInfo(updateBlogRequest.getInfo());
         updateBlog.setLogo_image(updateBlogRequest.getLogo_image());
@@ -115,7 +116,7 @@ public class BlogService {
     }
 
     @Transactional
-    public void addVisitors(String name){
+    public void addVisitors(String name) {
         Visitor addVisitor = new Visitor();
 
         addVisitor.setBlog(blogRepository.findByName(name));
@@ -125,10 +126,25 @@ public class BlogService {
     }
 
     @Transactional
-    public List<Visitor> blogVisitors(String name) {
+    public ShowVisitorsResponse showVisitors(String name) {
 
-        List<Visitor> visitor = visitorRepository.findByBlog_id(blogRepository.findByName(name).getId());
+        int blogId = blogRepository.findByName(name).getId();
 
-        return visitor;
+        List<Visitor> visitorList = visitorRepository.findByBlog_id(blogId);
+        String blogName = visitorList.get(0).getBlog().getName();
+
+        List<Timestamp> visitDate = new ArrayList<Timestamp>();
+
+        for (int i = 0; i < visitorList.size(); i++) {
+            visitDate.add(visitorList.get(i).getDate());
+        }
+
+        List<String> visitors = new ArrayList<String>();
+
+        for (int i = 0; i < visitorList.size(); i++) {
+            visitors.add(visitorList.get(i).getUser().getNick_name());
+        }
+
+        return ShowVisitorsResponse.of("Results of ShowVisitorsList", blogName, visitDate, visitors);
     }
 }

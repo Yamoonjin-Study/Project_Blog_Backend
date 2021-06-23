@@ -11,8 +11,6 @@ public class CreateBlogRequest {
 
     private String name;
 
-    private String nick_name;
-
     private String info;
 
     private String icon;

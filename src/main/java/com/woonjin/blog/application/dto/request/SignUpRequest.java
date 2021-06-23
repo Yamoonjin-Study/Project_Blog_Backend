@@ -13,6 +13,8 @@ public class SignUpRequest {
 
     private String passwordCheck;
 
+    private String nick_name;
+
     private String username;
 
     private String phone;

@@ -6,6 +6,7 @@ import com.woonjin.blog.application.dto.response.DeleteBlogResponse;
 import com.woonjin.blog.application.dto.response.InactivateBlogResponse;
 import com.woonjin.blog.application.dto.response.SearchBlogResponse;
 import com.woonjin.blog.application.dto.response.ShowBlogResponse;
+import com.woonjin.blog.application.dto.response.ShowVisitorsResponse;
 import com.woonjin.blog.application.dto.response.UpdateBlogResponse;
 import com.woonjin.blog.application.service.BlogService;
 import com.woonjin.blog.application.dto.request.CreateBlogRequest;
@@ -40,7 +41,10 @@ public class BlogController {
     @GetMapping("/blog/{name}")
     @ResponseStatus(value = HttpStatus.OK)
     public ShowBlogResponse 블로그조회(@PathVariable String name) {
-        blogService.addVisitors(name); //해당 블로그의 접속자에 기록 저장
+
+        //해당 블로그의 방문자에 기록 저장
+        blogService.addVisitors(name);
+
         return blogService.showBlog(name);
     }
 
@@ -76,8 +80,8 @@ public class BlogController {
 
     @GetMapping("blog/{name}/visitors")
     @ResponseStatus(value = HttpStatus.OK)
-    public List<Visitor> 방문자확인(@PathVariable String name){
-        return blogService.blogVisitors(name);
+    public ShowVisitorsResponse 방문자확인(@PathVariable String name){
+        return blogService.showVisitors(name);
     }
 
 }

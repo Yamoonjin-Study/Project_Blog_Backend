@@ -27,9 +27,6 @@ public class Blog {
     @Column(nullable = false, length = 30, unique = true)
     private String name;
 
-    @Column(name = "nick_name", nullable = false, length = 30, unique = true)
-    private String nick_name;
-
     @Column(nullable = true, length = 200)
     private String info;
 
@@ -59,7 +56,6 @@ public class Blog {
 
     public Blog(
         String name,
-        String nick_name,
         String info,
         String icon,
         Status status,
@@ -69,7 +65,6 @@ public class Blog {
         User user
     ) {
         this.name = name;
-        this.nick_name = nick_name;
         this.info = info;
         this.icon = icon;
         this.status = status;
@@ -81,7 +76,6 @@ public class Blog {
 
     public static Blog of(
         String name,
-        String nick_name,
         String info,
         String icon,
         Status status,
@@ -92,7 +86,6 @@ public class Blog {
     ) {
         return new Blog(
             name,
-            nick_name,
             info,
             icon,
             status,

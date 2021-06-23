@@ -26,6 +26,9 @@ public class User {
     @Column(nullable = false, length = 100)
     private String password;
 
+    @Column(name = "nick_name", nullable = false, length = 30, unique = true)
+    private String nick_name;
+
     @Column(nullable = false, length = 50)
     private String email;
 
@@ -45,6 +48,7 @@ public class User {
         String email,
         String password,
         String username,
+        String nick_name,
         String phone,
         Status status,
         RoleType role
@@ -52,6 +56,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.username = username;
+        this.nick_name = nick_name;
         this.phone = phone;
         this.status = status;
         this.role = role;
@@ -61,6 +66,7 @@ public class User {
         String email,
         String password,
         String username,
+        String nick_name,
         String phone,
         Status status,
         RoleType role
@@ -69,6 +75,7 @@ public class User {
             email,
             password,
             username,
+            nick_name,
             phone,
             status,
             role

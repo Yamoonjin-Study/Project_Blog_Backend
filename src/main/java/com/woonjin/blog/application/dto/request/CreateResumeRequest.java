@@ -5,7 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreatePortfolioRequest {
+public class CreateResumeRequest {
+
     private String content;
 
     private String title;

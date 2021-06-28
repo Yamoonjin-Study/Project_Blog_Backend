@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreatePortfolioRequest {
+public class CreateBusinessCardRequest {
     private String content;
 
     private String title;

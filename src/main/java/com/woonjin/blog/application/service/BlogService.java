@@ -21,14 +21,12 @@ import com.woonjin.blog.domain.repository.BlogRepository;
 import com.woonjin.blog.domain.repository.GuestBookRepository;
 import com.woonjin.blog.domain.repository.UserRepository;
 import com.woonjin.blog.domain.repository.VisitorRepository;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 public class BlogService {

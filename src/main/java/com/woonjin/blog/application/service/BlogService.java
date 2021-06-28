@@ -6,6 +6,8 @@ import com.woonjin.blog.application.dto.request.WriteGuestBookRequest;
 import com.woonjin.blog.application.dto.response.ActivateBlogResponse;
 import com.woonjin.blog.application.dto.response.CreateBlogResponse;
 import com.woonjin.blog.application.dto.response.DeleteBlogResponse;
+import com.woonjin.blog.application.dto.response.GuestBookList;
+import com.woonjin.blog.application.dto.response.GuestBookListResponse;
 import com.woonjin.blog.application.dto.response.InactivateBlogResponse;
 import com.woonjin.blog.application.dto.response.SearchBlogResponse;
 import com.woonjin.blog.application.dto.response.ShowBlogResponse;
@@ -138,10 +140,10 @@ public class BlogService {
     @Transactional
     public ShowVisitorsResponse showVisitors(String name) {
 
-        int blogId = blogRepository.findByName(name).getId();
+        Blog blog = blogRepository.findByName(name);
 
-        List<Visitor> visitorList = visitorRepository.findByBlog_id(blogId);
-        String blogName = visitorList.get(0).getBlog().getName();
+        List<Visitor> visitorList = visitorRepository.findByBlog(blog);
+        String blogName = blog.getName();
 
         List<VisitorInfo> visitorInfo = new ArrayList<VisitorInfo>();
 
@@ -163,6 +165,20 @@ public class BlogService {
                 (User) session.getAttribute("user")
             )
         );
-        return WriteGuestBookResponse.of("", writeGuestBook);
+        return WriteGuestBookResponse.of("Write GuestBook Success", writeGuestBook);
+    }
+
+    public GuestBookListResponse showGuestBook(String name) {
+        Blog blog = blogRepository.findByName(name);
+        List<GuestBook> guestBook = guestBookRepository.findByBlog(blog);
+        String blogname = blog.getName();
+
+        List<GuestBookList> guestBookList = new ArrayList<GuestBookList>();
+
+        for(int i = 0; i < guestBook.size(); i++){
+            guestBookList.add(i, GuestBookList.of(guestBook.get(i).getComment(), guestBook.get(i).getDate(), guestBook.get(i).getUser().getNick_name()));
+        }
+
+        return GuestBookListResponse.of("Results of ShowGuestBookList", blogname, guestBookList);
     }
 }

@@ -40,7 +40,7 @@ public class GuestBook {
     @CreationTimestamp
     private Timestamp date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_guest_book_id"), nullable = false)
     private User user;
 

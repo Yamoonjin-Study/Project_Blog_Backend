@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface VisitorRepository extends JpaRepository<Visitor, Integer> {
 
     List<Visitor> findByBlog(Blog blog);
+
+    void deleteByBlog(Blog blog);
 }

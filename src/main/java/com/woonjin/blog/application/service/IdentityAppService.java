@@ -19,7 +19,10 @@ public class IdentityAppService {
     private final UserRepository userRepository;
     private final HttpSession session;
 
-    public IdentityAppService(UserRepository userRepository, HttpSession session) {
+    public IdentityAppService(
+        UserRepository userRepository,
+        HttpSession session
+    ) {
         this.userRepository = userRepository;
         this.session = session;
     }
@@ -28,25 +31,25 @@ public class IdentityAppService {
     @Transactional
     public LogInResponse login(LogInRequest logInRequest) {
 
-        User userLogin = userRepository
+        User userLogin = this.userRepository
             .findByEmailAndPassword(logInRequest.getEmail(), logInRequest.getPassword());
 
         if (userLogin == null) {
             return LogInResponse.of("Login Fail", userLogin);
         } else {
             userLogin.activate(userLogin);
-            userRepository.save(userLogin);
-            session.setAttribute("user", userLogin);
+            this.userRepository.save(userLogin);
+            this.session.setAttribute("user", userLogin);
             return LogInResponse.of("Login Success", userLogin);
         }
     }
 
     @Transactional
     public LogOutResponse logout() {
-        User userLogout = (User) session.getAttribute("user");
+        User userLogout = (User) this.session.getAttribute("user");
         userLogout.inactivate(userLogout);
-        userRepository.save(userLogout);
-        session.removeAttribute("user");
+        this.userRepository.save(userLogout);
+        this.session.removeAttribute("user");
         return LogOutResponse.of("Logout Success", userLogout);
     }
 
@@ -72,9 +75,9 @@ public class IdentityAppService {
 
     @Transactional
     public MemberOutResponse memberout() {
-        User memberOut = (User) session.getAttribute("user");
-        userRepository.delete(memberOut);
-        session.removeAttribute("user");
+        User memberOut = (User) this.session.getAttribute("user");
+        this.userRepository.delete(memberOut);
+        this.session.removeAttribute("user");
         return MemberOutResponse.of("Memberout Success", memberOut);
     }
 }

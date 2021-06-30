@@ -24,9 +24,12 @@ public class ProfileService {
     private final ResumeRepository resumeRepository;
     private final BusinessCardRepository businessCardRepository;
 
-    public ProfileService(PortfolioRepository portfolioRepository,
-        ResumeRepository resumeRepository, BusinessCardRepository businessCardRepository,
-        HttpSession session) {
+    public ProfileService(
+        PortfolioRepository portfolioRepository,
+        ResumeRepository resumeRepository,
+        BusinessCardRepository businessCardRepository,
+        HttpSession session
+    ) {
         this.portfolioRepository = portfolioRepository;
         this.resumeRepository = resumeRepository;
         this.businessCardRepository = businessCardRepository;
@@ -49,7 +52,7 @@ public class ProfileService {
     }
 
     public ProfileResponse createResume(CreateResumeRequest createResumeRequest) {
-        User user = (User) session.getAttribute("user");
+        User user = (User) this.session.getAttribute("user");
 
         Resume resume = this.resumeRepository.save(
             Resume.of(
@@ -65,7 +68,7 @@ public class ProfileService {
 
     public ProfileResponse createBusinessCard(
         CreateBusinessCardRequest createBusinessCardRequest) {
-        User user = (User) session.getAttribute("user");
+        User user = (User) this.session.getAttribute("user");
 
         BusinessCard businessCard = this.businessCardRepository.save(
             BusinessCard.of(
@@ -80,65 +83,65 @@ public class ProfileService {
     }
 
     public ProfileResponse updatePortfolio(CreatePortfolioRequest updatePortfolioRequest) {
-        User user = (User) session.getAttribute("user");
-        Portfolio updatePortfolio = portfolioRepository.findByUser(user);
+        User user = (User) this.session.getAttribute("user");
+        Portfolio updatePortfolio = this.portfolioRepository.findByUser(user);
 
         updatePortfolio.setContent(updatePortfolioRequest.getContent());
         updatePortfolio.setTitle(updatePortfolioRequest.getTitle());
 
-        portfolioRepository.save(updatePortfolio);
+        this.portfolioRepository.save(updatePortfolio);
 
         return ProfileResponse.of("Update Portfolio Success", updatePortfolio);
     }
 
     public ProfileResponse updateResume(CreateResumeRequest updateResumeRequest) {
-        User user = (User) session.getAttribute("user");
-        Resume updateResume = resumeRepository.findByUser(user);
+        User user = (User) this.session.getAttribute("user");
+        Resume updateResume = this.resumeRepository.findByUser(user);
 
         updateResume.setContent(updateResumeRequest.getContent());
         updateResume.setTitle(updateResumeRequest.getTitle());
 
-        resumeRepository.save(updateResume);
+        this.resumeRepository.save(updateResume);
 
         return ProfileResponse.of("Update Resume Success", updateResume);
     }
 
     public ProfileResponse updateBusinessCard(
         CreateBusinessCardRequest updateBusinessCardRequest) {
-        User user = (User) session.getAttribute("user");
-        BusinessCard updateBusinessCard = businessCardRepository.findByUser(user);
+        User user = (User) this.session.getAttribute("user");
+        BusinessCard updateBusinessCard = this.businessCardRepository.findByUser(user);
 
         updateBusinessCard.setContent(updateBusinessCardRequest.getContent());
         updateBusinessCard.setTitle(updateBusinessCardRequest.getTitle());
 
-        businessCardRepository.save(updateBusinessCard);
+        this.businessCardRepository.save(updateBusinessCard);
 
         return ProfileResponse.of("Update BusinessCard Success", updateBusinessCard);
     }
 
     public ProfileResponse deleteBusinessCard() {
-        User user = (User) session.getAttribute("user");
-        BusinessCard deleteBusinessCard = businessCardRepository.findByUser(user);
+        User user = (User) this.session.getAttribute("user");
+        BusinessCard deleteBusinessCard = this.businessCardRepository.findByUser(user);
 
-        businessCardRepository.delete(deleteBusinessCard);
+        this.businessCardRepository.delete(deleteBusinessCard);
 
         return ProfileResponse.of("Delete BusinessCard Success", deleteBusinessCard);
     }
 
     public ProfileResponse deletePortfolio() {
-        User user = (User) session.getAttribute("user");
-        Portfolio deletePortfolio = portfolioRepository.findByUser(user);
+        User user = (User) this.session.getAttribute("user");
+        Portfolio deletePortfolio = this.portfolioRepository.findByUser(user);
 
-        portfolioRepository.delete(deletePortfolio);
+        this.portfolioRepository.delete(deletePortfolio);
 
         return ProfileResponse.of("Delete Portfolio Success", deletePortfolio);
     }
 
     public ProfileResponse deleteResume() {
-        User user = (User) session.getAttribute("user");
-        Resume deleteResume = resumeRepository.findByUser(user);
+        User user = (User) this.session.getAttribute("user");
+        Resume deleteResume = this.resumeRepository.findByUser(user);
 
-        resumeRepository.delete(deleteResume);
+        this.resumeRepository.delete(deleteResume);
 
         return ProfileResponse.of("Delete Resume Success", deleteResume);
     }

@@ -2,6 +2,7 @@ package com.woonjin.blog.domain.entity;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
@@ -17,6 +18,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "blog_visitors")
@@ -31,11 +34,11 @@ public class Visitor {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "blog_id", foreignKey = @ForeignKey(name = "fk_blog_visitor_id"))
+    @JoinColumn(name = "blogs_id", foreignKey = @ForeignKey(name = "fk_blog_visitor_id"), nullable = false)
     private Blog blog;
 
     @OneToOne
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_visitor_id"))
+    @JoinColumn(name = "users_id", foreignKey = @ForeignKey(name = "fk_user_visitor_id"))
     private User user;
 
     @CreationTimestamp

@@ -1,7 +1,10 @@
 package com.woonjin.blog.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.sql.Timestamp;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 
 
@@ -9,8 +12,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Setter
@@ -52,6 +58,14 @@ public class Blog {
     @OneToOne
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_blog_id"), unique = true, nullable = false)
     private User user;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "blog", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Visitor> visitor;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "blog", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private List<GuestBook> guestBook;
 
 
     public Blog(

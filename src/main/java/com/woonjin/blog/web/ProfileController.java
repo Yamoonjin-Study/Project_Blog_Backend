@@ -6,6 +6,7 @@ import com.woonjin.blog.application.dto.request.CreateResumeRequest;
 import com.woonjin.blog.application.dto.response.ProfileResponse;
 import com.woonjin.blog.application.service.ProfileService;
 import io.swagger.annotations.Api;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,17 +51,17 @@ public class ProfileController {
         return profileService.updateBusinessCard(createBusinessCardRequest);
     }
 
-    @PostMapping("/delete-resume")
+    @DeleteMapping("/delete-resume")
     public ProfileResponse 이력서삭제() {
         return profileService.deleteResume();
     }
 
-    @PostMapping("/delete-portfolio")
+    @DeleteMapping("/delete-portfolio")
     public ProfileResponse 포트폴리오삭제() {
         return profileService.deletePortfolio();
     }
 
-    @PostMapping("/delete-businesscard")
+    @DeleteMapping("/delete-businesscard")
     public ProfileResponse 명함삭제() {
         return profileService.deleteBusinessCard();
     }

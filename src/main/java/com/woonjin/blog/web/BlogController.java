@@ -16,6 +16,7 @@ import com.woonjin.blog.application.dto.request.CreateBlogRequest;
 import com.woonjin.blog.application.dto.request.UpdateBlogRequest;
 import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -73,7 +74,7 @@ public class BlogController {
         return blogService.inactivateBlog();
     }
 
-    @PostMapping("delete-blog")
+    @DeleteMapping("delete-blog")
     @ResponseStatus(value = HttpStatus.OK)
     public DeleteBlogResponse 블로그삭제() {
         return blogService.deleteBlog();
@@ -85,7 +86,7 @@ public class BlogController {
         return blogService.showVisitors(name);
     }
 
-    @PostMapping("blog/{name}/guestbook")
+    @GetMapping("blog/{name}/guestbook")
     @ResponseStatus(value = HttpStatus.OK)
     public GuestBookListResponse 방명록조회(@PathVariable String name){
         return blogService.showGuestBook(name);

@@ -39,9 +39,13 @@ public class BlogService {
     private final UserRepository userRepository;
     private final HttpSession session;
 
-    public BlogService(BlogRepository blogRepository, VisitorRepository visitorRepository,
-        GuestBookRepository guestBookRepository, UserRepository userRepository,
-        HttpSession session) {
+    public BlogService(
+        BlogRepository blogRepository,
+        VisitorRepository visitorRepository,
+        GuestBookRepository guestBookRepository,
+        UserRepository userRepository,
+        HttpSession session
+    ) {
         this.blogRepository = blogRepository;
         this.visitorRepository = visitorRepository;
         this.guestBookRepository = guestBookRepository;
@@ -52,16 +56,16 @@ public class BlogService {
     @Transactional
     public ShowBlogResponse showBlog(String name) {
         if (blogRepository.findByName(name) != null) {
-            return ShowBlogResponse.of("Look Up Success", blogRepository.findByName(name));
+            return ShowBlogResponse.of("Look Up Success", this.blogRepository.findByName(name));
         } else {
-            return ShowBlogResponse.of("No Result", blogRepository.findByName(name));
+            return ShowBlogResponse.of("No Result", this.blogRepository.findByName(name));
         }
     }
 
     @Transactional
     public SearchBlogResponse searchBlog(String name) {
 
-        List<String> list = blogRepository.searchBlog(name);
+        List<String> list = this.blogRepository.searchBlog(name);
 
         return SearchBlogResponse.of("Results of searching", list);
     }
@@ -85,9 +89,8 @@ public class BlogService {
 
     @Transactional
     public UpdateBlogResponse updateBlog(UpdateBlogRequest updateBlogRequest) {
-        User user = (User) session.getAttribute("user");
-
-        Blog updateBlog = (Blog) blogRepository.findByUser_Id(user.getId());
+        User user = (User) this.session.getAttribute("user");
+        Blog updateBlog = this.blogRepository.findByUser_Id(user.getId());
 
         updateBlog.setName(updateBlogRequest.getName());
         updateBlog.setIcon(updateBlogRequest.getIcon());
@@ -96,34 +99,39 @@ public class BlogService {
         updateBlog.setDesign_form(updateBlogRequest.getDesign_form());
         updateBlog.setCategory(updateBlogRequest.getCategory());
 
-        blogRepository.save(updateBlog);
+        this.blogRepository.save(updateBlog);
 
         return UpdateBlogResponse.of("Update Blog Success", updateBlogRequest);
     }
 
     @Transactional
     public ActivateBlogResponse activateBlog() {
-        User user = (User) session.getAttribute("user");
-        Blog activateBlog = (Blog) blogRepository.findByUser_Id(user.getId());
+        User user = (User) this.session.getAttribute("user");
+        Blog activateBlog = this.blogRepository.findByUser_Id(user.getId());
         activateBlog.activate(activateBlog);
-        blogRepository.save(activateBlog);
+        this.blogRepository.save(activateBlog);
         return ActivateBlogResponse.of("Activation Success", activateBlog);
     }
 
     @Transactional
     public InactivateBlogResponse inactivateBlog() {
         User user = (User) session.getAttribute("user");
-        Blog inactivateBlog = (Blog) blogRepository.findByUser_Id(user.getId());
+        Blog inactivateBlog = this.blogRepository.findByUser_Id(user.getId());
+
         inactivateBlog.inactivate(inactivateBlog);
-        blogRepository.save(inactivateBlog);
+
+        this.blogRepository.save(inactivateBlog);
+
         return InactivateBlogResponse.of("Inactivation Success", inactivateBlog);
     }
 
     @Transactional
     public DeleteBlogResponse deleteBlog() {
-        User user = (User) session.getAttribute("user");
-        Blog blog = (Blog) blogRepository.findByUser_Id(user.getId());
-        blogRepository.delete(blog);
+        User user = (User) this.session.getAttribute("user");
+        Blog blog = this.blogRepository.findByUser_Id(user.getId());
+
+        this.blogRepository.delete(blog);
+
         return DeleteBlogResponse.of("Delete Blog Success", blog);
     }
 
@@ -131,10 +139,10 @@ public class BlogService {
     public void addVisitors(String name) {
         Visitor addVisitor = new Visitor();
 
-        addVisitor.setBlog(blogRepository.findByName(name));
-        addVisitor.setUser((User) session.getAttribute("user"));
+        addVisitor.setBlog(this.blogRepository.findByName(name));
+        addVisitor.setUser((User) this.session.getAttribute("user"));
 
-        visitorRepository.save(addVisitor);
+        this.visitorRepository.save(addVisitor);
     }
 
     @Transactional
@@ -142,13 +150,14 @@ public class BlogService {
 
         Blog blog = blogRepository.findByName(name);
 
-        List<Visitor> visitorList = visitorRepository.findByBlog(blog);
+        List<Visitor> visitorList = this.visitorRepository.findByBlog(blog);
         String blogName = blog.getName();
 
         List<VisitorInfo> visitorInfo = new ArrayList<VisitorInfo>();
 
-        for(int i = 0; i < visitorList.size(); i++){
-            visitorInfo.add(i, VisitorInfo.of(visitorList.get(i).getUser().getNick_name(), visitorList.get(i).getDate()));
+        for (int i = 0; i < visitorList.size(); i++) {
+            visitorInfo.add(i, VisitorInfo
+                .of(visitorList.get(i).getUser().getNick_name(), visitorList.get(i).getDate()));
         }
 
         return ShowVisitorsResponse
@@ -160,23 +169,25 @@ public class BlogService {
         WriteGuestBookRequest writeGuestBookRequest) {
         GuestBook writeGuestBook = this.guestBookRepository.save(
             GuestBook.of(
-                blogRepository.findByName(name),
+                this.blogRepository.findByName(name),
                 writeGuestBookRequest.getComment(),
-                (User) session.getAttribute("user")
+                (User) this.session.getAttribute("user")
             )
         );
         return WriteGuestBookResponse.of("Write GuestBook Success", writeGuestBook);
     }
 
     public GuestBookListResponse showGuestBook(String name) {
-        Blog blog = blogRepository.findByName(name);
-        List<GuestBook> guestBook = guestBookRepository.findByBlog(blog);
+        Blog blog = this.blogRepository.findByName(name);
+        List<GuestBook> guestBook = this.guestBookRepository.findByBlog(blog);
         String blogname = blog.getName();
 
         List<GuestBookList> guestBookList = new ArrayList<GuestBookList>();
 
-        for(int i = 0; i < guestBook.size(); i++){
-            guestBookList.add(i, GuestBookList.of(guestBook.get(i).getComment(), guestBook.get(i).getDate(), guestBook.get(i).getUser().getNick_name()));
+        for (int i = 0; i < guestBook.size(); i++) {
+            guestBookList.add(i, GuestBookList
+                .of(guestBook.get(i).getComment(), guestBook.get(i).getDate(),
+                    guestBook.get(i).getUser().getNick_name()));
         }
 
         return GuestBookListResponse.of("Results of ShowGuestBookList", blogname, guestBookList);

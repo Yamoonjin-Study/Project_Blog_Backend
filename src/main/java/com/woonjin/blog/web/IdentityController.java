@@ -2,7 +2,7 @@ package com.woonjin.blog.web;
 
 import com.woonjin.blog.application.dto.response.LogInResponse;
 import com.woonjin.blog.application.dto.response.LogOutResponse;
-import com.woonjin.blog.application.dto.response.MemberOutResponse;
+import com.woonjin.blog.application.dto.response.WithdrawalResponse;
 import com.woonjin.blog.application.dto.response.SignUpResponse;
 import com.woonjin.blog.application.service.IdentityAppService;
 import com.woonjin.blog.application.dto.request.LogInRequest;
@@ -22,26 +22,26 @@ public class IdentityController {
     }
 
     @PostMapping("/sign-up")
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.CREATED)
     public SignUpResponse 회원가입(@RequestBody SignUpRequest signUpRequest) {
         return identityAppService.signup(signUpRequest);
     }
 
-    @PostMapping("/log-in")
+    @PutMapping("/log-in")
     @ResponseStatus(value = HttpStatus.OK)
     public LogInResponse 로그인(@RequestBody LogInRequest logInRequest) {
         return identityAppService.login(logInRequest);
     }
 
-    @PostMapping("/log-out")
+    @PutMapping("/log-out")
     @ResponseStatus(value = HttpStatus.OK)
     public LogOutResponse 로그아웃() {
         return identityAppService.logout();
     }
 
-    @PostMapping("/member-out")
+    @PostMapping("/withdrawal")
     @ResponseStatus(value = HttpStatus.OK)
-    public MemberOutResponse 회원탈퇴() {
-        return identityAppService.memberout();
+    public WithdrawalResponse 회원탈퇴() {
+        return identityAppService.withdrawal();
     }
 }

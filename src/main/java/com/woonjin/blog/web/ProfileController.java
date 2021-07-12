@@ -6,9 +6,12 @@ import com.woonjin.blog.application.dto.request.CreateResumeRequest;
 import com.woonjin.blog.application.dto.response.ProfileResponse;
 import com.woonjin.blog.application.service.ProfileService;
 import io.swagger.annotations.Api;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -22,31 +25,34 @@ public class ProfileController {
     }
 
     @PostMapping("/create-resume")
+    @ResponseStatus(HttpStatus.CREATED)
     public ProfileResponse 이력서생성(@RequestBody CreateResumeRequest createResumeRequest) {
         return profileService.createResume(createResumeRequest);
     }
 
     @PostMapping("/create-portfolio")
+    @ResponseStatus(HttpStatus.CREATED)
     public ProfileResponse 포트폴리오생성(@RequestBody CreatePortfolioRequest createPortfolioRequest) {
         return profileService.createPortfolio(createPortfolioRequest);
     }
 
     @PostMapping("/create-businesscard")
+    @ResponseStatus(HttpStatus.CREATED)
     public ProfileResponse 명함생성(@RequestBody CreateBusinessCardRequest createBusinessCardRequest) {
         return profileService.createBusinessCard(createBusinessCardRequest);
     }
 
-    @PostMapping("/update-resume")
+    @PutMapping("/update-resume")
     public ProfileResponse 이력서수정(@RequestBody CreateResumeRequest createResumeRequest) {
         return profileService.updateResume(createResumeRequest);
     }
 
-    @PostMapping("/update-portfolio")
+    @PutMapping("/update-portfolio")
     public ProfileResponse 포트폴리오수정(@RequestBody CreatePortfolioRequest createPortfolioRequest) {
         return profileService.updatePortfolio(createPortfolioRequest);
     }
 
-    @PostMapping("/update-businesscard")
+    @PutMapping("/update-businesscard")
     public ProfileResponse 명함수정(@RequestBody CreateBusinessCardRequest createBusinessCardRequest) {
         return profileService.updateBusinessCard(createBusinessCardRequest);
     }

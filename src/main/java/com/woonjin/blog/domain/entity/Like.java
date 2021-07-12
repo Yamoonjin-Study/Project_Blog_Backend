@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@Table(name = "board_likes")
+@Table(name = "likes")
 public class Like {
 
     @Id

@@ -52,18 +52,7 @@ public class BusinessCard implements Serializable {
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_business_card_id"), unique = true, nullable = false)
     private User user;
 
-    @Getter
-    public enum Type {
-        BUSINESSCARD("BUSINESSCARD");
-
-        private final String name;
-
-        Type(String name) {
-            this.name = name;
-        }
-    }
-
-    public BusinessCard(
+    private BusinessCard(
         BusinessCard.Type type,
         String content,
         String title,
@@ -87,5 +76,16 @@ public class BusinessCard implements Serializable {
             title,
             user
         );
+    }
+
+    @Getter
+    public enum Type {
+        BUSINESSCARD("BUSINESSCARD");
+
+        private final String name;
+
+        Type(String name) {
+            this.name = name;
+        }
     }
 }

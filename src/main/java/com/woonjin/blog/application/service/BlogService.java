@@ -32,7 +32,6 @@ import javax.transaction.Transactional;
 
 @Service
 public class BlogService {
-
     private final BlogRepository blogRepository;
     private final VisitorRepository visitorRepository;
     private final GuestBookRepository guestBookRepository;
@@ -72,6 +71,7 @@ public class BlogService {
 
     @Transactional
     public CreateBlogResponse createBlog(CreateBlogRequest createBlogRequest) {
+        User user = (User) this.session.getAttribute("user");
         Blog createBlog = this.blogRepository.save(
             Blog.of(
                 createBlogRequest.getName(),
@@ -81,7 +81,7 @@ public class BlogService {
                 createBlogRequest.getLogo_image(),
                 createBlogRequest.getDesign_form(),
                 createBlogRequest.getCategory(),
-                (User) session.getAttribute("user")
+                user
             )
         );
         return CreateBlogResponse.of("Create Blog Success", createBlog);

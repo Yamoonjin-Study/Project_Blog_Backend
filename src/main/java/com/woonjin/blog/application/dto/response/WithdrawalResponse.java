@@ -11,13 +11,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberOutResponse {
+public class WithdrawalResponse {
 
     private String responseMessage;
 
     private User user;
 
-    public static MemberOutResponse of(String responseMessage, User user) {
-        return new MemberOutResponse(responseMessage, user);
+    public static WithdrawalResponse of(String responseMessage, User user) {
+        return new WithdrawalResponse(responseMessage, user);
     }
 }

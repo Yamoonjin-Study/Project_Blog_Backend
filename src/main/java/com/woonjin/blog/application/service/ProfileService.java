@@ -37,7 +37,7 @@ public class ProfileService {
     }
 
     public ProfileResponse createPortfolio(CreatePortfolioRequest createPortfolioRequest) {
-        User user = (User) session.getAttribute("user");
+        User user = (User) this.session.getAttribute("user");
 
         Portfolio createPortfolio = this.portfolioRepository.save(
             Portfolio.of(

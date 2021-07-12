@@ -52,18 +52,7 @@ public class Resume implements Serializable {
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_resume_id"), unique = true, nullable = false)
     private User user;
 
-    @Getter
-    public enum Type {
-        RESUME("RESUME");
-
-        private final String name;
-
-        Type(String name) {
-            this.name = name;
-        }
-    }
-
-    public Resume(
+    private Resume(
         Type type,
         String content,
         String title,
@@ -87,5 +76,16 @@ public class Resume implements Serializable {
             title,
             user
         );
+    }
+
+    @Getter
+    public enum Type {
+        RESUME("RESUME");
+
+        private final String name;
+
+        Type(String name) {
+            this.name = name;
+        }
     }
 }

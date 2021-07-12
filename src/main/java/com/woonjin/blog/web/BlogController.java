@@ -16,10 +16,12 @@ import com.woonjin.blog.application.dto.request.CreateBlogRequest;
 import com.woonjin.blog.application.dto.request.UpdateBlogRequest;
 import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,24 +53,26 @@ public class BlogController {
     }
 
     @PostMapping("/create-blog")
-    @ResponseStatus(value = HttpStatus.OK)
-    public CreateBlogResponse 블로그생성(@RequestBody CreateBlogRequest createBlogRequest) {
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public CreateBlogResponse 블로그생성(
+        @RequestBody CreateBlogRequest createBlogRequest
+    ) {
         return blogService.createBlog(createBlogRequest);
     }
 
-    @PostMapping("update-blog")
+    @PutMapping("update-blog")
     @ResponseStatus(value = HttpStatus.OK)
     public UpdateBlogResponse 블로그정보수정(@RequestBody UpdateBlogRequest updateBlogRequest) {
         return blogService.updateBlog(updateBlogRequest);
     }
 
-    @PostMapping("activate-blog")
+    @PutMapping("activate-blog")
     @ResponseStatus(value = HttpStatus.OK)
     public ActivateBlogResponse 블로그활성화() {
         return blogService.activateBlog();
     }
 
-    @PostMapping("inactivate-blog")
+    @PutMapping("inactivate-blog")
     @ResponseStatus(value = HttpStatus.OK)
     public InactivateBlogResponse 블로그비활성화() {
         return blogService.inactivateBlog();

@@ -1,6 +1,5 @@
 package com.woonjin.blog.domain.entity;
 
-import com.woonjin.blog.domain.entity.Resume.Type;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import javax.persistence.Column;
@@ -53,18 +52,7 @@ public class Portfolio implements Serializable {
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_portfolio_id"), unique = true, nullable = false)
     private User user;
 
-    @Getter
-    public enum Type {
-        PORTFOLIO("PORTFOLIO");
-
-        private final String name;
-
-        Type(String name) {
-            this.name = name;
-        }
-    }
-
-    public Portfolio(
+    private Portfolio(
         Portfolio.Type type,
         String content,
         String title,
@@ -88,5 +76,16 @@ public class Portfolio implements Serializable {
             title,
             user
         );
+    }
+
+    @Getter
+    public enum Type {
+        PORTFOLIO("PORTFOLIO");
+
+        private final String name;
+
+        Type(String name) {
+            this.name = name;
+        }
     }
 }

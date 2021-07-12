@@ -4,7 +4,7 @@ import com.woonjin.blog.application.dto.request.LogInRequest;
 import com.woonjin.blog.application.dto.request.SignUpRequest;
 import com.woonjin.blog.application.dto.response.LogInResponse;
 import com.woonjin.blog.application.dto.response.LogOutResponse;
-import com.woonjin.blog.application.dto.response.MemberOutResponse;
+import com.woonjin.blog.application.dto.response.WithdrawalResponse;
 import com.woonjin.blog.application.dto.response.SignUpResponse;
 import com.woonjin.blog.domain.entity.User;
 import com.woonjin.blog.domain.repository.UserRepository;
@@ -56,7 +56,7 @@ public class IdentityAppService {
     @Transactional
     public SignUpResponse signup(SignUpRequest signUpRequest) {
         if (signUpRequest.getPassword().equals(signUpRequest.getPasswordCheck())) {
-            User userSignup = this.userRepository.save(
+            this.userRepository.save(
                 User.of(
                     signUpRequest.getEmail(),
                     signUpRequest.getPassword(),
@@ -74,10 +74,10 @@ public class IdentityAppService {
     }
 
     @Transactional
-    public MemberOutResponse memberout() {
+    public WithdrawalResponse withdrawal() {
         User memberOut = (User) this.session.getAttribute("user");
         this.userRepository.delete(memberOut);
         this.session.removeAttribute("user");
-        return MemberOutResponse.of("Memberout Success", memberOut);
+        return WithdrawalResponse.of("Memberout Success", memberOut);
     }
 }

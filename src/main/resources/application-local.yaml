@@ -35,7 +35,8 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
-
+  jwt:
+    secret: govlepel@$&
 server:
   port: 8080
   error:

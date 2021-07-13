@@ -26,49 +26,49 @@ public class ProfileController {
 
     @PostMapping("/create-resume")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProfileResponse 이력서생성(@RequestBody CreateResumeRequest createResumeRequest) {
+    public ProfileResponse CreateResume(@RequestBody CreateResumeRequest createResumeRequest) {
         return profileService.createResume(createResumeRequest);
     }
 
     @PostMapping("/create-portfolio")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProfileResponse 포트폴리오생성(@RequestBody CreatePortfolioRequest createPortfolioRequest) {
+    public ProfileResponse CreatePortfolio(@RequestBody CreatePortfolioRequest createPortfolioRequest) {
         return profileService.createPortfolio(createPortfolioRequest);
     }
 
     @PostMapping("/create-businesscard")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProfileResponse 명함생성(@RequestBody CreateBusinessCardRequest createBusinessCardRequest) {
+    public ProfileResponse CreateBusinessCard(@RequestBody CreateBusinessCardRequest createBusinessCardRequest) {
         return profileService.createBusinessCard(createBusinessCardRequest);
     }
 
     @PutMapping("/update-resume")
-    public ProfileResponse 이력서수정(@RequestBody CreateResumeRequest createResumeRequest) {
+    public ProfileResponse UpdateResume(@RequestBody CreateResumeRequest createResumeRequest) {
         return profileService.updateResume(createResumeRequest);
     }
 
     @PutMapping("/update-portfolio")
-    public ProfileResponse 포트폴리오수정(@RequestBody CreatePortfolioRequest createPortfolioRequest) {
+    public ProfileResponse UpdatePortfolio(@RequestBody CreatePortfolioRequest createPortfolioRequest) {
         return profileService.updatePortfolio(createPortfolioRequest);
     }
 
     @PutMapping("/update-businesscard")
-    public ProfileResponse 명함수정(@RequestBody CreateBusinessCardRequest createBusinessCardRequest) {
+    public ProfileResponse UpdateBusinessCard(@RequestBody CreateBusinessCardRequest createBusinessCardRequest) {
         return profileService.updateBusinessCard(createBusinessCardRequest);
     }
 
     @DeleteMapping("/delete-resume")
-    public ProfileResponse 이력서삭제() {
+    public ProfileResponse DeleteResume() {
         return profileService.deleteResume();
     }
 
     @DeleteMapping("/delete-portfolio")
-    public ProfileResponse 포트폴리오삭제() {
+    public ProfileResponse DeletePortfolio() {
         return profileService.deletePortfolio();
     }
 
     @DeleteMapping("/delete-businesscard")
-    public ProfileResponse 명함삭제() {
+    public ProfileResponse DeleteBusinessCard() {
         return profileService.deleteBusinessCard();
     }
 

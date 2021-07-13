@@ -23,25 +23,25 @@ public class IdentityController {
 
     @PostMapping("/sign-up")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public SignUpResponse 회원가입(@RequestBody SignUpRequest signUpRequest) {
+    public SignUpResponse SignUp(@RequestBody SignUpRequest signUpRequest) {
         return identityAppService.signup(signUpRequest);
     }
 
     @PutMapping("/log-in")
     @ResponseStatus(value = HttpStatus.OK)
-    public LogInResponse 로그인(@RequestBody LogInRequest logInRequest) {
+    public LogInResponse LogIn(@RequestBody LogInRequest logInRequest) {
         return identityAppService.login(logInRequest);
     }
 
     @PutMapping("/log-out")
     @ResponseStatus(value = HttpStatus.OK)
-    public LogOutResponse 로그아웃() {
+    public LogOutResponse LogOut() {
         return identityAppService.logout();
     }
 
     @PostMapping("/withdrawal")
     @ResponseStatus(value = HttpStatus.OK)
-    public WithdrawalResponse 회원탈퇴() {
+    public WithdrawalResponse Withdrawal() {
         return identityAppService.withdrawal();
     }
 }

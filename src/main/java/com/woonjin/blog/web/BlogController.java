@@ -38,13 +38,13 @@ public class BlogController {
 
     @GetMapping("/blog-search/{name}")
     @ResponseStatus(value = HttpStatus.OK)
-    public SearchBlogResponse 블로그검색(@PathVariable String name) {
+    public SearchBlogResponse SearchBlog(@PathVariable String name) {
         return blogService.searchBlog(name);
     }
 
     @GetMapping("/blog/{name}")
     @ResponseStatus(value = HttpStatus.OK)
-    public ShowBlogResponse 블로그조회(@PathVariable String name) {
+    public ShowBlogResponse ShowBlog(@PathVariable String name) {
 
         //해당 블로그의 방문자에 기록 저장
         blogService.addVisitors(name);
@@ -54,7 +54,7 @@ public class BlogController {
 
     @PostMapping("/create-blog")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public CreateBlogResponse 블로그생성(
+    public CreateBlogResponse CreateBlog(
         @RequestBody CreateBlogRequest createBlogRequest
     ) {
         return blogService.createBlog(createBlogRequest);
@@ -62,43 +62,43 @@ public class BlogController {
 
     @PutMapping("update-blog")
     @ResponseStatus(value = HttpStatus.OK)
-    public UpdateBlogResponse 블로그정보수정(@RequestBody UpdateBlogRequest updateBlogRequest) {
+    public UpdateBlogResponse UpdateBlog(@RequestBody UpdateBlogRequest updateBlogRequest) {
         return blogService.updateBlog(updateBlogRequest);
     }
 
     @PutMapping("activate-blog")
     @ResponseStatus(value = HttpStatus.OK)
-    public ActivateBlogResponse 블로그활성화() {
+    public ActivateBlogResponse ActivateBlog() {
         return blogService.activateBlog();
     }
 
     @PutMapping("inactivate-blog")
     @ResponseStatus(value = HttpStatus.OK)
-    public InactivateBlogResponse 블로그비활성화() {
+    public InactivateBlogResponse InactivateBlog() {
         return blogService.inactivateBlog();
     }
 
     @DeleteMapping("delete-blog")
     @ResponseStatus(value = HttpStatus.OK)
-    public DeleteBlogResponse 블로그삭제() {
+    public DeleteBlogResponse DeleteBlog() {
         return blogService.deleteBlog();
     }
 
     @GetMapping("blog/{name}/visitors")
     @ResponseStatus(value = HttpStatus.OK)
-    public ShowVisitorsResponse 방문자확인(@PathVariable String name){
+    public ShowVisitorsResponse ShowVisitors(@PathVariable String name){
         return blogService.showVisitors(name);
     }
 
     @GetMapping("blog/{name}/guestbook")
     @ResponseStatus(value = HttpStatus.OK)
-    public GuestBookListResponse 방명록조회(@PathVariable String name){
+    public GuestBookListResponse ShowGuestBooks(@PathVariable String name){
         return blogService.showGuestBook(name);
     }
 
     @PostMapping("blog/{name}/guestbook/write")
     @ResponseStatus(value = HttpStatus.OK)
-    public WriteGuestBookResponse 방명록작성(@PathVariable String name, @RequestBody WriteGuestBookRequest writeGuestBookRequest){
+    public WriteGuestBookResponse WriteGuestBook(@PathVariable String name, @RequestBody WriteGuestBookRequest writeGuestBookRequest){
         return blogService.writeGuestBook(name, writeGuestBookRequest);
     }
 }

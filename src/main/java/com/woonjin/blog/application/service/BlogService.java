@@ -25,10 +25,11 @@ import com.woonjin.blog.domain.repository.UserRepository;
 import com.woonjin.blog.domain.repository.VisitorRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BlogService {
@@ -37,6 +38,7 @@ public class BlogService {
     private final GuestBookRepository guestBookRepository;
     private final UserRepository userRepository;
     private final HttpSession session;
+    private final static Logger Log = Logger.getGlobal();
 
     public BlogService(
         BlogRepository blogRepository,
@@ -52,20 +54,23 @@ public class BlogService {
         this.session = session;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ShowBlogResponse showBlog(String name) {
         if (blogRepository.findByName(name) != null) {
+            Log.info("Look Up Success");
             return ShowBlogResponse.of("Look Up Success", this.blogRepository.findByName(name));
         } else {
+            Log.info("No Result");
             return ShowBlogResponse.of("No Result", this.blogRepository.findByName(name));
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public SearchBlogResponse searchBlog(String name) {
 
         List<String> list = this.blogRepository.searchBlog(name);
 
+        Log.info("Results of searching");
         return SearchBlogResponse.of("Results of searching", list);
     }
 
@@ -84,6 +89,7 @@ public class BlogService {
                 user
             )
         );
+        Log.info("Create Blog Success");
         return CreateBlogResponse.of("Create Blog Success", createBlog);
     }
 
@@ -101,6 +107,7 @@ public class BlogService {
 
         this.blogRepository.save(updateBlog);
 
+        Log.info("Update Blog Success");
         return UpdateBlogResponse.of("Update Blog Success", updateBlogRequest);
     }
 
@@ -110,6 +117,8 @@ public class BlogService {
         Blog activateBlog = this.blogRepository.findByUser_Id(user.getId());
         activateBlog.activate(activateBlog);
         this.blogRepository.save(activateBlog);
+
+        Log.info("Activation Success");
         return ActivateBlogResponse.of("Activation Success", activateBlog);
     }
 
@@ -122,6 +131,7 @@ public class BlogService {
 
         this.blogRepository.save(inactivateBlog);
 
+        Log.info("Inactivation Success");
         return InactivateBlogResponse.of("Inactivation Success", inactivateBlog);
     }
 
@@ -132,6 +142,7 @@ public class BlogService {
 
         this.blogRepository.delete(blog);
 
+        Log.info("Delete Blog Success");
         return DeleteBlogResponse.of("Delete Blog Success", blog);
     }
 
@@ -145,7 +156,7 @@ public class BlogService {
         this.visitorRepository.save(addVisitor);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ShowVisitorsResponse showVisitors(String name) {
 
         Blog blog = blogRepository.findByName(name);
@@ -160,6 +171,7 @@ public class BlogService {
                 .of(visitorList.get(i).getUser().getNick_name(), visitorList.get(i).getDate()));
         }
 
+        Log.info("Results of ShowVisitorsList");
         return ShowVisitorsResponse
             .of("Results of ShowVisitorsList", blogName, visitorInfo);
     }
@@ -174,9 +186,12 @@ public class BlogService {
                 (User) this.session.getAttribute("user")
             )
         );
+
+        Log.info("Write GuestBook Success");
         return WriteGuestBookResponse.of("Write GuestBook Success", writeGuestBook);
     }
 
+    @Transactional(readOnly = true)
     public GuestBookListResponse showGuestBook(String name) {
         Blog blog = this.blogRepository.findByName(name);
         List<GuestBook> guestBook = this.guestBookRepository.findByBlog(blog);
@@ -190,6 +205,7 @@ public class BlogService {
                     guestBook.get(i).getUser().getNick_name()));
         }
 
+        Log.info("Results of ShowGuestBookList");
         return GuestBookListResponse.of("Results of ShowGuestBookList", blogname, guestBookList);
     }
 }

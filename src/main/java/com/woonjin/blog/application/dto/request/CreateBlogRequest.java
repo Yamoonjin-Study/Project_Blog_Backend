@@ -3,10 +3,8 @@ package com.woonjin.blog.application.dto.request;
 
 import com.woonjin.blog.domain.entity.Blog.Category;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 public class CreateBlogRequest {
 
     private String name;

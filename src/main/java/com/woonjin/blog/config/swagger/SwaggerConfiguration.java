@@ -1,4 +1,4 @@
-package com.woonjin.blog.config;
+package com.woonjin.blog.config.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

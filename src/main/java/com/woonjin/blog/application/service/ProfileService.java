@@ -12,6 +12,7 @@ import com.woonjin.blog.domain.entity.User;
 import com.woonjin.blog.domain.repository.BusinessCardRepository;
 import com.woonjin.blog.domain.repository.PortfolioRepository;
 import com.woonjin.blog.domain.repository.ResumeRepository;
+import java.util.logging.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -23,6 +24,7 @@ public class ProfileService {
     private final PortfolioRepository portfolioRepository;
     private final ResumeRepository resumeRepository;
     private final BusinessCardRepository businessCardRepository;
+    private final static Logger Log = Logger.getGlobal();
 
     public ProfileService(
         PortfolioRepository portfolioRepository,
@@ -48,6 +50,7 @@ public class ProfileService {
             )
         );
 
+        Log.info("Create Portfolio Success");
         return ProfileResponse.of("Create Portfolio Success", createPortfolio);
     }
 
@@ -63,6 +66,7 @@ public class ProfileService {
             )
         );
 
+        Log.info("Create Resume Success");
         return ProfileResponse.of("Create Resume Success", resume);
     }
 
@@ -79,6 +83,7 @@ public class ProfileService {
             )
         );
 
+        Log.info("Create BusinessCard Success");
         return ProfileResponse.of("Create BusinessCard Success", businessCard);
     }
 
@@ -91,6 +96,7 @@ public class ProfileService {
 
         this.portfolioRepository.save(updatePortfolio);
 
+        Log.info("Update Portfolio Success");
         return ProfileResponse.of("Update Portfolio Success", updatePortfolio);
     }
 
@@ -103,6 +109,7 @@ public class ProfileService {
 
         this.resumeRepository.save(updateResume);
 
+        Log.info("Update Resume Success");
         return ProfileResponse.of("Update Resume Success", updateResume);
     }
 
@@ -116,6 +123,7 @@ public class ProfileService {
 
         this.businessCardRepository.save(updateBusinessCard);
 
+        Log.info("Update BusinessCard Success");
         return ProfileResponse.of("Update BusinessCard Success", updateBusinessCard);
     }
 
@@ -125,6 +133,7 @@ public class ProfileService {
 
         this.businessCardRepository.delete(deleteBusinessCard);
 
+        Log.info("Delete BusinessCard Success");
         return ProfileResponse.of("Delete BusinessCard Success", deleteBusinessCard);
     }
 
@@ -134,6 +143,7 @@ public class ProfileService {
 
         this.portfolioRepository.delete(deletePortfolio);
 
+        Log.info("Delete Portfolio Success");
         return ProfileResponse.of("Delete Portfolio Success", deletePortfolio);
     }
 
@@ -143,6 +153,7 @@ public class ProfileService {
 
         this.resumeRepository.delete(deleteResume);
 
+        Log.info("Delete Resume Success");
         return ProfileResponse.of("Delete Resume Success", deleteResume);
     }
 }

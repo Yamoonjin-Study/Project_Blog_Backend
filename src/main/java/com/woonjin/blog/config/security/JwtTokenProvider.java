@@ -1,22 +1,27 @@
 package com.woonjin.blog.config.security;
 
+import com.woonjin.blog.domain.entity.User.RoleType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Base64;
+import java.util.Date;
+import java.util.List;
+
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
@@ -24,7 +29,7 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
     @Value("${spring.jwt.secret}")
     private String secretKey;
 
-    private long tokenValidMilisecond = 1000L * 60 * 60; // 1시간만 토큰 유효
+    private long tokenValidMilisecond = 1000L * 60 * 60 * 24; // 24시간만 토큰 유효
 
     private final UserDetailsService userDetailsService;
 
@@ -34,7 +39,8 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
     }
 
     // Jwt 토큰 생성
-    public String createToken(String userPk, List<String> roles) {
+    public String createToken(String userPk, List<RoleType> roles) {
+        System.out.println(userPk +" / "+ roles);
         Claims claims = Jwts.claims().setSubject(userPk);
         claims.put("roles", roles);
         Date now = new Date();

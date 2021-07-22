@@ -1,6 +1,7 @@
 package com.woonjin.blog.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.woonjin.blog.domain.repository.UserRepository;
 import java.sql.Timestamp;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -97,27 +99,12 @@ public class User implements UserDetails {
         );
     }
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Override
-    public String getPassword() {
-        // TODO Auto-generated method stub
-        return this.getPassword();
-    }
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Override
-    public String getUsername() {
-        // TODO Auto-generated method stub
-        return this.getEmail();
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collectors = new ArrayList<>();
 
-        collectors.add(()->{
-            return "ROLE_" + this.getRole();
-        });
+        collectors.add(() -> "ROLE_"+this.getRole());
 
         return collectors;
     }

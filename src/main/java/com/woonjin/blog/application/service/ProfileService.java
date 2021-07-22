@@ -20,13 +20,14 @@ import javax.servlet.http.HttpSession;
 @Service
 public class ProfileService {
 
-    private final HttpSession session;
+    private final IdentityAppService identityAppService;
     private final PortfolioRepository portfolioRepository;
     private final ResumeRepository resumeRepository;
     private final BusinessCardRepository businessCardRepository;
     private final static Logger Log = Logger.getGlobal();
 
     public ProfileService(
+        IdentityAppService identityAppService,
         PortfolioRepository portfolioRepository,
         ResumeRepository resumeRepository,
         BusinessCardRepository businessCardRepository,
@@ -35,11 +36,11 @@ public class ProfileService {
         this.portfolioRepository = portfolioRepository;
         this.resumeRepository = resumeRepository;
         this.businessCardRepository = businessCardRepository;
-        this.session = session;
+        this.identityAppService = identityAppService;
     }
 
     public ProfileResponse createPortfolio(CreatePortfolioRequest createPortfolioRequest) {
-        User user = (User) this.session.getAttribute("user");
+        User user = this.identityAppService.getAuthenticationUser();
 
         Portfolio createPortfolio = this.portfolioRepository.save(
             Portfolio.of(
@@ -55,7 +56,7 @@ public class ProfileService {
     }
 
     public ProfileResponse createResume(CreateResumeRequest createResumeRequest) {
-        User user = (User) this.session.getAttribute("user");
+        User user = this.identityAppService.getAuthenticationUser();
 
         Resume resume = this.resumeRepository.save(
             Resume.of(
@@ -72,7 +73,7 @@ public class ProfileService {
 
     public ProfileResponse createBusinessCard(
         CreateBusinessCardRequest createBusinessCardRequest) {
-        User user = (User) this.session.getAttribute("user");
+        User user = this.identityAppService.getAuthenticationUser();
 
         BusinessCard businessCard = this.businessCardRepository.save(
             BusinessCard.of(
@@ -88,7 +89,7 @@ public class ProfileService {
     }
 
     public ProfileResponse updatePortfolio(CreatePortfolioRequest updatePortfolioRequest) {
-        User user = (User) this.session.getAttribute("user");
+        User user = this.identityAppService.getAuthenticationUser();
         Portfolio updatePortfolio = this.portfolioRepository.findByUser(user);
 
         updatePortfolio.setContent(updatePortfolioRequest.getContent());
@@ -101,7 +102,7 @@ public class ProfileService {
     }
 
     public ProfileResponse updateResume(CreateResumeRequest updateResumeRequest) {
-        User user = (User) this.session.getAttribute("user");
+        User user = this.identityAppService.getAuthenticationUser();
         Resume updateResume = this.resumeRepository.findByUser(user);
 
         updateResume.setContent(updateResumeRequest.getContent());
@@ -115,7 +116,7 @@ public class ProfileService {
 
     public ProfileResponse updateBusinessCard(
         CreateBusinessCardRequest updateBusinessCardRequest) {
-        User user = (User) this.session.getAttribute("user");
+        User user = this.identityAppService.getAuthenticationUser();
         BusinessCard updateBusinessCard = this.businessCardRepository.findByUser(user);
 
         updateBusinessCard.setContent(updateBusinessCardRequest.getContent());
@@ -128,7 +129,7 @@ public class ProfileService {
     }
 
     public ProfileResponse deleteBusinessCard() {
-        User user = (User) this.session.getAttribute("user");
+        User user = this.identityAppService.getAuthenticationUser();
         BusinessCard deleteBusinessCard = this.businessCardRepository.findByUser(user);
 
         this.businessCardRepository.delete(deleteBusinessCard);
@@ -138,7 +139,7 @@ public class ProfileService {
     }
 
     public ProfileResponse deletePortfolio() {
-        User user = (User) this.session.getAttribute("user");
+        User user = this.identityAppService.getAuthenticationUser();
         Portfolio deletePortfolio = this.portfolioRepository.findByUser(user);
 
         this.portfolioRepository.delete(deletePortfolio);
@@ -148,7 +149,7 @@ public class ProfileService {
     }
 
     public ProfileResponse deleteResume() {
-        User user = (User) this.session.getAttribute("user");
+        User user = this.identityAppService.getAuthenticationUser();
         Resume deleteResume = this.resumeRepository.findByUser(user);
 
         this.resumeRepository.delete(deleteResume);

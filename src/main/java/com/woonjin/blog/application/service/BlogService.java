@@ -28,35 +28,34 @@ import java.util.List;
 import java.util.logging.Logger;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BlogService {
+    private final IdentityAppService identityAppService;
     private final BlogRepository blogRepository;
     private final VisitorRepository visitorRepository;
     private final GuestBookRepository guestBookRepository;
     private final UserRepository userRepository;
-    private final HttpSession session;
     private final static Logger Log = Logger.getGlobal();
 
     public BlogService(
+        IdentityAppService identityAppService,
         BlogRepository blogRepository,
         VisitorRepository visitorRepository,
         GuestBookRepository guestBookRepository,
-        UserRepository userRepository,
-        HttpSession session
+        UserRepository userRepository
     ) {
+        this.identityAppService = identityAppService;
         this.blogRepository = blogRepository;
         this.visitorRepository = visitorRepository;
         this.guestBookRepository = guestBookRepository;
         this.userRepository = userRepository;
-        this.session = session;
     }
 
     @Transactional(readOnly = true)
     public ShowBlogResponse showBlog(String name) {
-        if (blogRepository.findByName(name) != null) {
+        if (this.blogRepository.findByName(name) != null) {
             Log.info("Look Up Success");
             return ShowBlogResponse.of("Look Up Success", this.blogRepository.findByName(name));
         } else {
@@ -76,7 +75,8 @@ public class BlogService {
 
     @Transactional
     public CreateBlogResponse createBlog(CreateBlogRequest createBlogRequest) {
-        User user = (User) this.session.getAttribute("user");
+        User user = identityAppService.getAuthenticationUser();
+
         Blog createBlog = this.blogRepository.save(
             Blog.of(
                 createBlogRequest.getName(),
@@ -95,7 +95,7 @@ public class BlogService {
 
     @Transactional
     public UpdateBlogResponse updateBlog(UpdateBlogRequest updateBlogRequest) {
-        User user = (User) this.session.getAttribute("user");
+        User user = identityAppService.getAuthenticationUser();
         Blog updateBlog = this.blogRepository.findByUser_Id(user.getId());
 
         updateBlog.setName(updateBlogRequest.getName());
@@ -113,7 +113,7 @@ public class BlogService {
 
     @Transactional
     public ActivateBlogResponse activateBlog() {
-        User user = (User) this.session.getAttribute("user");
+        User user = identityAppService.getAuthenticationUser();
         Blog activateBlog = this.blogRepository.findByUser_Id(user.getId());
         activateBlog.activate(activateBlog);
         this.blogRepository.save(activateBlog);
@@ -124,7 +124,7 @@ public class BlogService {
 
     @Transactional
     public InactivateBlogResponse inactivateBlog() {
-        User user = (User) session.getAttribute("user");
+        User user = identityAppService.getAuthenticationUser();
         Blog inactivateBlog = this.blogRepository.findByUser_Id(user.getId());
 
         inactivateBlog.inactivate(inactivateBlog);
@@ -137,7 +137,7 @@ public class BlogService {
 
     @Transactional
     public DeleteBlogResponse deleteBlog() {
-        User user = (User) this.session.getAttribute("user");
+        User user = identityAppService.getAuthenticationUser();
         Blog blog = this.blogRepository.findByUser_Id(user.getId());
 
         this.blogRepository.delete(blog);
@@ -151,7 +151,7 @@ public class BlogService {
         Visitor addVisitor = new Visitor();
 
         addVisitor.setBlog(this.blogRepository.findByName(name));
-        addVisitor.setUser((User) this.session.getAttribute("user"));
+        addVisitor.setUser(identityAppService.getAuthenticationUser());
 
         this.visitorRepository.save(addVisitor);
     }
@@ -159,7 +159,7 @@ public class BlogService {
     @Transactional(readOnly = true)
     public ShowVisitorsResponse showVisitors(String name) {
 
-        Blog blog = blogRepository.findByName(name);
+        Blog blog = this.blogRepository.findByName(name);
 
         List<Visitor> visitorList = this.visitorRepository.findByBlog(blog);
         String blogName = blog.getName();
@@ -183,7 +183,7 @@ public class BlogService {
             GuestBook.of(
                 this.blogRepository.findByName(name),
                 writeGuestBookRequest.getComment(),
-                (User) this.session.getAttribute("user")
+                identityAppService.getAuthenticationUser()
             )
         );
 

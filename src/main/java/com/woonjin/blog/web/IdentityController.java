@@ -27,7 +27,7 @@ public class IdentityController {
         return identityAppService.signup(signUpRequest);
     }
 
-    @PutMapping("/log-in")
+    @PostMapping("/log-in")
     @ResponseStatus(value = HttpStatus.OK)
     public LogInResponse LogIn(@RequestBody LogInRequest logInRequest) {
         return identityAppService.login(logInRequest);

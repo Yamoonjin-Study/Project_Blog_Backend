@@ -13,7 +13,7 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
 
     Blog findByName(String name);
 
-    @Query(value = "select name from blogs where name like %?1%", nativeQuery = true)
+    @Query(value = "select name from blogs where name like %?1% and status like 'ACTIVE'", nativeQuery = true)
     List<String> searchBlog(String name);
 
     //List<String> findNameByNameContaining(String name);

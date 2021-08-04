@@ -13,8 +13,6 @@ import com.woonjin.blog.domain.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,19 +24,16 @@ import javax.transaction.Transactional;
 public class IdentityAppService {
 
     private final UserRepository userRepository;
-    private final ServletRequest request;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final static Logger Log = Logger.getGlobal();
 
     public IdentityAppService(
         UserRepository userRepository,
-        ServletRequest request,
         PasswordEncoder passwordEncoder,
         JwtTokenProvider jwtTokenProvider
     ) {
         this.userRepository = userRepository;
-        this.request = request;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -72,7 +67,7 @@ public class IdentityAppService {
                 Authentication authentication = this.jwtTokenProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                Log.info("Login Success and token : " + token);
+                Log.info("Login Success and token : " + token + " email : " + this.getAuthenticationUser().getEmail());
                 return LogInResponse.of("Login Success", userLogin);
             }
         }
@@ -80,15 +75,14 @@ public class IdentityAppService {
 
     @Transactional
     public LogOutResponse logout() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User userLogout = this.userRepository.findByEmail(email);
+        User userLogout = this.getAuthenticationUser();
+
         userLogout.inactivate(userLogout);
         this.userRepository.save(userLogout);
 
         SecurityContextHolder.getContext().setAuthentication(null);
 
-        Log.info("Logout Success " + authentication);
+        Log.info("Logout Success " + userLogout);
         return LogOutResponse.of("Logout Success", userLogout);
     }
 
@@ -100,7 +94,7 @@ public class IdentityAppService {
                     signUpRequest.getEmail(),
                     this.passwordEncoder.encode(signUpRequest.getPassword()),
                     signUpRequest.getUsername(),
-                    signUpRequest.getNick_name(),
+                    signUpRequest.getNickname(),
                     signUpRequest.getPhone(),
                     User.Status.INACTIVE,
                     User.RoleType.USER
@@ -118,9 +112,7 @@ public class IdentityAppService {
 
     @Transactional
     public WithdrawalResponse withdrawal() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User withdrawalUser = this.userRepository.findByEmail(email);
+        User withdrawalUser = this.getAuthenticationUser();
         this.userRepository.delete(withdrawalUser);
 
         SecurityContextHolder.getContext().setAuthentication(null);

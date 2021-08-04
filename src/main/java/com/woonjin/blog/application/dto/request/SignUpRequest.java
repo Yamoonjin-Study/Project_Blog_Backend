@@ -11,7 +11,7 @@ public class SignUpRequest {
 
     private String passwordCheck;
 
-    private String nick_name;
+    private String nickname;
 
     private String username;
 

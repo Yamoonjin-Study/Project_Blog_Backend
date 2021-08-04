@@ -15,8 +15,6 @@ import com.woonjin.blog.domain.repository.ResumeRepository;
 import java.util.logging.Logger;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
-
 @Service
 public class ProfileService {
 
@@ -30,8 +28,7 @@ public class ProfileService {
         IdentityAppService identityAppService,
         PortfolioRepository portfolioRepository,
         ResumeRepository resumeRepository,
-        BusinessCardRepository businessCardRepository,
-        HttpSession session
+        BusinessCardRepository businessCardRepository
     ) {
         this.portfolioRepository = portfolioRepository;
         this.resumeRepository = resumeRepository;

@@ -168,7 +168,7 @@ public class BlogService {
 
         for (int i = 0; i < visitorList.size(); i++) {
             visitorInfo.add(i, VisitorInfo
-                .of(visitorList.get(i).getUser().getNick_name(), visitorList.get(i).getDate()));
+                .of(visitorList.get(i).getUser().getNickname(), visitorList.get(i).getDate()));
         }
 
         Log.info("Results of ShowVisitorsList");
@@ -202,7 +202,7 @@ public class BlogService {
         for (int i = 0; i < guestBook.size(); i++) {
             guestBookList.add(i, GuestBookList
                 .of(guestBook.get(i).getComment(), guestBook.get(i).getDate(),
-                    guestBook.get(i).getUser().getNick_name()));
+                    guestBook.get(i).getUser().getNickname()));
         }
 
         Log.info("Results of ShowGuestBookList");

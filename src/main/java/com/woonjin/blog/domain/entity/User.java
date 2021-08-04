@@ -1,7 +1,6 @@
 package com.woonjin.blog.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.woonjin.blog.domain.repository.UserRepository;
 import java.sql.Timestamp;
 
 import java.util.ArrayList;
@@ -20,7 +19,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -43,8 +41,8 @@ public class User implements UserDetails {
     @Column(nullable = false, length = 100)
     private String password;
 
-    @Column(name = "nick_name", nullable = false, length = 30, unique = true)
-    private String nick_name;
+    @Column(name = "nickname", nullable = false, length = 30, unique = true)
+    private String nickname;
 
     @Column(nullable = false, length = 50)
     private String email;
@@ -73,7 +71,7 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.username = username;
-        this.nick_name = nick_name;
+        this.nickname = nick_name;
         this.phone = phone;
         this.status = status;
         this.role = role;
@@ -83,7 +81,7 @@ public class User implements UserDetails {
         String email,
         String password,
         String username,
-        String nick_name,
+        String nickname,
         String phone,
         Status status,
         RoleType role
@@ -92,7 +90,7 @@ public class User implements UserDetails {
             email,
             password,
             username,
-            nick_name,
+            nickname,
             phone,
             status,
             role

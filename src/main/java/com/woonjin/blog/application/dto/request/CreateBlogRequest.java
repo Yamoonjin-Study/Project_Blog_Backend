@@ -1,6 +1,5 @@
 package com.woonjin.blog.application.dto.request;
 
-
 import com.woonjin.blog.domain.entity.Blog.Category;
 import lombok.Getter;
 

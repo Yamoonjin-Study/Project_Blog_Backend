@@ -57,6 +57,30 @@ public class Board {
     private Category category;
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
-    private List<Like> like;
+    private List<Like> likes;
 
+    @OneToMany(mappedBy = "top_board")
+    private List<Reply> replies;
+
+    private Board(
+        String title,
+        String content,
+        Category category
+    ){
+        this.title = title;
+        this.content = content;
+        this.category = category;
+    }
+
+    public static Board of(
+        String title,
+        String content,
+        Category category
+    ){
+        return new Board(
+            title,
+            content,
+            category
+        );
+    }
 }

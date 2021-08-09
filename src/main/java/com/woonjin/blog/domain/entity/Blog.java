@@ -54,7 +54,7 @@ public class Blog {
     @Enumerated(value = EnumType.STRING)
     private Status status;
 
-    @Column(name = "logo_image", nullable = true, length = 200)
+    @Column(name = "logo_image", length = 200)
     private String logo_image;
 
     @Column(nullable = false)

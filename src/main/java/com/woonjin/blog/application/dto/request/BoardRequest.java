@@ -10,5 +10,5 @@ public class BoardRequest {
 
     private String content;
 
-    private Category category;
+    private String category;
 }

@@ -3,6 +3,7 @@ package com.woonjin.blog.domain.entity;
 import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,9 +29,13 @@ public class Reply {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", foreignKey = @ForeignKey(name = "fk_board_reply_id"), nullable = false)
-    private Board top_board;
+    private Board board;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reply_id", foreignKey = @ForeignKey(name = "fk_reply_reply_id"))
+    private Reply reply;
 
     @CreationTimestamp
     private Timestamp post_date;
@@ -38,7 +43,33 @@ public class Reply {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_reply_id"), nullable = false)
     private User writer;
+
+    private Reply(
+        Board board,
+        Reply reply,
+        String content,
+        User writer
+    ){
+        this.board = board;
+        this.reply = reply;
+        this.content = content;
+        this.writer = writer;
+    }
+
+    public static Reply of(
+        Board board,
+        Reply reply,
+        String content,
+        User writer
+    ){
+        return new Reply(
+            board,
+            reply,
+            content,
+            writer
+        );
+    }
 }

@@ -1,8 +1,10 @@
 package com.woonjin.blog.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.sql.Timestamp;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -56,10 +58,12 @@ public class Board {
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "fk_category_board_id"))
     private Category category;
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    @JsonIgnore
+    @OneToMany(mappedBy = "board", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Like> likes;
 
-    @OneToMany(mappedBy = "top_board")
+    @JsonIgnore
+    @OneToMany(mappedBy = "board", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Reply> replies;
 
     private Board(

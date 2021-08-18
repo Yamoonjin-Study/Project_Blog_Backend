@@ -27,19 +27,19 @@ public class ChatController {
 
     }
 
-    @GetMapping("chat/{id}")
-    public void 채팅내용조회(@PathVariable String id){
+    @GetMapping("chat-room/{nickname}")
+    public void 채팅방조회(@PathVariable String nickname){
 //      상대가 안읽으면 표시가 되어있고, 읽으면 표시가 사라지게(본인도 마찬가지)
 
     }
 
-    @PostMapping("chat/{nickname}")
+    @PostMapping("chat-send")
     public Chat 메세지전송(@PathVariable String nickname, String contents){
 //
         return this.chatService.sendMessage(nickname, contents);
     }
 
-    @PutMapping("chat/{id}")
+    @PutMapping("chat-delete")
     public void 메세지삭제(){
 //      전송시간으로 부터 1분이내에만 삭제 가능 => "삭제된 메세지입니다." 로 수정됨
     }

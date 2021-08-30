@@ -23,8 +23,12 @@ public class Like {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
+    @JoinColumn(name = "board_id", foreignKey = @ForeignKey(name = "fk_board_like_id"))
     private Board board;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reply_id", foreignKey = @ForeignKey(name = "fk_reply_like_id"))
+    private Reply reply;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_like_id"))

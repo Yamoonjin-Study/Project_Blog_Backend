@@ -7,11 +7,13 @@ import com.woonjin.blog.application.dto.response.WriteBoardResponse;
 import com.woonjin.blog.application.service.BoardService;
 import com.woonjin.blog.domain.entity.Board;
 import io.swagger.annotations.Api;
+import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,23 +29,27 @@ public class BoardController {
     }
 
     @GetMapping("search-board/{words}")
-    public void searchBoardWithWords(@PathVariable String words) {
+    public List<Board> searchBoardWithWords(@PathVariable String words) {
 //통합 검색
+        return this.boardService.searchBoardWithWords(words);
     }
 
     @GetMapping("search-board/{contents}")
-    public void searchBoardWithContents(@PathVariable String contents) {
+    public List<Board> searchBoardWithContents(@PathVariable String contents) {
 //내용으로 검색
+        return this.boardService.searchBoardWithContents(contents);
     }
 
     @GetMapping("search-board/{writer}")
-    public void searchBoardWithWriter(@PathVariable String writer) {
+    public List<Board> searchBoardWithWriter(@PathVariable String writer) {
 //작성자로 검색
+        return this.boardService.searchBoardWithWriter(writer);
     }
 
     @GetMapping("search-board/{title}")
-    public void searchBoardWithTitle(@PathVariable String title) {
+    public List<Board> searchBoardWithTitle(@PathVariable String title) {
 //제목으로 검색
+        return this.boardService.searchBoardWithTitle(title);
     }
 
     @GetMapping("show-board/{id}")
@@ -52,7 +58,7 @@ public class BoardController {
     }
 
     @PostMapping("write-board")
-    public WriteBoardResponse writeBoard(BoardRequest boardRequest) {
+    public WriteBoardResponse writeBoard(@RequestBody BoardRequest boardRequest) {
         return this.boardService.writeBoard(boardRequest);
     }
 
@@ -62,12 +68,12 @@ public class BoardController {
     }
 
     @PutMapping("update-board")
-    public void updateBoard(BoardRequest boardRequest) {
+    public void updateBoard(@RequestBody BoardRequest boardRequest) {
         this.boardService.updateBoard(boardRequest);
     }
 
     @PostMapping("write-reply")
-    public void writeReply(ReplyRequest replyRequest) {
+    public void writeReply(@RequestBody ReplyRequest replyRequest) {
         this.boardService.writeReply(replyRequest);
     }
 
@@ -77,7 +83,7 @@ public class BoardController {
     }
 
     @PutMapping("update-reply/{id}")
-    public void updateReply(@PathVariable int reply_id, ReplyRequest replyRequest) {
+    public void updateReply(@PathVariable int reply_id, @RequestBody ReplyRequest replyRequest) {
         this.boardService.updateReply(reply_id, replyRequest);
     }
 

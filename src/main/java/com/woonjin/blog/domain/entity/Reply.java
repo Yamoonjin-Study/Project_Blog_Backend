@@ -1,6 +1,8 @@
 package com.woonjin.blog.domain.entity;
 
 import java.sql.Timestamp;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,6 +39,9 @@ public class Reply {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reply_id", foreignKey = @ForeignKey(name = "fk_reply_reply_id"))
     private Reply reply;
+
+    @OneToMany(mappedBy = "reply", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<Like> likes;
 
     @CreationTimestamp
     private Timestamp post_date;

@@ -38,13 +38,13 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false, length = 30, unique = true)
+    @Column(nullable = false, length = 30)
     private String title;
 
     @Lob
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_board_id"))
     private User user;
 
@@ -67,21 +67,25 @@ public class Board {
     private List<Reply> replies;
 
     private Board(
+        User user,
         String title,
         String content,
         Category category
     ){
+        this.user = user;
         this.title = title;
         this.content = content;
         this.category = category;
     }
 
     public static Board of(
+        User user,
         String title,
         String content,
         Category category
     ){
         return new Board(
+            user,
             title,
             content,
             category

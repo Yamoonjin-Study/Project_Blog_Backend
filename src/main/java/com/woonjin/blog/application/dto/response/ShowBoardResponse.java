@@ -1,6 +1,7 @@
 package com.woonjin.blog.application.dto.response;
 
 import com.woonjin.blog.domain.entity.Board;
+import com.woonjin.blog.domain.entity.Like;
 import com.woonjin.blog.domain.entity.Reply;
 import java.util.List;
 import lombok.AccessLevel;
@@ -16,11 +17,13 @@ import lombok.Setter;
 public class ShowBoardResponse {
     private Board board;
 
-    private List<Reply> reply;
+    private List<Like> likes;
+
+    private List<Reply> replies;
 
     private String ResponseMessage;
 
-    public static ShowBoardResponse of(Board board, List<Reply> reply, String responseMessage){
-        return new ShowBoardResponse(board, reply, responseMessage);
+    public static ShowBoardResponse of(Board board, List<Like> likes, List<Reply> replies, String responseMessage){
+        return new ShowBoardResponse(board, likes, replies, responseMessage);
     }
 }

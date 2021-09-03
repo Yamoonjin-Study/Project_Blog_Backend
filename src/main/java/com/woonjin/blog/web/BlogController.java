@@ -85,19 +85,20 @@ public class BlogController {
 
     @GetMapping("blog/{name}/visitors")
     @ResponseStatus(value = HttpStatus.OK)
-    public ShowVisitorsResponse ShowVisitors(@PathVariable String name){
+    public ShowVisitorsResponse ShowVisitors(@PathVariable String name) {
         return blogService.showVisitors(name);
     }
 
     @GetMapping("blog/{name}/guestbook")
     @ResponseStatus(value = HttpStatus.OK)
-    public GuestBookListResponse ShowGuestBooks(@PathVariable String name){
+    public GuestBookListResponse ShowGuestBooks(@PathVariable String name) {
         return blogService.showGuestBook(name);
     }
 
     @PostMapping("blog/{name}/guestbook/write")
     @ResponseStatus(value = HttpStatus.OK)
-    public WriteGuestBookResponse WriteGuestBook(@PathVariable String name, @RequestBody WriteGuestBookRequest writeGuestBookRequest){
+    public WriteGuestBookResponse WriteGuestBook(@PathVariable String name,
+        @RequestBody WriteGuestBookRequest writeGuestBookRequest) {
         return blogService.writeGuestBook(name, writeGuestBookRequest);
     }
 }

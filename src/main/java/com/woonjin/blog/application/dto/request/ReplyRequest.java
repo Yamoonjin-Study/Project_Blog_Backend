@@ -5,9 +5,9 @@ import lombok.Getter;
 @Getter
 public class ReplyRequest {
 
-    private int top_board;
+    private int top_board_id;
 
-    private int top_reply;
+    private int top_reply_id;
 
     private String content;
 }

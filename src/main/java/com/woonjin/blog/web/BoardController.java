@@ -34,19 +34,19 @@ public class BoardController {
         return this.boardService.searchBoardWithWords(words);
     }
 
-    @GetMapping("search-board/{contents}")
+    @GetMapping("search-board/contents/{contents}")
     public List<Board> searchBoardWithContents(@PathVariable String contents) {
 //내용으로 검색
         return this.boardService.searchBoardWithContents(contents);
     }
 
-    @GetMapping("search-board/{writer}")
+    @GetMapping("search-board/writer/{writer}")
     public List<Board> searchBoardWithWriter(@PathVariable String writer) {
 //작성자로 검색
         return this.boardService.searchBoardWithWriter(writer);
     }
 
-    @GetMapping("search-board/{title}")
+    @GetMapping("search-board/title/{title}")
     public List<Board> searchBoardWithTitle(@PathVariable String title) {
 //제목으로 검색
         return this.boardService.searchBoardWithTitle(title);
@@ -77,15 +77,34 @@ public class BoardController {
         this.boardService.writeReply(replyRequest);
     }
 
-    @DeleteMapping("delete-reply/{id}")
+    @DeleteMapping("delete-reply/{reply_id}")
     public void deleteReply(@PathVariable int reply_id) {
         this.boardService.deleteReply(reply_id);
     }
 
-    @PutMapping("update-reply/{id}")
+    @PutMapping("update-reply/{reply_id}")
     public void updateReply(@PathVariable int reply_id, @RequestBody ReplyRequest replyRequest) {
         this.boardService.updateReply(reply_id, replyRequest);
     }
 
+    @PostMapping("like-board/{board_id}")
+    public void likeBoard(@PathVariable int board_id) {
+        this.boardService.likeBoard(board_id);
+    }
+
+    @DeleteMapping("dislike-board/{board_id}")
+    public void dislikeBoard(@PathVariable int board_id) {
+        this.boardService.dislikeBoard(board_id);
+    }
+
+    @PostMapping("like-reply/{reply_id}")
+    public void likeReply(@PathVariable int reply_id) {
+        this.boardService.likeReply(reply_id);
+    }
+
+    @DeleteMapping("dislike-reply/{reply_id}")
+    public void dislikeReply(@PathVariable int reply_id) {
+        this.boardService.dislikeReply(reply_id);
+    }
 
 }

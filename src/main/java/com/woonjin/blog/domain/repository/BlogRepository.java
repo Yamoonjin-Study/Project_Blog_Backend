@@ -15,6 +15,6 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
 
     @Query(value = "select name from blogs where name like %?1% and status like 'ACTIVE'", nativeQuery = true)
     List<String> searchBlog(String name);
-
+    
     //List<String> findNameByNameContaining(String name);
 }

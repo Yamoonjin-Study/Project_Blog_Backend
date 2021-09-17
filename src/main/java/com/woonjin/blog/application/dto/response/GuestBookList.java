@@ -1,6 +1,5 @@
 package com.woonjin.blog.application.dto.response;
 
-import com.woonjin.blog.domain.entity.User;
 import java.sql.Timestamp;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

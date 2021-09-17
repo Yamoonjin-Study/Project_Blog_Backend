@@ -1,7 +1,6 @@
 package com.woonjin.blog.application.dto.response;
 
 import com.woonjin.blog.application.dto.request.UpdateBlogRequest;
-import com.woonjin.blog.domain.entity.Blog;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,5 @@
 package com.woonjin.blog.application.dto.response;
 
-import com.woonjin.blog.domain.entity.Blog;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

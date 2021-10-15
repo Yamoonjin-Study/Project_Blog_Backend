@@ -40,8 +40,9 @@ public class IdentityAppService {
 
     public User getAuthenticationUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        return this.userRepository.findByEmail(email);
+        User user = (User) authentication.getPrincipal();
+        Log.info("getAuthenticationUser : "+user.getEmail());
+        return this.userRepository.findByEmail(user.getEmail());
     }
 
 
@@ -67,7 +68,7 @@ public class IdentityAppService {
                 Authentication authentication = this.jwtTokenProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                Log.info("Login Success and token : " + token + " email : " + this.getAuthenticationUser().getEmail());
+                Log.info("Login Success and token : " + token + " email : " + getAuthenticationUser().getEmail());
                 return LogInResponse.of("Login Success", userLogin);
             }
         }

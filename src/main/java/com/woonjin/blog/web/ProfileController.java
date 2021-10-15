@@ -32,13 +32,15 @@ public class ProfileController {
 
     @PostMapping("/create-portfolio")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProfileResponse CreatePortfolio(@RequestBody CreatePortfolioRequest createPortfolioRequest) {
+    public ProfileResponse CreatePortfolio(
+        @RequestBody CreatePortfolioRequest createPortfolioRequest) {
         return profileService.createPortfolio(createPortfolioRequest);
     }
 
     @PostMapping("/create-businesscard")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProfileResponse CreateBusinessCard(@RequestBody CreateBusinessCardRequest createBusinessCardRequest) {
+    public ProfileResponse CreateBusinessCard(
+        @RequestBody CreateBusinessCardRequest createBusinessCardRequest) {
         return profileService.createBusinessCard(createBusinessCardRequest);
     }
 
@@ -48,12 +50,14 @@ public class ProfileController {
     }
 
     @PutMapping("/update-portfolio")
-    public ProfileResponse UpdatePortfolio(@RequestBody CreatePortfolioRequest createPortfolioRequest) {
+    public ProfileResponse UpdatePortfolio(
+        @RequestBody CreatePortfolioRequest createPortfolioRequest) {
         return profileService.updatePortfolio(createPortfolioRequest);
     }
 
     @PutMapping("/update-businesscard")
-    public ProfileResponse UpdateBusinessCard(@RequestBody CreateBusinessCardRequest createBusinessCardRequest) {
+    public ProfileResponse UpdateBusinessCard(
+        @RequestBody CreateBusinessCardRequest createBusinessCardRequest) {
         return profileService.updateBusinessCard(createBusinessCardRequest);
     }
 
@@ -71,5 +75,4 @@ public class ProfileController {
     public ProfileResponse DeleteBusinessCard() {
         return profileService.deleteBusinessCard();
     }
-
 }

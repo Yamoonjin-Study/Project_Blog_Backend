@@ -21,12 +21,14 @@ public class IdentityController {
         this.identityAppService = identityAppService;
     }
 
+    @CrossOrigin
     @PostMapping("/sign-up")
     @ResponseStatus(value = HttpStatus.CREATED)
     public SignUpResponse SignUp(@RequestBody SignUpRequest signUpRequest) {
         return identityAppService.signup(signUpRequest);
     }
 
+    @CrossOrigin
     @PostMapping("/log-in")
     @ResponseStatus(value = HttpStatus.OK)
     public LogInResponse LogIn(@RequestBody LogInRequest logInRequest) {

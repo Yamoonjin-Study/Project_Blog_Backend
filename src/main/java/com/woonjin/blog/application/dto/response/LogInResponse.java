@@ -15,9 +15,11 @@ public class LogInResponse {
 
     private String responseMessage;
 
+    private String token;
+
     private User user;
 
-    public static LogInResponse of(String responseMessage, User user) {
-        return new LogInResponse(responseMessage, user);
+    public static LogInResponse of(String responseMessage, String token, User user) {
+        return new LogInResponse(responseMessage, token, user);
     }
 }

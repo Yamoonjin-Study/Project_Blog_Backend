@@ -2,6 +2,7 @@ package com.woonjin.blog.application.service;
 
 import com.woonjin.blog.application.dto.request.LogInRequest;
 import com.woonjin.blog.application.dto.request.SignUpRequest;
+import com.woonjin.blog.application.dto.response.LogInCheckResponse;
 import com.woonjin.blog.application.dto.response.LogInResponse;
 import com.woonjin.blog.application.dto.response.LogOutResponse;
 import com.woonjin.blog.application.dto.response.WithdrawalResponse;
@@ -12,6 +13,7 @@ import com.woonjin.blog.domain.entity.User.RoleType;
 import com.woonjin.blog.domain.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,11 +40,13 @@ public class IdentityAppService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public User getAuthenticationUser(){
+    public User getAuthenticationUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-        Log.info("getAuthenticationUser : "+user.getEmail());
-        return this.userRepository.findByEmail(user.getEmail());
+        User authentiUser = (User) authentication.getPrincipal();
+        int id = authentiUser.getId();
+        User user = this.userRepository.findById(id);
+        this.Log.info("getAuthenticationUser : " + user);
+        return user;
     }
 
 
@@ -53,38 +57,46 @@ public class IdentityAppService {
             .findByEmail(logInRequest.getEmail());
 
         if (userLogin == null) {
-            Log.warning("Login Fail");
-            return LogInResponse.of("Login Fail", userLogin);
+            this.Log.warning("Login Fail");
+            return LogInResponse.of("Login Fail", null, null);
         } else {
-            if (!this.passwordEncoder.matches(logInRequest.getPassword(), userLogin.getPassword())) {
-                Log.warning("Login Fail");
-                return LogInResponse.of("Login Fail", userLogin);
+            if (!this.passwordEncoder.matches(logInRequest.getPassword(),
+                userLogin.getPassword())) {
+                this.Log.warning("Login Fail");
+                return LogInResponse.of("Login Fail", null, userLogin);
             } else {
 
                 List<RoleType> roles = new ArrayList<>();
                 roles.add(userLogin.getRole());
 
-                String token = this.jwtTokenProvider.createToken(String.valueOf(userLogin.getId()), roles);
+                String token = this.jwtTokenProvider.createToken(String.valueOf(userLogin.getId()),
+                    roles);
                 Authentication authentication = this.jwtTokenProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                Log.info("Login Success and token : " + token + " email : " + getAuthenticationUser().getEmail());
-                return LogInResponse.of("Login Success", userLogin);
+                this.Log.info("Login Success and token : " + token + " user : "
+                    + getAuthenticationUser());
+                return LogInResponse.of("Login Success", token, userLogin);
             }
+        }
+    }
+
+    public LogInCheckResponse loginCheck(String token) {
+        boolean isLogin = this.jwtTokenProvider.validateToken(token);
+        this.Log.info("isLogin : " + isLogin);
+        if(isLogin == true){
+            return LogInCheckResponse.of("IsLogin");
+        }else{
+            return LogInCheckResponse.of("IsNotLogin");
         }
     }
 
     @Transactional
     public LogOutResponse logout() {
-        User userLogout = this.getAuthenticationUser();
-
-        userLogout.inactivate(userLogout);
-        this.userRepository.save(userLogout);
-
         SecurityContextHolder.getContext().setAuthentication(null);
 
-        Log.info("Logout Success " + userLogout);
-        return LogOutResponse.of("Logout Success", userLogout);
+        this.Log.info("Logout Success");
+        return LogOutResponse.of("Logout Success");
     }
 
     @Transactional
@@ -102,11 +114,11 @@ public class IdentityAppService {
                 )
             );
 
-            Log.info("Signup Success");
+            this.Log.info("Signup Success");
             return SignUpResponse.of("Signup Success", signUpRequest);
         } else {
 
-            Log.warning("Signup Fail");
+            this.Log.warning("Signup Fail");
             return SignUpResponse.of("Signup Fail", signUpRequest);
         }
     }
@@ -118,7 +130,7 @@ public class IdentityAppService {
 
         SecurityContextHolder.getContext().setAuthentication(null);
 
-        Log.info("Withdrawal Success");
+        this.Log.info("Withdrawal Success");
         return WithdrawalResponse.of("Withdrawal Success", withdrawalUser);
     }
 }

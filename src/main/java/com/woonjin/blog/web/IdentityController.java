@@ -1,5 +1,7 @@
 package com.woonjin.blog.web;
 
+import com.woonjin.blog.application.dto.request.LogInCheckRequest;
+import com.woonjin.blog.application.dto.response.LogInCheckResponse;
 import com.woonjin.blog.application.dto.response.LogInResponse;
 import com.woonjin.blog.application.dto.response.LogOutResponse;
 import com.woonjin.blog.application.dto.response.WithdrawalResponse;
@@ -25,25 +27,33 @@ public class IdentityController {
     @PostMapping("/sign-up")
     @ResponseStatus(value = HttpStatus.CREATED)
     public SignUpResponse SignUp(@RequestBody SignUpRequest signUpRequest) {
-        return identityAppService.signup(signUpRequest);
+        return this.identityAppService.signup(signUpRequest);
     }
 
     @CrossOrigin
     @PostMapping("/log-in")
     @ResponseStatus(value = HttpStatus.OK)
     public LogInResponse LogIn(@RequestBody LogInRequest logInRequest) {
-        return identityAppService.login(logInRequest);
+        return this.identityAppService.login(logInRequest);
     }
 
-    @PutMapping("/log-out")
+    @CrossOrigin
+    @PostMapping("/log-in/check")
+    @ResponseStatus(value = HttpStatus.OK)
+    public LogInCheckResponse LogInCheck(@RequestBody LogInCheckRequest token) {
+        return this.identityAppService.loginCheck(token.getToken());
+    }
+
+    @CrossOrigin
+    @GetMapping("/log-out")
     @ResponseStatus(value = HttpStatus.OK)
     public LogOutResponse LogOut() {
-        return identityAppService.logout();
+        return this.identityAppService.logout();
     }
 
     @PostMapping("/withdrawal")
     @ResponseStatus(value = HttpStatus.OK)
     public WithdrawalResponse Withdrawal() {
-        return identityAppService.withdrawal();
+        return this.identityAppService.withdrawal();
     }
 }

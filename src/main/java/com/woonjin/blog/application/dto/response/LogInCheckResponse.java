@@ -1,5 +1,6 @@
 package com.woonjin.blog.application.dto.response;
 
+import com.woonjin.blog.domain.entity.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,11 +11,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LogOutResponse {
+public class LogInCheckResponse {
 
     private String responseMessage;
 
-    public static LogOutResponse of(String responseMessage) {
-        return new LogOutResponse(responseMessage);
+    public static LogInCheckResponse of(String responseMessage) {
+        return new LogInCheckResponse(responseMessage);
     }
 }

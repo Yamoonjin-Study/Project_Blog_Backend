@@ -13,14 +13,13 @@ import com.woonjin.blog.domain.entity.User.RoleType;
 import com.woonjin.blog.domain.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 
 @Service
 public class IdentityAppService {
@@ -40,15 +39,15 @@ public class IdentityAppService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    @Transactional
     public User getAuthenticationUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User authentiUser = (User) authentication.getPrincipal();
         int id = authentiUser.getId();
         User user = this.userRepository.findById(id);
-        this.Log.info("getAuthenticationUser : " + user);
+        Log.info("getAuthenticationUser : " + user);
         return user;
     }
-
 
     @Transactional
     public LogInResponse login(LogInRequest logInRequest) {
@@ -57,12 +56,12 @@ public class IdentityAppService {
             .findByEmail(logInRequest.getEmail());
 
         if (userLogin == null) {
-            this.Log.warning("Login Fail");
+            Log.warning("Login Fail");
             return LogInResponse.of("Login Fail", null, null);
         } else {
             if (!this.passwordEncoder.matches(logInRequest.getPassword(),
                 userLogin.getPassword())) {
-                this.Log.warning("Login Fail");
+                Log.warning("Login Fail");
                 return LogInResponse.of("Login Fail", null, userLogin);
             } else {
 
@@ -73,8 +72,9 @@ public class IdentityAppService {
                     roles);
                 Authentication authentication = this.jwtTokenProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                this.Log.info("Login Success and token : " + token + " user : "
+                Log.info(
+                    "이름 : " + SecurityContextHolder.getContext().getAuthentication().getName());
+                Log.info("Login Success and token : " + token + " user : "
                     + getAuthenticationUser());
                 return LogInResponse.of("Login Success", token, userLogin);
             }
@@ -82,13 +82,12 @@ public class IdentityAppService {
     }
 
     public LogInCheckResponse loginCheck(String token) {
-        boolean isLogin = this.jwtTokenProvider.validateToken(token);
-        this.Log.info("isLogin : " + isLogin);
-        if(isLogin == true){
-            return LogInCheckResponse.of("IsLogin");
-        }else{
-            return LogInCheckResponse.of("IsNotLogin");
+        if (this.jwtTokenProvider.validateToken(token) == true) {
+            return LogInCheckResponse.of(true, "IsLogin");
+        } else {
+            return LogInCheckResponse.of(false, "IsNotLogin");
         }
+
     }
 
     @Transactional
@@ -133,4 +132,11 @@ public class IdentityAppService {
         this.Log.info("Withdrawal Success");
         return WithdrawalResponse.of("Withdrawal Success", withdrawalUser);
     }
+
+    @Transactional(readOnly = true)
+    public User showUserInfo(int id) {
+        User userFindById = this.userRepository.findById(id);
+        return userFindById;
+    }
 }
+

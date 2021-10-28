@@ -3,6 +3,7 @@ package com.woonjin.blog.config.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -36,7 +37,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // jwt token으로 인증할것이므로 세션필요없으므로 생성안함.
 //            .and()
             .authorizeRequests() // 다음 리퀘스트에 대한 사용권한 체크
-            .antMatchers("/log-in", "/log-out", "/sign-up", "/withdrawal", "/log-in/check").permitAll() // 가입 및 인증 주소는 누구나 접근가능
+            .antMatchers("/log-in", "/sign-up","/log-out").permitAll() // 가입 및 인증 주소는 누구나 접근가능
+            .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()//OPTIONS 메소드는 모두 접근 가능
             .anyRequest().hasRole("USER") // 그외 나머지 요청은 모두 인증된 회원만 접근 가능
             .and()
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class); // jwt token 필터를 id/password 인증 필터 전에 넣어라.

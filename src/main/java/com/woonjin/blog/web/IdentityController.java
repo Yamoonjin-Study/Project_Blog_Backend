@@ -9,9 +9,15 @@ import com.woonjin.blog.application.dto.response.SignUpResponse;
 import com.woonjin.blog.application.service.IdentityAppService;
 import com.woonjin.blog.application.dto.request.LogInRequest;
 import com.woonjin.blog.application.dto.request.SignUpRequest;
+import com.woonjin.blog.domain.entity.User;
 import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Api(tags = {"1. IdentityApp Service"})
@@ -23,37 +29,33 @@ public class IdentityController {
         this.identityAppService = identityAppService;
     }
 
-    @CrossOrigin
     @PostMapping("/sign-up")
-    @ResponseStatus(value = HttpStatus.CREATED)
     public SignUpResponse SignUp(@RequestBody SignUpRequest signUpRequest) {
         return this.identityAppService.signup(signUpRequest);
     }
 
-    @CrossOrigin
     @PostMapping("/log-in")
-    @ResponseStatus(value = HttpStatus.OK)
     public LogInResponse LogIn(@RequestBody LogInRequest logInRequest) {
         return this.identityAppService.login(logInRequest);
     }
 
-    @CrossOrigin
     @PostMapping("/log-in/check")
-    @ResponseStatus(value = HttpStatus.OK)
     public LogInCheckResponse LogInCheck(@RequestBody LogInCheckRequest token) {
         return this.identityAppService.loginCheck(token.getToken());
     }
 
-    @CrossOrigin
     @GetMapping("/log-out")
-    @ResponseStatus(value = HttpStatus.OK)
     public LogOutResponse LogOut() {
         return this.identityAppService.logout();
     }
 
     @PostMapping("/withdrawal")
-    @ResponseStatus(value = HttpStatus.OK)
     public WithdrawalResponse Withdrawal() {
         return this.identityAppService.withdrawal();
+    }
+
+    @GetMapping("/userinfo/{id}")
+    public User ShowUserInfo(@PathVariable int id){
+        return this.identityAppService.showUserInfo(id);
     }
 }

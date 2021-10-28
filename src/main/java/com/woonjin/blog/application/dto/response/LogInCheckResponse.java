@@ -13,9 +13,10 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LogInCheckResponse {
 
+    private Boolean isLogin;
     private String responseMessage;
 
-    public static LogInCheckResponse of(String responseMessage) {
-        return new LogInCheckResponse(responseMessage);
+    public static LogInCheckResponse of(Boolean isLogin, String responseMessage) {
+        return new LogInCheckResponse(isLogin, responseMessage);
     }
 }

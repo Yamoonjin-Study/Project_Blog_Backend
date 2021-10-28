@@ -2,6 +2,7 @@ package com.woonjin.blog.web;
 
 import com.woonjin.blog.application.dto.request.WriteGuestBookRequest;
 import com.woonjin.blog.application.dto.response.ActivateBlogResponse;
+import com.woonjin.blog.application.dto.response.BlogCheckResponse;
 import com.woonjin.blog.application.dto.response.CreateBlogResponse;
 import com.woonjin.blog.application.dto.response.DeleteBlogResponse;
 import com.woonjin.blog.application.dto.response.GuestBookListResponse;
@@ -16,6 +17,7 @@ import com.woonjin.blog.application.dto.request.CreateBlogRequest;
 import com.woonjin.blog.application.dto.request.UpdateBlogRequest;
 import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,20 +37,29 @@ public class BlogController {
         this.blogService = blogService;
     }
 
+    @CrossOrigin
     @GetMapping("/blog-search/{name}")
     @ResponseStatus(value = HttpStatus.OK)
     public SearchBlogResponse SearchBlog(@PathVariable String name) {
-        return blogService.searchBlog(name);
+        return this.blogService.searchBlog(name);
     }
 
+    @CrossOrigin
+    @GetMapping("/blog/myBlog")
+    @ResponseStatus(value = HttpStatus.OK)
+    public BlogCheckResponse findBlogName() {
+        return this.blogService.checkBlogUser();
+    }
+
+    @CrossOrigin
     @GetMapping("/blog/{name}")
     @ResponseStatus(value = HttpStatus.OK)
     public ShowBlogResponse ShowBlog(@PathVariable String name) {
 
         //해당 블로그의 방문자에 기록 저장
-        blogService.addVisitors(name);
+        this.blogService.addVisitors(name);
 
-        return blogService.showBlog(name);
+        return this.blogService.showBlog(name);
     }
 
     @PostMapping("/create-blog")

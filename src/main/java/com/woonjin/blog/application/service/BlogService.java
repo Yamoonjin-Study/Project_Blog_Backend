@@ -4,6 +4,7 @@ import com.woonjin.blog.application.dto.request.CreateBlogRequest;
 import com.woonjin.blog.application.dto.request.UpdateBlogRequest;
 import com.woonjin.blog.application.dto.request.WriteGuestBookRequest;
 import com.woonjin.blog.application.dto.response.ActivateBlogResponse;
+import com.woonjin.blog.application.dto.response.BlogCheckResponse;
 import com.woonjin.blog.application.dto.response.CreateBlogResponse;
 import com.woonjin.blog.application.dto.response.DeleteBlogResponse;
 import com.woonjin.blog.application.dto.response.GuestBookList;
@@ -32,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BlogService {
+
     private final IdentityAppService identityAppService;
     private final BlogRepository blogRepository;
     private final VisitorRepository visitorRepository;
@@ -51,6 +53,17 @@ public class BlogService {
         this.visitorRepository = visitorRepository;
         this.guestBookRepository = guestBookRepository;
         this.userRepository = userRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public BlogCheckResponse checkBlogUser() {
+        User user = this.identityAppService.getAuthenticationUser();
+        Blog blog = this.blogRepository.findByUser_Id(user.getId());
+        if(blog == null){
+            return BlogCheckResponse.of(false, "null");
+        }else{
+            return BlogCheckResponse.of(true,blog.getName());
+        }
     }
 
     @Transactional(readOnly = true)
@@ -75,7 +88,7 @@ public class BlogService {
 
     @Transactional
     public CreateBlogResponse createBlog(CreateBlogRequest createBlogRequest) {
-        User user = identityAppService.getAuthenticationUser();
+        User user = this.identityAppService.getAuthenticationUser();
 
         Blog createBlog = this.blogRepository.save(
             Blog.of(
@@ -95,7 +108,7 @@ public class BlogService {
 
     @Transactional
     public UpdateBlogResponse updateBlog(UpdateBlogRequest updateBlogRequest) {
-        User user = identityAppService.getAuthenticationUser();
+        User user = this.identityAppService.getAuthenticationUser();
         Blog updateBlog = this.blogRepository.findByUser_Id(user.getId());
 
         updateBlog.setName(updateBlogRequest.getName());
@@ -113,7 +126,7 @@ public class BlogService {
 
     @Transactional
     public ActivateBlogResponse activateBlog() {
-        User user = identityAppService.getAuthenticationUser();
+        User user = this.identityAppService.getAuthenticationUser();
         Blog activateBlog = this.blogRepository.findByUser_Id(user.getId());
         activateBlog.activate(activateBlog);
         this.blogRepository.save(activateBlog);
@@ -124,7 +137,7 @@ public class BlogService {
 
     @Transactional
     public InactivateBlogResponse inactivateBlog() {
-        User user = identityAppService.getAuthenticationUser();
+        User user = this.identityAppService.getAuthenticationUser();
         Blog inactivateBlog = this.blogRepository.findByUser_Id(user.getId());
 
         inactivateBlog.inactivate(inactivateBlog);
@@ -137,7 +150,7 @@ public class BlogService {
 
     @Transactional
     public DeleteBlogResponse deleteBlog() {
-        User user = identityAppService.getAuthenticationUser();
+        User user = this.identityAppService.getAuthenticationUser();
         Blog blog = this.blogRepository.findByUser_Id(user.getId());
 
         this.blogRepository.delete(blog);
@@ -151,7 +164,7 @@ public class BlogService {
         Visitor addVisitor = new Visitor();
 
         addVisitor.setBlog(this.blogRepository.findByName(name));
-        addVisitor.setUser(identityAppService.getAuthenticationUser());
+        addVisitor.setUser(this.identityAppService.getAuthenticationUser());
 
         this.visitorRepository.save(addVisitor);
     }

@@ -14,6 +14,7 @@ import com.woonjin.blog.domain.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,8 +43,8 @@ public class IdentityAppService {
     @Transactional
     public User getAuthenticationUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User authentiUser = (User) authentication.getPrincipal();
-        int id = authentiUser.getId();
+        User authUser = (User) authentication.getPrincipal();
+        int id = authUser.getId();
         User user = this.userRepository.findById(id);
         Log.info("getAuthenticationUser : " + user);
         return user;

@@ -37,21 +37,18 @@ public class BlogController {
         this.blogService = blogService;
     }
 
-    @CrossOrigin
     @GetMapping("/blog-search/{name}")
     @ResponseStatus(value = HttpStatus.OK)
     public SearchBlogResponse SearchBlog(@PathVariable String name) {
         return this.blogService.searchBlog(name);
     }
 
-    @CrossOrigin
     @GetMapping("/blog/myBlog")
     @ResponseStatus(value = HttpStatus.OK)
     public BlogCheckResponse findBlogName() {
         return this.blogService.checkBlogUser();
     }
 
-    @CrossOrigin
     @GetMapping("/blog/{name}")
     @ResponseStatus(value = HttpStatus.OK)
     public ShowBlogResponse ShowBlog(@PathVariable String name) {

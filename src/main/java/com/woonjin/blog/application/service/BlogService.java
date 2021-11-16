@@ -27,6 +27,7 @@ import com.woonjin.blog.domain.repository.VisitorRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -59,10 +60,10 @@ public class BlogService {
     public BlogCheckResponse checkBlogUser() {
         User user = this.identityAppService.getAuthenticationUser();
         Blog blog = this.blogRepository.findByUser_Id(user.getId());
-        if(blog == null){
+        if (blog == null) {
             return BlogCheckResponse.of(false, "null");
-        }else{
-            return BlogCheckResponse.of(true,blog.getName());
+        } else {
+            return BlogCheckResponse.of(true, blog.getName());
         }
     }
 

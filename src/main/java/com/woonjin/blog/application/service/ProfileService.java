@@ -13,6 +13,7 @@ import com.woonjin.blog.domain.repository.BusinessCardRepository;
 import com.woonjin.blog.domain.repository.PortfolioRepository;
 import com.woonjin.blog.domain.repository.ResumeRepository;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 @Service

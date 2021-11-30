@@ -59,7 +59,11 @@ public class Blog {
 
     @Column(nullable = false)
     @ColumnDefault("1")
-    private int design_form;
+    private int main_content;
+
+    @Column(nullable = false)
+    @ColumnDefault("1")
+    private int menu_design;
 
     @Enumerated(value = EnumType.STRING)
     private Category category;
@@ -83,7 +87,8 @@ public class Blog {
         String icon,
         Status status,
         String logo_image,
-        int design_form,
+        int main_content,
+        int menu_design,
         Category category,
         User user
     ) {
@@ -92,7 +97,8 @@ public class Blog {
         this.icon = icon;
         this.status = status;
         this.logo_image = logo_image;
-        this.design_form = design_form;
+        this.main_content = main_content;
+        this.menu_design = menu_design;
         this.category = category;
         this.user = user;
     }
@@ -103,7 +109,8 @@ public class Blog {
         String icon,
         Status status,
         String logo_image,
-        int design_form,
+        int main_content,
+        int menu_design,
         Category category,
         User user
     ) {
@@ -113,7 +120,8 @@ public class Blog {
             icon,
             status,
             logo_image,
-            design_form,
+            main_content,
+            menu_design,
             category,
             user
         );

@@ -24,13 +24,17 @@ import com.woonjin.blog.domain.repository.BlogRepository;
 import com.woonjin.blog.domain.repository.GuestBookRepository;
 import com.woonjin.blog.domain.repository.UserRepository;
 import com.woonjin.blog.domain.repository.VisitorRepository;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class BlogService {
@@ -98,13 +102,59 @@ public class BlogService {
                 createBlogRequest.getIcon(),
                 Blog.Status.ACTIVE,
                 createBlogRequest.getLogo_image(),
-                createBlogRequest.getDesign_form(),
+                createBlogRequest.getMain_content(),
+                createBlogRequest.getMenu_design(),
                 createBlogRequest.getCategory(),
                 user
             )
         );
+
         Log.info("Create Blog Success");
         return CreateBlogResponse.of("Create Blog Success", createBlog);
+    }
+
+    @Transactional
+    public String saveFile(int id, MultipartFile icon, MultipartFile logo) throws IOException {
+
+        if(icon == null || icon.isEmpty() || logo == null || logo.isEmpty()){
+            Log.info("Save File Fail");
+            return "file is empty";
+        }else{
+            String uploadIconFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/iconImages/";
+            String uploadLogoFilePath1 = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/logoImages/";
+
+            String prefix1 = icon.getOriginalFilename().substring(icon.getOriginalFilename().lastIndexOf("."));
+            String filename1 = UUID.randomUUID().toString().replaceAll("-", "") + prefix1;
+
+//            File folder = new File(uploadFilePath);
+//            if(!folder.isDirectory()){
+//                folder.mkdirs();
+//            }
+
+            String pathname1 = uploadIconFilePath + filename1;
+            File dest1 = new File(pathname1);
+            icon.transferTo(dest1);
+
+            String prefix2 = logo.getOriginalFilename().substring(logo.getOriginalFilename().lastIndexOf("."));
+            String filename2 = UUID.randomUUID().toString().replaceAll("-", "") + prefix2;
+            String pathname2 = uploadLogoFilePath1 + filename2;
+            File dest2 = new File(pathname2);
+            logo.transferTo(dest2);
+
+            Blog blog = this.blogRepository.findById(id);
+            String iconImgSrc = "/resources/iconImages/";
+            String logoImgSrc = "/resources/logoImages/";
+            blog.setIcon(iconImgSrc+filename1);
+            blog.setLogo_image(logoImgSrc+filename2);
+            System.out.println(blog.getIcon() + "/"+blog.getLogo_image());
+
+            this.blogRepository.save(blog);
+
+            Log.info("Save File Success");
+            return "files are saved";
+        }
+
+
     }
 
     @Transactional
@@ -116,7 +166,8 @@ public class BlogService {
         updateBlog.setIcon(updateBlogRequest.getIcon());
         updateBlog.setInfo(updateBlogRequest.getInfo());
         updateBlog.setLogo_image(updateBlogRequest.getLogo_image());
-        updateBlog.setDesign_form(updateBlogRequest.getDesign_form());
+        updateBlog.setMain_content(updateBlogRequest.getMain_content());
+        updateBlog.setMenu_design(updateBlogRequest.getMenu_design());
         updateBlog.setCategory(updateBlogRequest.getCategory());
 
         this.blogRepository.save(updateBlog);

@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface BlogRepository extends JpaRepository<Blog, Integer> {
 
+    Blog findById(int id);
+
     Blog findByUser_Id(int id);
 
     Blog findByName(String name);

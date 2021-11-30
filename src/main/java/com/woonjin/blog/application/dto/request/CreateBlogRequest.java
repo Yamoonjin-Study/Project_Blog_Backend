@@ -14,7 +14,9 @@ public class CreateBlogRequest {
 
     private String logo_image;
 
-    private int design_form;
+    private int main_content;
+
+    private int menu_design;
 
     private Category category;
 }

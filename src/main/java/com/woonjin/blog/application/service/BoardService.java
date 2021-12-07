@@ -109,6 +109,11 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
+    public List<Board> showBoardList() {
+        return this.boardRepository.findByUser(this.identityAppService.getAuthenticationUser());
+    }
+
+    @Transactional(readOnly = true)
     public ShowBoardResponse showBoard(int id) {
         return ShowBoardResponse.of(
             this.boardRepository.findById(id),

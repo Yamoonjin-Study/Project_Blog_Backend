@@ -22,7 +22,6 @@ import com.woonjin.blog.domain.entity.User;
 import com.woonjin.blog.domain.entity.Visitor;
 import com.woonjin.blog.domain.repository.BlogRepository;
 import com.woonjin.blog.domain.repository.GuestBookRepository;
-import com.woonjin.blog.domain.repository.UserRepository;
 import com.woonjin.blog.domain.repository.VisitorRepository;
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -43,21 +41,18 @@ public class BlogService {
     private final BlogRepository blogRepository;
     private final VisitorRepository visitorRepository;
     private final GuestBookRepository guestBookRepository;
-    private final UserRepository userRepository;
     private final static Logger Log = Logger.getGlobal();
 
     public BlogService(
         IdentityAppService identityAppService,
         BlogRepository blogRepository,
         VisitorRepository visitorRepository,
-        GuestBookRepository guestBookRepository,
-        UserRepository userRepository
+        GuestBookRepository guestBookRepository
     ) {
         this.identityAppService = identityAppService;
         this.blogRepository = blogRepository;
         this.visitorRepository = visitorRepository;
         this.guestBookRepository = guestBookRepository;
-        this.userRepository = userRepository;
     }
 
     @Transactional(readOnly = true)

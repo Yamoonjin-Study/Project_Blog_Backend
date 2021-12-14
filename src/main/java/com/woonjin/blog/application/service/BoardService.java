@@ -4,16 +4,19 @@ import com.woonjin.blog.application.dto.request.BoardRequest;
 import com.woonjin.blog.application.dto.request.ReplyRequest;
 import com.woonjin.blog.application.dto.response.ShowBoardResponse;
 import com.woonjin.blog.application.dto.response.WriteBoardResponse;
+import com.woonjin.blog.domain.entity.Blog;
 import com.woonjin.blog.domain.entity.Board;
 import com.woonjin.blog.domain.entity.Category;
 import com.woonjin.blog.domain.entity.Like;
 import com.woonjin.blog.domain.entity.Reply;
 import com.woonjin.blog.domain.entity.User;
+import com.woonjin.blog.domain.repository.BlogRepository;
 import com.woonjin.blog.domain.repository.BoardRepository;
 import com.woonjin.blog.domain.repository.CategoryRepository;
 import com.woonjin.blog.domain.repository.LikeRepository;
 import com.woonjin.blog.domain.repository.ReplyRepository;
 import com.woonjin.blog.domain.repository.UserRepository;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -26,6 +29,7 @@ public class BoardService {
 
     private final IdentityAppService identityAppService;
     private final UserRepository userRepository;
+    private final BlogRepository blogRepository;
     private final BoardRepository boardRepository;
     private final ReplyRepository replyRepository;
     private final CategoryRepository categoryRepository;
@@ -35,6 +39,7 @@ public class BoardService {
     public BoardService(
         IdentityAppService identityAppService,
         UserRepository userRepository,
+        BlogRepository blogRepository,
         BoardRepository boardRepository,
         ReplyRepository replyRepository,
         CategoryRepository categoryRepository,
@@ -42,6 +47,7 @@ public class BoardService {
     ) {
         this.identityAppService = identityAppService;
         this.userRepository = userRepository;
+        this.blogRepository = blogRepository;
         this.boardRepository = boardRepository;
         this.replyRepository = replyRepository;
         this.categoryRepository = categoryRepository;
@@ -56,7 +62,7 @@ public class BoardService {
         int x = 0;
         int y = 0;
         int z = 0;
-        List<Board> boardsWithWriter = this.boardRepository.findByUser(user);
+        List<Board> boardsWithWriter = this.boardRepository.findByUserOrderByCreateDateDesc(user);
         List<Board> boardsWithTitle = this.searchBoardWithTitle(words);
         List<Board> boardsWithContent = this.searchBoardWithContents(words);
 
@@ -105,16 +111,23 @@ public class BoardService {
     @Transactional(readOnly = true)
     public List<Board> searchBoardWithWriter(String writer) {
         User user = this.userRepository.findByNickname(writer);
-        return this.boardRepository.findByUser(user);
+        return this.boardRepository.findByUserOrderByCreateDateDesc(user);
     }
 
     @Transactional(readOnly = true)
-    public List<Board> showBoardList() {
-        return this.boardRepository.findByUser(this.identityAppService.getAuthenticationUser());
+    public List<Board> showBoardList(String blog_name) {
+        Blog blog = this.blogRepository.findByName(blog_name);
+        User user = this.userRepository.findById(blog.getUser().getId());
+
+        return this.boardRepository.findByUserOrderByCreateDateDesc(user);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public ShowBoardResponse showBoard(int id) {
+        Board board = this.boardRepository.findById(id);
+        board.setCount(board.getCount()+1);
+        this.boardRepository.save(board);
+
         return ShowBoardResponse.of(
             this.boardRepository.findById(id),
             this.likeRepository.findByBoard(this.boardRepository.findById(id)),

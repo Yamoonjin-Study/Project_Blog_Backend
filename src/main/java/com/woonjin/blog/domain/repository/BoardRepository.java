@@ -13,5 +13,5 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
 
     List<Board> findByTitleContaining(String title);
 
-    List<Board> findByUser(User writer);
+    List<Board> findByUserOrderByCreateDateDesc(User writer);
 }

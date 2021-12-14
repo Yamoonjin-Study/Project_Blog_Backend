@@ -52,9 +52,9 @@ public class BoardController {
         return this.boardService.searchBoardWithTitle(title);
     }
 
-    @GetMapping("/board-list")
-    public List<Board> showBoardList(){
-        return this.boardService.showBoardList();
+    @GetMapping("/board-list/{blog_name}")
+    public List<Board> showBoardList(@PathVariable String blog_name){
+        return this.boardService.showBoardList(blog_name);
     }
 
     @GetMapping("/show-board/{id}")

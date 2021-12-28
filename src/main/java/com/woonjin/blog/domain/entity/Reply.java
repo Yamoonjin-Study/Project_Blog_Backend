@@ -47,7 +47,7 @@ public class Reply {
     private List<Like> likes;
 
     @CreationTimestamp
-    private Timestamp post_date;
+    private Timestamp postDate;
 
     @Column(nullable = false)
     private String content;

@@ -2,6 +2,7 @@ package com.woonjin.blog.application.service;
 
 import com.woonjin.blog.application.dto.request.BoardRequest;
 import com.woonjin.blog.application.dto.request.ReplyRequest;
+import com.woonjin.blog.application.dto.request.UpdateReplyRequest;
 import com.woonjin.blog.application.dto.response.ShowBoardResponse;
 import com.woonjin.blog.application.dto.response.WriteBoardResponse;
 import com.woonjin.blog.domain.entity.Blog;
@@ -131,7 +132,7 @@ public class BoardService {
         return ShowBoardResponse.of(
             this.boardRepository.findById(id),
             this.likeRepository.findByBoard(this.boardRepository.findById(id)),
-            this.replyRepository.findByBoard(this.boardRepository.findById(id)),
+            this.replyRepository.findByBoardOrderByPostDateDesc(this.boardRepository.findById(id)),
             "Show Board Success");
     }
 
@@ -177,9 +178,8 @@ public class BoardService {
     }
 
     @Transactional
-    public Board updateBoard(BoardRequest boardRequest) {
-        int boardId = this.boardRepository.findByTitle(boardRequest.getTitle()).getId();
-        Board updateBoard = this.boardRepository.findById(boardId);
+    public Board updateBoard(BoardRequest boardRequest, int id) {
+        Board updateBoard = this.boardRepository.findById(id);
 
         updateBoard.setTitle(boardRequest.getTitle());
         updateBoard.setContent(boardRequest.getContent());
@@ -216,10 +216,11 @@ public class BoardService {
     }
 
     @Transactional
-    public void updateReply(int reply_id, ReplyRequest replyRequest) {
+    public void updateReply(int reply_id, UpdateReplyRequest replyRequest) {
         Reply updateReply = this.replyRepository.findById(reply_id);
 
         updateReply.setContent(replyRequest.getContent());
+        updateReply.setPostDate(replyRequest.getPost_date());
 
         this.replyRepository.save(updateReply);
 

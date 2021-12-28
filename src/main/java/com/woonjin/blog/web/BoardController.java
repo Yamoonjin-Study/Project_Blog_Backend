@@ -2,6 +2,7 @@ package com.woonjin.blog.web;
 
 import com.woonjin.blog.application.dto.request.BoardRequest;
 import com.woonjin.blog.application.dto.request.ReplyRequest;
+import com.woonjin.blog.application.dto.request.UpdateReplyRequest;
 import com.woonjin.blog.application.dto.response.ShowBoardResponse;
 import com.woonjin.blog.application.dto.response.WriteBoardResponse;
 import com.woonjin.blog.application.service.BoardService;
@@ -72,9 +73,9 @@ public class BoardController {
         this.boardService.deleteBoard(id);
     }
 
-    @PutMapping("/update-board")
-    public void updateBoard(@RequestBody BoardRequest boardRequest) {
-        this.boardService.updateBoard(boardRequest);
+    @PutMapping("/update-board/{id}")
+    public void updateBoard(@RequestBody BoardRequest boardRequest, @PathVariable int id) {
+        this.boardService.updateBoard(boardRequest, id);
     }
 
     @PostMapping("/write-reply")
@@ -88,8 +89,8 @@ public class BoardController {
     }
 
     @PutMapping("/update-reply/{reply_id}")
-    public void updateReply(@PathVariable int reply_id, @RequestBody ReplyRequest replyRequest) {
-        this.boardService.updateReply(reply_id, replyRequest);
+    public void updateReply(@PathVariable int reply_id, @RequestBody UpdateReplyRequest updateReplyRequest) {
+        this.boardService.updateReply(reply_id, updateReplyRequest);
     }
 
     @PostMapping("/like-board/{board_id}")

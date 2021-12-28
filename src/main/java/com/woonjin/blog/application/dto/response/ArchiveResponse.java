@@ -1,5 +1,6 @@
 package com.woonjin.blog.application.dto.response;
 
+import com.woonjin.blog.domain.entity.Archive;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,13 +11,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProfileResponse {
+public class ArchiveResponse {
 
     private String responseMessage;
 
-    private Object profile;
+    private Archive archive;
 
-    public static ProfileResponse of(String responseMessage, Object profile) {
-        return new ProfileResponse(responseMessage, profile);
+    public static ArchiveResponse of(String responseMessage, Archive archive) {
+        return new ArchiveResponse(responseMessage, archive);
     }
 }

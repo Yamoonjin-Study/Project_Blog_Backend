@@ -9,7 +9,7 @@ public interface ReplyRepository extends JpaRepository<Reply, Integer> {
 
     Reply findById(int id);
 
-    List<Reply> findByBoard(Board board);
+    List<Reply> findByBoardOrderByPostDateDesc(Board board);
 //
 //    List<Reply> findByTop_reply(int reply_id);
 }

@@ -45,7 +45,7 @@ public class Blog {
     @Column(nullable = true, length = 200)
     private String info;
 
-    @Column(nullable = true, length = 200)
+    @Column(nullable = true, length = 500)
     private String icon;
 
     @CreationTimestamp
@@ -54,7 +54,7 @@ public class Blog {
     @Enumerated(value = EnumType.STRING)
     private Status status;
 
-    @Column(name = "logo_image", length = 200)
+    @Column(name = "logo_image", length = 500)
     private String logo_image;
 
     @Column(nullable = false)

@@ -26,8 +26,8 @@ import org.hibernate.annotations.CreationTimestamp;
 @Getter
 @Setter
 @Entity
-@Table(name = "business_cards")
-public class BusinessCard implements Serializable {
+@Table(name = "archives")
+public class Archive implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +39,9 @@ public class BusinessCard implements Serializable {
     @Column(nullable = false, length = 255)
     private String title;
 
+    @Column(nullable = true, length = 500)
+    private String file;
+
     @CreationTimestamp
     private Timestamp createDate;
 
@@ -49,38 +52,44 @@ public class BusinessCard implements Serializable {
     private int count;
 
     @OneToOne
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_business_card_id"), unique = true, nullable = false)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_portfolio_id"), unique = true, nullable = false)
     private User user;
 
-    private BusinessCard(
-        BusinessCard.Type type,
+    private Archive(
+        Archive.Type type,
         String content,
         String title,
+        String file,
         User user
     ) {
         this.type = type;
         this.content = content;
         this.title = title;
+        this.file = file;
         this.user = user;
     }
 
-    public static BusinessCard of(
-        BusinessCard.Type type,
+    public static Archive of(
+        Archive.Type type,
         String content,
         String title,
+        String file,
         User user
     ) {
-        return new BusinessCard(
+        return new Archive(
             type,
             content,
             title,
+            file,
             user
         );
     }
 
     @Getter
     public enum Type {
-        BUSINESSCARD("BUSINESSCARD");
+        PORTFOLIO("PORTFOLIO"),
+        RESUME("RESUME"),
+        BUSINESS_CARD("BUSINESS_CARD");
 
         private final String name;
 

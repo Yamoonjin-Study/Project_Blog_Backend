@@ -1,6 +1,7 @@
 package com.woonjin.blog.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.sql.Timestamp;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -33,12 +34,12 @@ public class Reply {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @JsonIgnore
+    @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", foreignKey = @ForeignKey(name = "fk_board_reply_id"), nullable = false)
     private Board board;
 
-    @JsonIgnore
+    @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reply_id", foreignKey = @ForeignKey(name = "fk_reply_reply_id"))
     private Reply reply;

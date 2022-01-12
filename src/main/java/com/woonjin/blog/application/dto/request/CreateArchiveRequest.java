@@ -9,7 +9,5 @@ public class CreateArchiveRequest {
 
     private String title;
 
-    private String file;
-
     private Type type;
 }

@@ -1,5 +1,6 @@
 package com.woonjin.blog.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import javax.persistence.Column;
@@ -40,7 +41,7 @@ public class Archive implements Serializable {
     private String title;
 
     @Column(nullable = true, length = 500)
-    private String file;
+    private String file_path;
 
     @CreationTimestamp
     private Timestamp createDate;
@@ -51,37 +52,38 @@ public class Archive implements Serializable {
     @ColumnDefault("0")
     private int count;
 
+    @JsonBackReference
     @OneToOne
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_portfolio_id"), unique = true, nullable = false)
-    private User user;
+    @JoinColumn(name = "blog_id", foreignKey = @ForeignKey(name = "fk_blog_archive_id"))
+    private Blog blog;
 
     private Archive(
         Archive.Type type,
         String content,
         String title,
-        String file,
-        User user
+        String file_path,
+        Blog blog
     ) {
         this.type = type;
         this.content = content;
         this.title = title;
-        this.file = file;
-        this.user = user;
+        this.file_path = file_path;
+        this.blog = blog;
     }
 
     public static Archive of(
         Archive.Type type,
         String content,
         String title,
-        String file,
-        User user
+        String file_path,
+        Blog blog
     ) {
         return new Archive(
             type,
             content,
             title,
-            file,
-            user
+            file_path,
+            blog
         );
     }
 

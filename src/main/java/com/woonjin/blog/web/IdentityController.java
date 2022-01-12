@@ -1,9 +1,12 @@
 package com.woonjin.blog.web;
 
 import com.woonjin.blog.application.dto.request.LogInCheckRequest;
+import com.woonjin.blog.application.dto.request.UpdateUserRequest;
+import com.woonjin.blog.application.dto.request.WithdrawalRequest;
 import com.woonjin.blog.application.dto.response.LogInCheckResponse;
 import com.woonjin.blog.application.dto.response.LogInResponse;
 import com.woonjin.blog.application.dto.response.LogOutResponse;
+import com.woonjin.blog.application.dto.response.UpdateUserResponse;
 import com.woonjin.blog.application.dto.response.WithdrawalResponse;
 import com.woonjin.blog.application.dto.response.SignUpResponse;
 import com.woonjin.blog.application.service.IdentityAppService;
@@ -49,9 +52,14 @@ public class IdentityController {
         return this.identityAppService.logout();
     }
 
+    @PostMapping("/update")
+    public UpdateUserResponse UpdateUser(@RequestBody UpdateUserRequest updateUserRequest) {
+        return this.identityAppService.updateUser(updateUserRequest);
+    }
+
     @PostMapping("/withdrawal")
-    public WithdrawalResponse Withdrawal() {
-        return this.identityAppService.withdrawal();
+    public WithdrawalResponse Withdrawal(@RequestBody WithdrawalRequest withdrawalRequest) {
+        return this.identityAppService.withdrawal(withdrawalRequest);
     }
 
     @GetMapping("/userinfo/{id}")

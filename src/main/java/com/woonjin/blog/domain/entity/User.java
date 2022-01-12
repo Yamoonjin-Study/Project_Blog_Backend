@@ -1,5 +1,6 @@
 package com.woonjin.blog.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.sql.Timestamp;
 
@@ -9,9 +10,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -59,6 +63,11 @@ public class User implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private Status status;
 
+    @JsonManagedReference
+    @OneToOne
+    @JoinColumn(name = "blog_id", foreignKey = @ForeignKey(name = "fk_blog_user_id"), unique = true)
+    private Blog blog;
+
     private User(
         String email,
         String password,
@@ -66,7 +75,8 @@ public class User implements UserDetails {
         String nick_name,
         String phone,
         Status status,
-        RoleType role
+        RoleType role,
+        Blog blog
     ) {
         this.email = email;
         this.password = password;
@@ -75,6 +85,7 @@ public class User implements UserDetails {
         this.phone = phone;
         this.status = status;
         this.role = role;
+        this.blog = blog;
     }
 
     public static User of(
@@ -84,7 +95,8 @@ public class User implements UserDetails {
         String nickname,
         String phone,
         Status status,
-        RoleType role
+        RoleType role,
+        Blog blog
     ) {
         return new User(
             email,
@@ -93,7 +105,8 @@ public class User implements UserDetails {
             nickname,
             phone,
             status,
-            role
+            role,
+            blog
         );
     }
 

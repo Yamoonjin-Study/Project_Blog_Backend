@@ -15,19 +15,8 @@ import com.woonjin.blog.application.dto.response.WriteGuestBookResponse;
 import com.woonjin.blog.application.service.BlogService;
 import com.woonjin.blog.application.dto.request.CreateBlogRequest;
 import com.woonjin.blog.application.dto.request.UpdateBlogRequest;
-import com.woonjin.blog.domain.entity.Blog;
-import com.woonjin.blog.domain.repository.BlogRepository;
 import io.swagger.annotations.Api;
-import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import javax.servlet.ServletContext;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +24,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -87,7 +75,8 @@ public class BlogController {
         @RequestPart(value = "icon") MultipartFile icon,
         @RequestPart(value = "logo_image") MultipartFile logo
     ) throws IOException {
-        System.out.println("컨트롤러 접근 / "+icon.getOriginalFilename()+", " +icon.getSize()+"/"+logo.getOriginalFilename()+", " +logo.getSize());
+        System.out.println("컨트롤러 접근 / " + icon.getOriginalFilename() + ", " + icon.getSize() + "/"
+            + logo.getOriginalFilename() + ", " + logo.getSize());
         return this.blogService.saveFile(id, icon, logo);
     }
 

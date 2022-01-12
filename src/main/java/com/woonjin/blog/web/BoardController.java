@@ -3,7 +3,10 @@ package com.woonjin.blog.web;
 import com.woonjin.blog.application.dto.request.BoardRequest;
 import com.woonjin.blog.application.dto.request.ReplyRequest;
 import com.woonjin.blog.application.dto.request.UpdateReplyRequest;
+import com.woonjin.blog.application.dto.response.LikeBoardResponse;
+import com.woonjin.blog.application.dto.response.LikeReplyResponse;
 import com.woonjin.blog.application.dto.response.ShowBoardResponse;
+import com.woonjin.blog.application.dto.response.ShowLikeReplyResponse;
 import com.woonjin.blog.application.dto.response.WriteBoardResponse;
 import com.woonjin.blog.application.service.BoardService;
 import com.woonjin.blog.domain.entity.Board;
@@ -54,7 +57,7 @@ public class BoardController {
     }
 
     @GetMapping("/board-list/{blog_name}")
-    public List<Board> showBoardList(@PathVariable String blog_name){
+    public List<Board> showBoardList(@PathVariable String blog_name) {
         return this.boardService.showBoardList(blog_name);
     }
 
@@ -89,13 +92,14 @@ public class BoardController {
     }
 
     @PutMapping("/update-reply/{reply_id}")
-    public void updateReply(@PathVariable int reply_id, @RequestBody UpdateReplyRequest updateReplyRequest) {
+    public void updateReply(@PathVariable int reply_id,
+        @RequestBody UpdateReplyRequest updateReplyRequest) {
         this.boardService.updateReply(reply_id, updateReplyRequest);
     }
 
-    @PostMapping("/like-board/{board_id}")
-    public void likeBoard(@PathVariable int board_id) {
-        this.boardService.likeBoard(board_id);
+    @GetMapping("/like-board/{board_id}")
+    public LikeBoardResponse likeBoard(@PathVariable int board_id) {
+        return this.boardService.likeBoard(board_id);
     }
 
     @DeleteMapping("/dislike-board/{board_id}")
@@ -103,9 +107,14 @@ public class BoardController {
         this.boardService.dislikeBoard(board_id);
     }
 
-    @PostMapping("/like-reply/{reply_id}")
-    public void likeReply(@PathVariable int reply_id) {
-        this.boardService.likeReply(reply_id);
+    @GetMapping("/show-like-reply/{reply_id}")
+    public ShowLikeReplyResponse showLikeReply(@PathVariable int reply_id) {
+        return this.boardService.showLikeReply(reply_id);
+    }
+
+    @GetMapping("/like-reply/{reply_id}")
+    public LikeReplyResponse likeReply(@PathVariable int reply_id) {
+        return this.boardService.likeReply(reply_id);
     }
 
     @DeleteMapping("/dislike-reply/{reply_id}")

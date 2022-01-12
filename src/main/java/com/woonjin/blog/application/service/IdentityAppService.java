@@ -2,15 +2,21 @@ package com.woonjin.blog.application.service;
 
 import com.woonjin.blog.application.dto.request.LogInRequest;
 import com.woonjin.blog.application.dto.request.SignUpRequest;
+import com.woonjin.blog.application.dto.request.UpdateUserRequest;
+import com.woonjin.blog.application.dto.request.WithdrawalRequest;
 import com.woonjin.blog.application.dto.response.LogInCheckResponse;
 import com.woonjin.blog.application.dto.response.LogInResponse;
 import com.woonjin.blog.application.dto.response.LogOutResponse;
+import com.woonjin.blog.application.dto.response.UpdateUserResponse;
 import com.woonjin.blog.application.dto.response.WithdrawalResponse;
 import com.woonjin.blog.application.dto.response.SignUpResponse;
 import com.woonjin.blog.config.security.JwtTokenProvider;
 import com.woonjin.blog.domain.entity.User;
 import com.woonjin.blog.domain.entity.User.RoleType;
+import com.woonjin.blog.domain.entity.User.Status;
+import com.woonjin.blog.domain.entity.Withdrawal;
 import com.woonjin.blog.domain.repository.UserRepository;
+import com.woonjin.blog.domain.repository.WithdrawalRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -25,16 +31,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class IdentityAppService {
 
     private final UserRepository userRepository;
+    private final WithdrawalRepository withdrawalRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final static Logger Log = Logger.getGlobal();
 
     public IdentityAppService(
         UserRepository userRepository,
+        WithdrawalRepository withdrawalRepository,
         PasswordEncoder passwordEncoder,
         JwtTokenProvider jwtTokenProvider
     ) {
         this.userRepository = userRepository;
+        this.withdrawalRepository = withdrawalRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -64,19 +73,22 @@ public class IdentityAppService {
                 Log.warning("Login Fail");
                 return LogInResponse.of("Login Fail", null, userLogin);
             } else {
+                if(userLogin.getStatus() == Status.INACTIVE){
+                    return LogInResponse.of("Login Fail", null, userLogin);
+                }else{
+                    List<RoleType> roles = new ArrayList<>();
+                    roles.add(userLogin.getRole());
 
-                List<RoleType> roles = new ArrayList<>();
-                roles.add(userLogin.getRole());
-
-                String token = this.jwtTokenProvider.createToken(String.valueOf(userLogin.getId()),
-                    roles);
-                Authentication authentication = this.jwtTokenProvider.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                Log.info(
-                    "이름 : " + SecurityContextHolder.getContext().getAuthentication().getName());
-                Log.info("Login Success and token : " + token + " user : "
-                    + getAuthenticationUser());
-                return LogInResponse.of("Login Success", token, userLogin);
+                    String token = this.jwtTokenProvider.createToken(String.valueOf(userLogin.getId()),
+                        roles);
+                    Authentication authentication = this.jwtTokenProvider.getAuthentication(token);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    Log.info(
+                        "이름 : " + SecurityContextHolder.getContext().getAuthentication().getName());
+                    Log.info("Login Success and token : " + token + " user : "
+                        + getAuthenticationUser());
+                    return LogInResponse.of("Login Success", token, userLogin);
+                }
             }
         }
     }
@@ -87,7 +99,6 @@ public class IdentityAppService {
         } else {
             return LogInCheckResponse.of(false, "IsNotLogin");
         }
-
     }
 
     @Transactional
@@ -108,8 +119,9 @@ public class IdentityAppService {
                     signUpRequest.getUsername(),
                     signUpRequest.getNickname(),
                     signUpRequest.getPhone(),
-                    User.Status.INACTIVE,
-                    User.RoleType.USER
+                    Status.ACTIVE,
+                    User.RoleType.USER,
+                    null
                 )
             );
 
@@ -123,14 +135,46 @@ public class IdentityAppService {
     }
 
     @Transactional
-    public WithdrawalResponse withdrawal() {
+    public UpdateUserResponse updateUser(UpdateUserRequest updateUserRequest) {
+        User user = this.getAuthenticationUser();
+        if (this.passwordEncoder.matches(updateUserRequest.getExistingPassword(), user.getPassword())) {
+            user.setEmail(updateUserRequest.getEmail());
+            user.setPassword(this.passwordEncoder.encode(updateUserRequest.getPassword()));
+            user.setUsername(updateUserRequest.getUsername());
+            user.setNickname(updateUserRequest.getNickname());
+            user.setPhone(updateUserRequest.getPhone());
+
+            this.userRepository.save(user);
+
+            this.Log.info("Update Success");
+            return UpdateUserResponse.of("Update Success", updateUserRequest);
+        } else {
+            this.Log.warning("Update Fail");
+            return UpdateUserResponse.of("Update Fail", updateUserRequest);
+        }
+    }
+
+    @Transactional
+    public WithdrawalResponse withdrawal(WithdrawalRequest withdrawalRequest) {
         User withdrawalUser = this.getAuthenticationUser();
-        this.userRepository.delete(withdrawalUser);
 
-        SecurityContextHolder.getContext().setAuthentication(null);
+        if (this.passwordEncoder.matches(withdrawalRequest.getPassword(), withdrawalUser.getPassword())){
+            Withdrawal withdrawal = new Withdrawal();
+            withdrawal.setReason(withdrawalRequest.getReason());
 
-        this.Log.info("Withdrawal Success");
-        return WithdrawalResponse.of("Withdrawal Success", withdrawalUser);
+            withdrawalUser.setStatus(Status.INACTIVE);
+
+            this.userRepository.save(withdrawalUser);
+            this.withdrawalRepository.save(withdrawal);
+
+            SecurityContextHolder.getContext().setAuthentication(null);
+
+            this.Log.info("Withdrawal Success");
+            return WithdrawalResponse.of("Withdrawal Success", withdrawalUser, withdrawal);
+        }else{
+            this.Log.info("Withdrawal Fail");
+            return WithdrawalResponse.of("Withdrawal Fail", withdrawalUser, null);
+        }
     }
 
     @Transactional(readOnly = true)

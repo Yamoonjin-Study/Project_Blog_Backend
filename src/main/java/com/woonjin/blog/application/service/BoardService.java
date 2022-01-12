@@ -3,7 +3,10 @@ package com.woonjin.blog.application.service;
 import com.woonjin.blog.application.dto.request.BoardRequest;
 import com.woonjin.blog.application.dto.request.ReplyRequest;
 import com.woonjin.blog.application.dto.request.UpdateReplyRequest;
+import com.woonjin.blog.application.dto.response.LikeBoardResponse;
+import com.woonjin.blog.application.dto.response.LikeReplyResponse;
 import com.woonjin.blog.application.dto.response.ShowBoardResponse;
+import com.woonjin.blog.application.dto.response.ShowLikeReplyResponse;
 import com.woonjin.blog.application.dto.response.WriteBoardResponse;
 import com.woonjin.blog.domain.entity.Blog;
 import com.woonjin.blog.domain.entity.Board;
@@ -132,7 +135,7 @@ public class BoardService {
         return ShowBoardResponse.of(
             this.boardRepository.findById(id),
             this.likeRepository.findByBoard(this.boardRepository.findById(id)),
-            this.replyRepository.findByBoardOrderByPostDateDesc(this.boardRepository.findById(id)),
+            this.replyRepository.findByBoardOrderByPostDateAsc(this.boardRepository.findById(id)),
             "Show Board Success");
     }
 
@@ -235,7 +238,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void likeBoard(int board_id) {
+    public LikeBoardResponse likeBoard(int board_id) {
         User user = this.identityAppService.getAuthenticationUser();
         Board board = this.boardRepository.findById(board_id);
         if (this.likeRepository.findByBoardAndUser(board, user) == null) {
@@ -248,8 +251,10 @@ public class BoardService {
             );
 
             Log.info("Like Board Success / " + like);
+            return LikeBoardResponse.of("Like Board Success", like);
         } else {
             Log.warning("Like Board Fail / reason : you already liked this board.");
+            return LikeBoardResponse.of("Like Board Fail", null);
         }
     }
 
@@ -267,7 +272,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void likeReply(int reply_id) {
+    public LikeReplyResponse likeReply(int reply_id) {
         User user = this.identityAppService.getAuthenticationUser();
         Reply reply = this.replyRepository.findById(reply_id);
         if (this.likeRepository.findByReplyAndUser(reply, user) == null) {
@@ -279,10 +284,20 @@ public class BoardService {
                 )
             );
 
-            Log.info("Like Board Success / " + like);
+            Log.info("Like Reply Success / " + like);
+            return LikeReplyResponse.of("Like Reply Success", like);
         } else {
-            Log.warning("Like Board Fail / reason : you already liked this board.");
+            Log.warning("Like Reply Fail / reason : you already liked this board.");
+            return LikeReplyResponse.of("Like Reply Fail", null);
         }
+    }
+
+    @Transactional
+    public ShowLikeReplyResponse showLikeReply(int reply_id){
+        Reply reply = this.replyRepository.findById(reply_id);
+        List<Like> likes = this.likeRepository.findByReply(reply);
+
+        return ShowLikeReplyResponse.of("", likes);
     }
 
     @Transactional

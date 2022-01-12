@@ -22,6 +22,7 @@ import com.woonjin.blog.domain.entity.User;
 import com.woonjin.blog.domain.entity.Visitor;
 import com.woonjin.blog.domain.repository.BlogRepository;
 import com.woonjin.blog.domain.repository.GuestBookRepository;
+import com.woonjin.blog.domain.repository.UserRepository;
 import com.woonjin.blog.domain.repository.VisitorRepository;
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +40,7 @@ public class BlogService {
 
     private final IdentityAppService identityAppService;
     private final BlogRepository blogRepository;
+    private final UserRepository userRepository;
     private final VisitorRepository visitorRepository;
     private final GuestBookRepository guestBookRepository;
     private final static Logger Log = Logger.getGlobal();
@@ -46,11 +48,13 @@ public class BlogService {
     public BlogService(
         IdentityAppService identityAppService,
         BlogRepository blogRepository,
+        UserRepository userRepository,
         VisitorRepository visitorRepository,
         GuestBookRepository guestBookRepository
     ) {
         this.identityAppService = identityAppService;
         this.blogRepository = blogRepository;
+        this.userRepository = userRepository;
         this.visitorRepository = visitorRepository;
         this.guestBookRepository = guestBookRepository;
     }
@@ -100,9 +104,15 @@ public class BlogService {
                 createBlogRequest.getMain_content(),
                 createBlogRequest.getMenu_design(),
                 createBlogRequest.getCategory(),
-                user
+                user,
+                null,
+                null,
+                null
             )
         );
+
+        user.setBlog(createBlog);
+        this.userRepository.save(user);
 
         Log.info("Create Blog Success");
         return CreateBlogResponse.of("Create Blog Success", createBlog);
@@ -148,8 +158,6 @@ public class BlogService {
             Log.info("Save File Success");
             return "files are saved";
         }
-
-
     }
 
     @Transactional

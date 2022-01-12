@@ -1,6 +1,7 @@
 package com.woonjin.blog.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,12 +33,12 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @JsonIgnore
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "sender", foreignKey = @ForeignKey(name = "fk_user1_chat_id"), nullable = false)
     private User sender;
 
-    @JsonIgnore
+    @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver", foreignKey = @ForeignKey(name = "fk_user2_chat_id"), nullable = false)
     private User receiver;

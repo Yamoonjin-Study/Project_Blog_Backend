@@ -1,6 +1,8 @@
 package com.woonjin.blog.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.sql.Timestamp;
 
 import java.util.List;
@@ -68,6 +70,7 @@ public class Blog {
     @Enumerated(value = EnumType.STRING)
     private Category category;
 
+    @JsonBackReference
     @OneToOne
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_blog_id"), unique = true, nullable = false)
     private User user;
@@ -80,6 +83,21 @@ public class Blog {
     @OneToMany(mappedBy = "blog", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<GuestBook> guestBook;
 
+    @JsonManagedReference
+    @OneToOne
+    @JoinColumn(name = "business_card_id", foreignKey = @ForeignKey(name = "fk_business_card_blog_id"), unique = true)
+    private Archive business_card;
+
+    @JsonManagedReference
+    @OneToOne
+    @JoinColumn(name = "portfolio_id", foreignKey = @ForeignKey(name = "fk_portfolio_blog_id"), unique = true)
+    private Archive portfolio;
+
+    @JsonManagedReference
+    @OneToOne
+    @JoinColumn(name = "resume_id", foreignKey = @ForeignKey(name = "fk_resume_blog_id"), unique = true)
+    private Archive resume;
+
 
     private Blog(
         String name,
@@ -90,7 +108,10 @@ public class Blog {
         int main_content,
         int menu_design,
         Category category,
-        User user
+        User user,
+        Archive business_card,
+        Archive portfolio,
+        Archive resume
     ) {
         this.name = name;
         this.info = info;
@@ -101,6 +122,9 @@ public class Blog {
         this.menu_design = menu_design;
         this.category = category;
         this.user = user;
+        this.business_card = business_card;
+        this.portfolio = portfolio;
+        this.resume = resume;
     }
 
     public static Blog of(
@@ -112,7 +136,10 @@ public class Blog {
         int main_content,
         int menu_design,
         Category category,
-        User user
+        User user,
+        Archive business_card,
+        Archive portfolio,
+        Archive resume
     ) {
         return new Blog(
             name,
@@ -123,7 +150,10 @@ public class Blog {
             main_content,
             menu_design,
             category,
-            user
+            user,
+            business_card,
+            portfolio,
+            resume
         );
     }
 

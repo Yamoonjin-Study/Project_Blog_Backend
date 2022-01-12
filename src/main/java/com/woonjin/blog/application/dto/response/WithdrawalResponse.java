@@ -1,6 +1,7 @@
 package com.woonjin.blog.application.dto.response;
 
 import com.woonjin.blog.domain.entity.User;
+import com.woonjin.blog.domain.entity.Withdrawal;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +18,9 @@ public class WithdrawalResponse {
 
     private User user;
 
-    public static WithdrawalResponse of(String responseMessage, User user) {
-        return new WithdrawalResponse(responseMessage, user);
+    private Withdrawal withdrawal;
+
+    public static WithdrawalResponse of(String responseMessage, User user, Withdrawal withdrawal) {
+        return new WithdrawalResponse(responseMessage, user ,withdrawal);
     }
 }

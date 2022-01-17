@@ -259,18 +259,27 @@ public class BlogService {
         return WriteGuestBookResponse.of("Write GuestBook Success", writeGuestBook);
     }
 
+    @Transactional
+    public WriteGuestBookResponse deleteGuestBook(int id) {
+        GuestBook guestBook = this.guestBookRepository.findById(id);
+        this.guestBookRepository.delete(guestBook);
+
+        Log.info("Delete GuestBook Success");
+        return WriteGuestBookResponse.of("Delete GuestBook Success", guestBook);
+    }
+
     @Transactional(readOnly = true)
     public GuestBookListResponse showGuestBook(String name) {
         Blog blog = this.blogRepository.findByName(name);
-        List<GuestBook> guestBook = this.guestBookRepository.findByBlog(blog);
+        List<GuestBook> guestBook = this.guestBookRepository.findByBlogOrderByDateDesc(blog);
         String blogname = blog.getName();
 
         List<GuestBookList> guestBookList = new ArrayList<GuestBookList>();
 
         for (int i = 0; i < guestBook.size(); i++) {
             guestBookList.add(i, GuestBookList
-                .of(guestBook.get(i).getComment(), guestBook.get(i).getDate(),
-                    guestBook.get(i).getUser().getNickname()));
+                .of(guestBook.get(i).getId(), guestBook.get(i).getBlog().getUser().getId(), guestBook.get(i).getComment(), guestBook.get(i).getDate(),
+                    guestBook.get(i).getUser().getNickname(), guestBook.get(i).getUser().getBlog().getIcon()));
         }
 
         Log.info("Results of ShowGuestBookList");

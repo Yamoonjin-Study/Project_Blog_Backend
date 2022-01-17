@@ -134,8 +134,7 @@ public class BoardService {
 
         return ShowBoardResponse.of(
             this.boardRepository.findById(id),
-            this.likeRepository.findByBoard(this.boardRepository.findById(id)),
-            this.replyRepository.findByBoardOrderByPostDateAsc(this.boardRepository.findById(id)),
+            this.replyRepository.findByBoardOrderByPostDateAsc(board),
             "Show Board Success");
     }
 
@@ -296,8 +295,11 @@ public class BoardService {
     public ShowLikeReplyResponse showLikeReply(int reply_id){
         Reply reply = this.replyRepository.findById(reply_id);
         List<Like> likes = this.likeRepository.findByReply(reply);
-
-        return ShowLikeReplyResponse.of("", likes);
+        if(likes.size() > 0){
+            return ShowLikeReplyResponse.of("Show Like Replies Success", likes);
+        }else{
+            return ShowLikeReplyResponse.of("Show Like Replies Fail", null);
+        }
     }
 
     @Transactional

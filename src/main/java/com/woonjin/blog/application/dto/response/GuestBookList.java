@@ -12,13 +12,21 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GuestBookList {
+
+    private int id;
+
+    private int user_id;
+
     private String comment;
 
     private Timestamp date;
 
     private String user_nickname;
 
-    public static GuestBookList of(String comment, Timestamp date, String user_nickname){
-        return new GuestBookList(comment, date, user_nickname);
+    private String blog_icon;
+
+    public static GuestBookList of(int id, int user_id, String comment, Timestamp date,
+        String user_nickname, String blog_icon) {
+        return new GuestBookList(id, user_id, comment, date, user_nickname, blog_icon);
     }
 }

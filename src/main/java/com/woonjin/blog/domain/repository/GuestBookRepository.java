@@ -7,5 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GuestBookRepository extends JpaRepository<GuestBook, Integer> {
 
-    List<GuestBook> findByBlog(Blog blog);
+    GuestBook findById(int id);
+
+    List<GuestBook> findByBlogOrderByDateDesc(Blog blog);
 }

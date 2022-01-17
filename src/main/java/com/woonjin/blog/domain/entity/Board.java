@@ -1,6 +1,8 @@
 package com.woonjin.blog.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -58,11 +60,11 @@ public class Board {
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "fk_category_board_id"))
     private Category category;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "board", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "board", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Like> likes;
 
-    @JsonIgnore
+    @JsonBackReference
     @OneToMany(mappedBy = "board", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Reply> replies;
 

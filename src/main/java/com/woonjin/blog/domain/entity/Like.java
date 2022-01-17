@@ -1,5 +1,6 @@
 package com.woonjin.blog.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.sql.Timestamp;
 
@@ -31,7 +32,7 @@ public class Like {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @JsonIgnore
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", foreignKey = @ForeignKey(name = "fk_board_like_id"))
     private Board board;
@@ -41,6 +42,7 @@ public class Like {
     @JoinColumn(name = "reply_id", foreignKey = @ForeignKey(name = "fk_reply_like_id"))
     private Reply reply;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_like_id"))
     private User user;

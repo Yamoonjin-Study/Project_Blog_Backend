@@ -17,13 +17,11 @@ import lombok.Setter;
 public class ShowBoardResponse {
     private Board board;
 
-    private List<Like> likes;
-
     private List<Reply> replies;
 
     private String ResponseMessage;
 
-    public static ShowBoardResponse of(Board board, List<Like> likes, List<Reply> replies, String responseMessage){
-        return new ShowBoardResponse(board, likes, replies, responseMessage);
+    public static ShowBoardResponse of(Board board, List<Reply> replies, String responseMessage){
+        return new ShowBoardResponse(board, replies, responseMessage);
     }
 }

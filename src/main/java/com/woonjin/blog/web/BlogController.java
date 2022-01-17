@@ -122,4 +122,10 @@ public class BlogController {
         @RequestBody WriteGuestBookRequest writeGuestBookRequest) {
         return blogService.writeGuestBook(name, writeGuestBookRequest);
     }
+
+    @DeleteMapping("blog/guestbook/delete/{id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public WriteGuestBookResponse DeleteGuestBook(@PathVariable int id) {
+        return blogService.deleteGuestBook(id);
+    }
 }

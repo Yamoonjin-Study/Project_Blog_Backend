@@ -69,61 +69,78 @@ public class BlogController {
         return blogService.createBlog(createBlogRequest);
     }
 
-    @PostMapping("/save-file/{id}")
+    @PostMapping("/save-file")
     public String SaveFile(
-        @PathVariable int id,
         @RequestPart(value = "icon") MultipartFile icon,
         @RequestPart(value = "logo_image") MultipartFile logo
     ) throws IOException {
-        System.out.println("컨트롤러 접근 / " + icon.getOriginalFilename() + ", " + icon.getSize() + "/"
-            + logo.getOriginalFilename() + ", " + logo.getSize());
-        return this.blogService.saveFile(id, icon, logo);
+        return this.blogService.saveFile(icon, logo);
     }
 
-    @PutMapping("update-blog")
+    @PostMapping("/save-icon-file")
+    public String SaveIconFile(
+        @RequestPart(value = "icon") MultipartFile icon
+    ) throws IOException {
+        return this.blogService.saveIconFile(icon);
+    }
+
+    @PostMapping("/save-logo-file")
+    public String SaveLogoFile(
+        @RequestPart(value = "logo_image") MultipartFile logo
+    ) throws IOException {
+        return this.blogService.saveLogoFile(logo);
+    }
+
+    @PutMapping("/update-blog-info")
     @ResponseStatus(value = HttpStatus.OK)
-    public UpdateBlogResponse UpdateBlog(@RequestBody UpdateBlogRequest updateBlogRequest) {
-        return blogService.updateBlog(updateBlogRequest);
+    public UpdateBlogResponse UpdateBlogInfo(@RequestBody UpdateBlogRequest updateBlogRequest) {
+        return blogService.updateBlogInfo(updateBlogRequest);
     }
 
-    @PutMapping("activate-blog")
+    @PutMapping("/update-blog-design")
+    @ResponseStatus(value = HttpStatus.OK)
+    public UpdateBlogResponse UpdateBlogDesign(@RequestBody UpdateBlogRequest updateBlogRequest) {
+        return blogService.updateBlogDesign(updateBlogRequest);
+    }
+
+    @PutMapping("/activate-blog")
     @ResponseStatus(value = HttpStatus.OK)
     public ActivateBlogResponse ActivateBlog() {
         return blogService.activateBlog();
     }
 
-    @PutMapping("inactivate-blog")
+    @PutMapping("/inactivate-blog")
     @ResponseStatus(value = HttpStatus.OK)
     public InactivateBlogResponse InactivateBlog() {
         return blogService.inactivateBlog();
     }
 
-    @DeleteMapping("delete-blog")
+    @DeleteMapping("/delete-blog")
     @ResponseStatus(value = HttpStatus.OK)
     public DeleteBlogResponse DeleteBlog() {
         return blogService.deleteBlog();
     }
 
-    @GetMapping("blog/{name}/visitors")
+    @GetMapping("/blog/{name}/visitors")
     @ResponseStatus(value = HttpStatus.OK)
     public ShowVisitorsResponse ShowVisitors(@PathVariable String name) {
         return blogService.showVisitors(name);
     }
 
-    @GetMapping("blog/{name}/guestbook")
+    @GetMapping("/blog/{name}/guestbook")
     @ResponseStatus(value = HttpStatus.OK)
     public GuestBookListResponse ShowGuestBooks(@PathVariable String name) {
         return blogService.showGuestBook(name);
     }
 
-    @PostMapping("blog/{name}/guestbook/write")
+    @PostMapping("/blog/{name}/guestbook/write")
     @ResponseStatus(value = HttpStatus.OK)
     public WriteGuestBookResponse WriteGuestBook(@PathVariable String name,
         @RequestBody WriteGuestBookRequest writeGuestBookRequest) {
         return blogService.writeGuestBook(name, writeGuestBookRequest);
     }
 
-    @DeleteMapping("blog/guestbook/delete/{id}")
+    @DeleteMapping("/blog/guestbook/delete/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public WriteGuestBookResponse DeleteGuestBook(@PathVariable int id) {
         return blogService.deleteGuestBook(id);

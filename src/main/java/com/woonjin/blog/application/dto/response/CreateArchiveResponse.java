@@ -1,7 +1,6 @@
 package com.woonjin.blog.application.dto.response;
 
 import com.woonjin.blog.domain.entity.Archive;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,13 +11,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ArchiveResponse {
+public class CreateArchiveResponse {
 
     private String responseMessage;
 
-    private List<Archive> archive;
+    private Archive archive;
 
-    public static ArchiveResponse of(String responseMessage, List<Archive> archive) {
-        return new ArchiveResponse(responseMessage, archive);
+    public static CreateArchiveResponse of(String responseMessage, Archive archive) {
+        return new CreateArchiveResponse(responseMessage, archive);
     }
 }

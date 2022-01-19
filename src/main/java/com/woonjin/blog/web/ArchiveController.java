@@ -2,11 +2,13 @@ package com.woonjin.blog.web;
 
 import com.woonjin.blog.application.dto.request.CreateArchiveRequest;
 import com.woonjin.blog.application.dto.response.ArchiveResponse;
+import com.woonjin.blog.application.dto.response.CreateArchiveResponse;
 import com.woonjin.blog.application.service.ArchiveService;
 import io.swagger.annotations.Api;
 import java.io.IOException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,9 +28,15 @@ public class ArchiveController {
         this.archiveService = archiveService;
     }
 
+    @GetMapping("/show-archives/{name}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ArchiveResponse showArchive(@PathVariable String name) {
+        return this.archiveService.showArchive(name);
+    }
+
     @PostMapping("/create-archive")
     @ResponseStatus(HttpStatus.CREATED)
-    public ArchiveResponse CreateArchive(@RequestBody CreateArchiveRequest createArchiveRequest) {
+    public CreateArchiveResponse CreateArchive(@RequestBody CreateArchiveRequest createArchiveRequest) {
         return this.archiveService.createArchive(createArchiveRequest);
     }
 
@@ -39,13 +47,13 @@ public class ArchiveController {
         return this.archiveService.uploadFile(id, pdfFile);
     }
 
-    @PutMapping("/update-archive")
-    public ArchiveResponse UpdateArchive(@RequestBody CreateArchiveRequest createArchiveRequest) {
-        return archiveService.updateArchive(createArchiveRequest);
+    @PutMapping("/update-archive{id}")
+    public CreateArchiveResponse UpdateArchive(@RequestBody CreateArchiveRequest createArchiveRequest, @PathVariable int id) {
+        return archiveService.updateArchive(createArchiveRequest, id);
     }
 
-    @DeleteMapping("/delete-archive")
-    public ArchiveResponse DeleteArchive() {
-        return archiveService.deleteArchive();
+    @DeleteMapping("/delete-archive/{id}")
+    public CreateArchiveResponse DeleteArchive(@PathVariable int id) {
+        return archiveService.deleteArchive(id);
     }
 }

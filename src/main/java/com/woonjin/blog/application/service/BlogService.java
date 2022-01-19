@@ -119,12 +119,11 @@ public class BlogService {
     }
 
     @Transactional
-    public String saveFile(int id, MultipartFile icon, MultipartFile logo) throws IOException {
-
-        if(icon == null || icon.isEmpty() || logo == null || logo.isEmpty()){
+    public String saveFile(MultipartFile icon, MultipartFile logo) throws IOException {
+        if (icon == null || icon.isEmpty() || logo == null || logo.isEmpty()) {
             Log.info("Save File Fail");
             return "file is empty";
-        }else{
+        } else {
             String uploadIconFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/iconImages/";
             String uploadLogoFilePath1 = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/logoImages/";
 
@@ -146,7 +145,8 @@ public class BlogService {
             File dest2 = new File(pathname2);
             logo.transferTo(dest2);
 
-            Blog blog = this.blogRepository.findById(id);
+            User user = this.identityAppService.getAuthenticationUser();
+            Blog blog = this.blogRepository.findByUser_Id(user.getId());
             String iconImgSrc = "/resources/iconImages/";
             String logoImgSrc = "/resources/logoImages/";
             blog.setIcon(iconImgSrc+filename1);
@@ -161,17 +161,79 @@ public class BlogService {
     }
 
     @Transactional
-    public UpdateBlogResponse updateBlog(UpdateBlogRequest updateBlogRequest) {
+    public String saveIconFile(MultipartFile icon) throws IOException {
+            String uploadIconFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/iconImages/";
+
+            String prefix = icon.getOriginalFilename().substring(icon.getOriginalFilename().lastIndexOf("."));
+            String filename = UUID.randomUUID().toString().replaceAll("-", "") + prefix;
+
+            String pathname = uploadIconFilePath + filename;
+            File dest = new File(pathname);
+            icon.transferTo(dest);
+
+            User user = this.identityAppService.getAuthenticationUser();
+            Blog blog = this.blogRepository.findByUser_Id(user.getId());
+            String iconImgSrc = "/resources/iconImages/";
+            blog.setIcon(iconImgSrc+filename);
+
+            this.blogRepository.save(blog);
+
+            Log.info("Save File Success");
+            return "files are saved";
+
+    }
+
+    @Transactional
+    public String saveLogoFile(MultipartFile logo) throws IOException {
+            String uploadLogoFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/logoImages/";
+
+            String prefix = logo.getOriginalFilename().substring(logo.getOriginalFilename().lastIndexOf("."));
+            String filename = UUID.randomUUID().toString().replaceAll("-", "") + prefix;
+            String pathname = uploadLogoFilePath + filename;
+            File dest = new File(pathname);
+            logo.transferTo(dest);
+
+            User user = this.identityAppService.getAuthenticationUser();
+            Blog blog = this.blogRepository.findByUser_Id(user.getId());
+            String logoImgSrc = "/resources/logoImages/";
+            blog.setLogo_image(logoImgSrc+filename);
+            System.out.println(blog.getIcon() + "/"+blog.getLogo_image());
+
+            this.blogRepository.save(blog);
+
+            Log.info("Save File Success");
+            return "files are saved";
+    }
+
+    @Transactional
+    public UpdateBlogResponse updateBlogInfo(UpdateBlogRequest updateBlogRequest) {
         User user = this.identityAppService.getAuthenticationUser();
         Blog updateBlog = this.blogRepository.findByUser_Id(user.getId());
 
         updateBlog.setName(updateBlogRequest.getName());
-        updateBlog.setIcon(updateBlogRequest.getIcon());
         updateBlog.setInfo(updateBlogRequest.getInfo());
-        updateBlog.setLogo_image(updateBlogRequest.getLogo_image());
+        updateBlog.setCategory(updateBlogRequest.getCategory());
+
+        this.blogRepository.save(updateBlog);
+
+        Log.info("Update Blog Success");
+        return UpdateBlogResponse.of("Update Blog Success", updateBlogRequest);
+    }
+
+    @Transactional
+    public UpdateBlogResponse updateBlogDesign(UpdateBlogRequest updateBlogRequest) {
+        User user = this.identityAppService.getAuthenticationUser();
+        Blog updateBlog = this.blogRepository.findByUser_Id(user.getId());
+
+        if (updateBlogRequest.getIcon() != null && !updateBlogRequest.getIcon().isEmpty()
+            && updateBlogRequest.getLogo_image() != null && !updateBlogRequest.getLogo_image()
+            .isEmpty()) {
+            updateBlog.setIcon(updateBlogRequest.getIcon());
+            updateBlog.setLogo_image(updateBlogRequest.getLogo_image());
+        }
+
         updateBlog.setMain_content(updateBlogRequest.getMain_content());
         updateBlog.setMenu_design(updateBlogRequest.getMenu_design());
-        updateBlog.setCategory(updateBlogRequest.getCategory());
 
         this.blogRepository.save(updateBlog);
 
@@ -265,7 +327,7 @@ public class BlogService {
         this.guestBookRepository.delete(guestBook);
 
         Log.info("Delete GuestBook Success");
-        return WriteGuestBookResponse.of("Delete GuestBook Success", guestBook);
+        return WriteGuestBookResponse.of("Delete GuestBook Success", null);
     }
 
     @Transactional(readOnly = true)
@@ -278,7 +340,7 @@ public class BlogService {
 
         for (int i = 0; i < guestBook.size(); i++) {
             guestBookList.add(i, GuestBookList
-                .of(guestBook.get(i).getId(), guestBook.get(i).getBlog().getUser().getId(), guestBook.get(i).getComment(), guestBook.get(i).getDate(),
+                .of(guestBook.get(i).getId(), guestBook.get(i).getUser().getId(), guestBook.get(i).getComment(), guestBook.get(i).getDate(),
                     guestBook.get(i).getUser().getNickname(), guestBook.get(i).getUser().getBlog().getIcon()));
         }
 

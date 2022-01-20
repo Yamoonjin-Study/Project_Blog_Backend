@@ -12,11 +12,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class VisitorInfo {
-    private String user_nickname;
+    private String userNickName;
 
     private Timestamp date;
 
-    public static VisitorInfo of(String user_nickname, Timestamp date){
-        return new VisitorInfo(user_nickname, date);
+    public static VisitorInfo of(String userNickName, Timestamp date){
+        return new VisitorInfo(userNickName, date);
     }
 }

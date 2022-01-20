@@ -6,11 +6,11 @@ import lombok.Getter;
 @Getter
 public class UpdateReplyRequest {
 
-    private int top_board_id;
+    private int topBoardId;
 
-    private int top_reply_id;
+    private int topReplyId;
 
     private String content;
 
-    private Timestamp post_date;
+    private Timestamp postDate;
 }

@@ -71,22 +71,22 @@ public class BlogController {
 
     @PostMapping("/save-file")
     public String SaveFile(
-        @RequestPart(value = "icon") MultipartFile icon,
-        @RequestPart(value = "logo_image") MultipartFile logo
+        @RequestPart(value = "iconImage") MultipartFile icon,
+        @RequestPart(value = "logoImage") MultipartFile logo
     ) throws IOException {
         return this.blogService.saveFile(icon, logo);
     }
 
     @PostMapping("/save-icon-file")
     public String SaveIconFile(
-        @RequestPart(value = "icon") MultipartFile icon
+        @RequestPart(value = "iconImage") MultipartFile icon
     ) throws IOException {
         return this.blogService.saveIconFile(icon);
     }
 
     @PostMapping("/save-logo-file")
     public String SaveLogoFile(
-        @RequestPart(value = "logo_image") MultipartFile logo
+        @RequestPart(value = "logoImage") MultipartFile logo
     ) throws IOException {
         return this.blogService.saveLogoFile(logo);
     }

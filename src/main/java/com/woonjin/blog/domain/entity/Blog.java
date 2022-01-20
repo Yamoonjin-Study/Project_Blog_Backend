@@ -41,31 +41,32 @@ public class Blog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false, length = 30, unique = true)
-    private String name;
+    @Column(name = "blog_name", nullable = false, length = 30, unique = true)
+    private String blogName;
 
-    @Column(nullable = true, length = 200)
+    @Column(length = 200)
     private String info;
 
-    @Column(nullable = true, length = 500)
-    private String icon;
+    @Column(name = "icon_image", length = 500)
+    private String iconImage;
 
     @CreationTimestamp
-    private Timestamp create_date;
+    @Column(name = "create_date")
+    private Timestamp createDate;
 
     @Enumerated(value = EnumType.STRING)
     private Status status;
 
     @Column(name = "logo_image", length = 500)
-    private String logo_image;
+    private String logoImage;
 
-    @Column(nullable = false)
+    @Column(name = "main_content", nullable = false)
     @ColumnDefault("1")
-    private int main_content;
+    private int mainContent;
 
-    @Column(nullable = false)
+    @Column(name = "menu_design", nullable = false)
     @ColumnDefault("1")
-    private int menu_design;
+    private int menuDesign;
 
     @Enumerated(value = EnumType.STRING)
     private Category category;
@@ -76,7 +77,8 @@ public class Blog {
     private User user;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "blog", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "blog", cascade = {
+        CascadeType.ALL}, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Visitor> visitor;
 
     @JsonIgnore
@@ -86,7 +88,7 @@ public class Blog {
     @JsonManagedReference
     @OneToOne
     @JoinColumn(name = "business_card_id", foreignKey = @ForeignKey(name = "fk_business_card_blog_id"), unique = true)
-    private Archive business_card;
+    private Archive businessCard;
 
     @JsonManagedReference
     @OneToOne
@@ -100,58 +102,58 @@ public class Blog {
 
 
     private Blog(
-        String name,
+        String blogName,
         String info,
-        String icon,
+        String iconImage,
         Status status,
-        String logo_image,
-        int main_content,
-        int menu_design,
+        String logoImage,
+        int mainContent,
+        int menuDesign,
         Category category,
         User user,
-        Archive business_card,
+        Archive businessCard,
         Archive portfolio,
         Archive resume
     ) {
-        this.name = name;
+        this.blogName = blogName;
         this.info = info;
-        this.icon = icon;
+        this.iconImage = iconImage;
         this.status = status;
-        this.logo_image = logo_image;
-        this.main_content = main_content;
-        this.menu_design = menu_design;
+        this.logoImage = logoImage;
+        this.mainContent = mainContent;
+        this.menuDesign = menuDesign;
         this.category = category;
         this.user = user;
-        this.business_card = business_card;
+        this.businessCard = businessCard;
         this.portfolio = portfolio;
         this.resume = resume;
     }
 
     public static Blog of(
-        String name,
+        String blogName,
         String info,
-        String icon,
+        String iconImage,
         Status status,
-        String logo_image,
-        int main_content,
-        int menu_design,
+        String logoImage,
+        int mainContent,
+        int menuDesign,
         Category category,
         User user,
-        Archive business_card,
+        Archive businessCard,
         Archive portfolio,
         Archive resume
     ) {
         return new Blog(
-            name,
+            blogName,
             info,
-            icon,
+            iconImage,
             status,
-            logo_image,
-            main_content,
-            menu_design,
+            logoImage,
+            mainContent,
+            menuDesign,
             category,
             user,
-            business_card,
+            businessCard,
             portfolio,
             resume
         );

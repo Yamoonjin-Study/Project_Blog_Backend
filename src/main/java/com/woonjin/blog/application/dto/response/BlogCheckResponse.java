@@ -14,9 +14,9 @@ public class BlogCheckResponse {
 
     private Boolean existence;
 
-    private String blogname;
+    private String blogName;
 
-    public static BlogCheckResponse of(Boolean existence, String blogname) {
-        return new BlogCheckResponse(existence, blogname);
+    public static BlogCheckResponse of(Boolean existence, String blogName) {
+        return new BlogCheckResponse(existence, blogName);
     }
 }

@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LikeReplyResponse {
 
-    private String ResponseMessage;
+    private String responseMessage;
 
     private Like like;
 

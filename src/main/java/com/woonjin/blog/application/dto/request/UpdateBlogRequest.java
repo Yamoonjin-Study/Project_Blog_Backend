@@ -12,11 +12,11 @@ public class UpdateBlogRequest {
 
     private String icon;
 
-    private String logo_image;
+    private String logoImage;
 
-    private int main_content;
+    private int mainContent;
 
-    private int menu_design;
+    private int menuDesign;
 
     private Category category;
 }

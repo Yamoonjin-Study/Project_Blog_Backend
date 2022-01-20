@@ -51,6 +51,7 @@ public class Board {
     private User user;
 
     @CreationTimestamp
+    @Column(name = "create_date")
     private Timestamp createDate;
 
     @ColumnDefault("0")

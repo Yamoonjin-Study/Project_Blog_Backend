@@ -15,11 +15,11 @@ public class GuestBookListResponse {
 
     private String responseMessage;
 
-    private String blogname;
+    private String blogName;
 
     private List<GuestBookList> guestBookList;
 
-    public static GuestBookListResponse of(String responseMessage, String blogname, List<GuestBookList> guestBookList){
-        return new GuestBookListResponse(responseMessage, blogname, guestBookList);
+    public static GuestBookListResponse of(String responseMessage, String blogName, List<GuestBookList> guestBookList){
+        return new GuestBookListResponse(responseMessage, blogName, guestBookList);
     }
 }

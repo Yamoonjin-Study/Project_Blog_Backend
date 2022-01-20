@@ -66,18 +66,18 @@ public class BlogService {
         if (blog == null) {
             return BlogCheckResponse.of(false, "null");
         } else {
-            return BlogCheckResponse.of(true, blog.getName());
+            return BlogCheckResponse.of(true, blog.getBlogName());
         }
     }
 
     @Transactional(readOnly = true)
     public ShowBlogResponse showBlog(String name) {
-        if (this.blogRepository.findByName(name) != null) {
+        if (this.blogRepository.findByBlogName(name) != null) {
             Log.info("Look Up Success");
-            return ShowBlogResponse.of("Look Up Success", this.blogRepository.findByName(name));
+            return ShowBlogResponse.of("Look Up Success", this.blogRepository.findByBlogName(name));
         } else {
             Log.info("No Result");
-            return ShowBlogResponse.of("No Result", this.blogRepository.findByName(name));
+            return ShowBlogResponse.of("No Result", this.blogRepository.findByBlogName(name));
         }
     }
 
@@ -96,13 +96,13 @@ public class BlogService {
 
         Blog createBlog = this.blogRepository.save(
             Blog.of(
-                createBlogRequest.getName(),
+                createBlogRequest.getBlogName(),
                 createBlogRequest.getInfo(),
-                createBlogRequest.getIcon(),
+                createBlogRequest.getIconImage(),
                 Blog.Status.ACTIVE,
-                createBlogRequest.getLogo_image(),
-                createBlogRequest.getMain_content(),
-                createBlogRequest.getMenu_design(),
+                createBlogRequest.getLogoImage(),
+                createBlogRequest.getMainContent(),
+                createBlogRequest.getMenuDesign(),
                 createBlogRequest.getCategory(),
                 user,
                 null,
@@ -125,7 +125,7 @@ public class BlogService {
             return "file is empty";
         } else {
             String uploadIconFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/iconImages/";
-            String uploadLogoFilePath1 = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/logoImages/";
+            String uploadLogoFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/logoImages/";
 
             String prefix1 = icon.getOriginalFilename().substring(icon.getOriginalFilename().lastIndexOf("."));
             String filename1 = UUID.randomUUID().toString().replaceAll("-", "") + prefix1;
@@ -141,7 +141,7 @@ public class BlogService {
 
             String prefix2 = logo.getOriginalFilename().substring(logo.getOriginalFilename().lastIndexOf("."));
             String filename2 = UUID.randomUUID().toString().replaceAll("-", "") + prefix2;
-            String pathname2 = uploadLogoFilePath1 + filename2;
+            String pathname2 = uploadLogoFilePath + filename2;
             File dest2 = new File(pathname2);
             logo.transferTo(dest2);
 
@@ -149,9 +149,9 @@ public class BlogService {
             Blog blog = this.blogRepository.findByUser_Id(user.getId());
             String iconImgSrc = "/resources/iconImages/";
             String logoImgSrc = "/resources/logoImages/";
-            blog.setIcon(iconImgSrc+filename1);
-            blog.setLogo_image(logoImgSrc+filename2);
-            System.out.println(blog.getIcon() + "/"+blog.getLogo_image());
+            blog.setIconImage(iconImgSrc+filename1);
+            blog.setLogoImage(logoImgSrc+filename2);
+            System.out.println(blog.getIconImage() + "/"+blog.getLogoImage());
 
             this.blogRepository.save(blog);
 
@@ -174,7 +174,7 @@ public class BlogService {
             User user = this.identityAppService.getAuthenticationUser();
             Blog blog = this.blogRepository.findByUser_Id(user.getId());
             String iconImgSrc = "/resources/iconImages/";
-            blog.setIcon(iconImgSrc+filename);
+            blog.setIconImage(iconImgSrc+filename);
 
             this.blogRepository.save(blog);
 
@@ -196,8 +196,7 @@ public class BlogService {
             User user = this.identityAppService.getAuthenticationUser();
             Blog blog = this.blogRepository.findByUser_Id(user.getId());
             String logoImgSrc = "/resources/logoImages/";
-            blog.setLogo_image(logoImgSrc+filename);
-            System.out.println(blog.getIcon() + "/"+blog.getLogo_image());
+            blog.setLogoImage(logoImgSrc+filename);
 
             this.blogRepository.save(blog);
 
@@ -210,7 +209,7 @@ public class BlogService {
         User user = this.identityAppService.getAuthenticationUser();
         Blog updateBlog = this.blogRepository.findByUser_Id(user.getId());
 
-        updateBlog.setName(updateBlogRequest.getName());
+        updateBlog.setBlogName(updateBlogRequest.getName());
         updateBlog.setInfo(updateBlogRequest.getInfo());
         updateBlog.setCategory(updateBlogRequest.getCategory());
 
@@ -226,14 +225,14 @@ public class BlogService {
         Blog updateBlog = this.blogRepository.findByUser_Id(user.getId());
 
         if (updateBlogRequest.getIcon() != null && !updateBlogRequest.getIcon().isEmpty()
-            && updateBlogRequest.getLogo_image() != null && !updateBlogRequest.getLogo_image()
+            && updateBlogRequest.getLogoImage() != null && !updateBlogRequest.getLogoImage()
             .isEmpty()) {
-            updateBlog.setIcon(updateBlogRequest.getIcon());
-            updateBlog.setLogo_image(updateBlogRequest.getLogo_image());
+            updateBlog.setIconImage(updateBlogRequest.getIcon());
+            updateBlog.setLogoImage(updateBlogRequest.getLogoImage());
         }
 
-        updateBlog.setMain_content(updateBlogRequest.getMain_content());
-        updateBlog.setMenu_design(updateBlogRequest.getMenu_design());
+        updateBlog.setMainContent(updateBlogRequest.getMainContent());
+        updateBlog.setMenuDesign(updateBlogRequest.getMenuDesign());
 
         this.blogRepository.save(updateBlog);
 
@@ -280,7 +279,7 @@ public class BlogService {
     public void addVisitors(String name) {
         Visitor addVisitor = new Visitor();
 
-        addVisitor.setBlog(this.blogRepository.findByName(name));
+        addVisitor.setBlog(this.blogRepository.findByBlogName(name));
         addVisitor.setUser(this.identityAppService.getAuthenticationUser());
 
         this.visitorRepository.save(addVisitor);
@@ -289,16 +288,16 @@ public class BlogService {
     @Transactional(readOnly = true)
     public ShowVisitorsResponse showVisitors(String name) {
 
-        Blog blog = this.blogRepository.findByName(name);
+        Blog blog = this.blogRepository.findByBlogName(name);
 
         List<Visitor> visitorList = this.visitorRepository.findByBlog(blog);
-        String blogName = blog.getName();
+        String blogName = blog.getBlogName();
 
         List<VisitorInfo> visitorInfo = new ArrayList<VisitorInfo>();
 
         for (int i = 0; i < visitorList.size(); i++) {
             visitorInfo.add(i, VisitorInfo
-                .of(visitorList.get(i).getUser().getNickname(), visitorList.get(i).getDate()));
+                .of(visitorList.get(i).getUser().getNickName(), visitorList.get(i).getDate()));
         }
 
         Log.info("Results of ShowVisitorsList");
@@ -311,7 +310,7 @@ public class BlogService {
         WriteGuestBookRequest writeGuestBookRequest) {
         GuestBook writeGuestBook = this.guestBookRepository.save(
             GuestBook.of(
-                this.blogRepository.findByName(name),
+                this.blogRepository.findByBlogName(name),
                 writeGuestBookRequest.getComment(),
                 identityAppService.getAuthenticationUser()
             )
@@ -332,16 +331,16 @@ public class BlogService {
 
     @Transactional(readOnly = true)
     public GuestBookListResponse showGuestBook(String name) {
-        Blog blog = this.blogRepository.findByName(name);
+        Blog blog = this.blogRepository.findByBlogName(name);
         List<GuestBook> guestBook = this.guestBookRepository.findByBlogOrderByDateDesc(blog);
-        String blogname = blog.getName();
+        String blogname = blog.getBlogName();
 
         List<GuestBookList> guestBookList = new ArrayList<GuestBookList>();
 
         for (int i = 0; i < guestBook.size(); i++) {
             guestBookList.add(i, GuestBookList
                 .of(guestBook.get(i).getId(), guestBook.get(i).getUser().getId(), guestBook.get(i).getComment(), guestBook.get(i).getDate(),
-                    guestBook.get(i).getUser().getNickname(), guestBook.get(i).getUser().getBlog().getIcon()));
+                    guestBook.get(i).getUser().getNickName(), guestBook.get(i).getUser().getBlog().getIconImage()));
         }
 
         Log.info("Results of ShowGuestBookList");

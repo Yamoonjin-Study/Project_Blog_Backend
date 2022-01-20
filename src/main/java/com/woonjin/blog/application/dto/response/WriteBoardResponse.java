@@ -14,7 +14,7 @@ import lombok.Setter;
 public class WriteBoardResponse {
     private Board board;
 
-    private String ResponseMessage;
+    private String responseMessage;
 
     public static WriteBoardResponse of(Board board, String responseMessage){
         return new WriteBoardResponse(board, responseMessage);

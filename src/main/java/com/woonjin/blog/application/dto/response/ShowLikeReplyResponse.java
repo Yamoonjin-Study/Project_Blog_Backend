@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ShowLikeReplyResponse {
 
-    private String ResponseMessage;
+    private String responseMessage;
 
     private List<Like> like;
 

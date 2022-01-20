@@ -41,9 +41,10 @@ public class Archive implements Serializable {
     private String title;
 
     @Column(nullable = true, length = 500)
-    private String file_path;
+    private String filePath;
 
     @CreationTimestamp
+    @Column(name = "create_date")
     private Timestamp createDate;
 
     @Enumerated(value = EnumType.STRING)
@@ -61,13 +62,13 @@ public class Archive implements Serializable {
         Archive.Type type,
         String content,
         String title,
-        String file_path,
+        String filePath,
         Blog blog
     ) {
         this.type = type;
         this.content = content;
         this.title = title;
-        this.file_path = file_path;
+        this.filePath = filePath;
         this.blog = blog;
     }
 
@@ -75,14 +76,14 @@ public class Archive implements Serializable {
         Archive.Type type,
         String content,
         String title,
-        String file_path,
+        String filePath,
         Blog blog
     ) {
         return new Archive(
             type,
             content,
             title,
-            file_path,
+            filePath,
             blog
         );
     }

@@ -15,12 +15,12 @@ public class ShowVisitorsResponse {
 
     private String responseMessage;
 
-    private String blogname;
+    private String blogName;
 
     private List<VisitorInfo> visitorInfo;
 
 
-    public static ShowVisitorsResponse of(String responseMessage, String blogname, List<VisitorInfo> visitorInfo) {
-        return new ShowVisitorsResponse(responseMessage, blogname, visitorInfo);
+    public static ShowVisitorsResponse of(String responseMessage, String blogName, List<VisitorInfo> visitorInfo) {
+        return new ShowVisitorsResponse(responseMessage, blogName, visitorInfo);
     }
 }

@@ -4,7 +4,6 @@ import com.woonjin.blog.application.dto.request.CreateArchiveRequest;
 import com.woonjin.blog.application.dto.response.ArchiveResponse;
 import com.woonjin.blog.application.dto.response.CreateArchiveResponse;
 import com.woonjin.blog.domain.entity.Archive;
-import com.woonjin.blog.domain.entity.Archive.Type;
 import com.woonjin.blog.domain.entity.Blog;
 import com.woonjin.blog.domain.entity.User;
 import com.woonjin.blog.domain.repository.ArchiveRepository;
@@ -37,7 +36,7 @@ public class ArchiveService {
     }
 
     public ArchiveResponse showArchive(String name) {
-        Blog blog = this.blogRepository.findByName(name);
+        Blog blog = this.blogRepository.findByBlogName(name);
 
         List<Archive> createArchive = this.archiveRepository.findByBlog(blog);
 
@@ -74,7 +73,7 @@ public class ArchiveService {
             String prefix = pdfFile.getOriginalFilename()
                 .substring(pdfFile.getOriginalFilename().lastIndexOf("."));
             String filename = UUID.randomUUID().toString().replaceAll("-", "") + prefix;
-            archive.setFile_path(fileSrc + filename);
+            archive.setFilePath(fileSrc + filename);
             String pathname = uploadIconFilePath + filename;
             File dest = new File(pathname);
             pdfFile.transferTo(dest);

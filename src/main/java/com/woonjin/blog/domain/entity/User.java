@@ -46,8 +46,8 @@ public class User implements UserDetails {
     @Column(nullable = false, length = 100)
     private String password;
 
-    @Column(name = "nickname", nullable = false, length = 30, unique = true)
-    private String nickname;
+    @Column(name = "nick_name", nullable = false, length = 30, unique = true)
+    private String nickName;
 
     @Column(nullable = false, length = 50, unique = true)
     private String email;
@@ -59,6 +59,7 @@ public class User implements UserDetails {
     private RoleType role;
 
     @CreationTimestamp
+    @Column(name = "create_date")
     private Timestamp createDate;
 
     @Enumerated(value = EnumType.STRING)
@@ -73,7 +74,7 @@ public class User implements UserDetails {
         String email,
         String password,
         String username,
-        String nick_name,
+        String nickName,
         String phone,
         Status status,
         RoleType role,
@@ -82,7 +83,7 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.username = username;
-        this.nickname = nick_name;
+        this.nickName = nickName;
         this.phone = phone;
         this.status = status;
         this.role = role;
@@ -93,7 +94,7 @@ public class User implements UserDetails {
         String email,
         String password,
         String username,
-        String nickname,
+        String nickName,
         String phone,
         Status status,
         RoleType role,
@@ -103,7 +104,7 @@ public class User implements UserDetails {
             email,
             password,
             username,
-            nickname,
+            nickName,
             phone,
             status,
             role,

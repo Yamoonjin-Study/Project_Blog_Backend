@@ -37,7 +37,7 @@ public class ChatService {
         String email = authentication.getName();
         User sender = this.userRepository.findByEmail(email);
 
-        User receiver = this.userRepository.findByNickname(receivername);
+        User receiver = this.userRepository.findByNickName(receivername);
         try {
             Chat sendMessage = this.chatRepository.save(
                 Chat.of(

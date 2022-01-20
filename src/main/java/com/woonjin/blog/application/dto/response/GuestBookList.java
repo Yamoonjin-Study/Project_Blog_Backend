@@ -15,18 +15,18 @@ public class GuestBookList {
 
     private int id;
 
-    private int user_id;
+    private int userId;
 
     private String comment;
 
     private Timestamp date;
 
-    private String user_nickname;
+    private String userNickName;
 
-    private String blog_icon;
+    private String blogIcon;
 
-    public static GuestBookList of(int id, int user_id, String comment, Timestamp date,
-        String user_nickname, String blog_icon) {
-        return new GuestBookList(id, user_id, comment, date, user_nickname, blog_icon);
+    public static GuestBookList of(int id, int userId, String comment, Timestamp date,
+        String userNickName, String blogIcon) {
+        return new GuestBookList(id, userId, comment, date, userNickName, blogIcon);
     }
 }

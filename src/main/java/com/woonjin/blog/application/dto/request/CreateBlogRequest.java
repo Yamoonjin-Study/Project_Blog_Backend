@@ -6,17 +6,17 @@ import lombok.Getter;
 @Getter
 public class CreateBlogRequest {
 
-    private String name;
+    private String blogName;
 
     private String info;
 
-    private String icon;
+    private String iconImage;
 
-    private String logo_image;
+    private String logoImage;
 
-    private int main_content;
+    private int mainContent;
 
-    private int menu_design;
+    private int menuDesign;
 
     private Category category;
 }

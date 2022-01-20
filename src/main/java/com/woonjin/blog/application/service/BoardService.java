@@ -60,7 +60,7 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public List<Board> searchBoardWithWords(String words) {
-        User user = this.userRepository.findByNickname(words);
+        User user = this.userRepository.findByNickName(words);
 
         List<Board> boards = new ArrayList<>();
         int x = 0;
@@ -114,13 +114,13 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public List<Board> searchBoardWithWriter(String writer) {
-        User user = this.userRepository.findByNickname(writer);
+        User user = this.userRepository.findByNickName(writer);
         return this.boardRepository.findByUserOrderByCreateDateDesc(user);
     }
 
     @Transactional(readOnly = true)
     public List<Board> showBoardList(String blog_name) {
-        Blog blog = this.blogRepository.findByName(blog_name);
+        Blog blog = this.blogRepository.findByBlogName(blog_name);
         User user = this.userRepository.findById(blog.getUser().getId());
 
         return this.boardRepository.findByUserOrderByCreateDateDesc(user);
@@ -207,8 +207,8 @@ public class BoardService {
         User user = this.identityAppService.getAuthenticationUser();
         Reply reply = this.replyRepository.save(
             Reply.of(
-                this.boardRepository.findById(replyRequest.getTop_board_id()),
-                this.replyRepository.findById(replyRequest.getTop_reply_id()),
+                this.boardRepository.findById(replyRequest.getTopBoardId()),
+                this.replyRepository.findById(replyRequest.getTopReplyId()),
                 replyRequest.getContent(),
                 user
             )
@@ -222,7 +222,7 @@ public class BoardService {
         Reply updateReply = this.replyRepository.findById(reply_id);
 
         updateReply.setContent(replyRequest.getContent());
-        updateReply.setPostDate(replyRequest.getPost_date());
+        updateReply.setPostDate(replyRequest.getPostDate());
 
         this.replyRepository.save(updateReply);
 

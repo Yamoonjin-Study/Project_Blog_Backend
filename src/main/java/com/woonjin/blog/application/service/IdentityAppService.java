@@ -117,7 +117,7 @@ public class IdentityAppService {
                     signUpRequest.getEmail(),
                     this.passwordEncoder.encode(signUpRequest.getPassword()),
                     signUpRequest.getUsername(),
-                    signUpRequest.getNickname(),
+                    signUpRequest.getNickName(),
                     signUpRequest.getPhone(),
                     Status.ACTIVE,
                     User.RoleType.USER,
@@ -141,7 +141,7 @@ public class IdentityAppService {
             user.setEmail(updateUserRequest.getEmail());
             user.setPassword(this.passwordEncoder.encode(updateUserRequest.getPassword()));
             user.setUsername(updateUserRequest.getUsername());
-            user.setNickname(updateUserRequest.getNickname());
+            user.setNickName(updateUserRequest.getNickName());
             user.setPhone(updateUserRequest.getPhone());
 
             this.userRepository.save(user);

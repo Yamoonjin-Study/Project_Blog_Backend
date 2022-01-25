@@ -2,6 +2,7 @@ package com.woonjin.blog.web;
 
 import com.woonjin.blog.application.dto.request.WriteGuestBookRequest;
 import com.woonjin.blog.application.dto.response.ActivateBlogResponse;
+import com.woonjin.blog.application.dto.response.FollowingResponse;
 import com.woonjin.blog.application.dto.response.BlogCheckResponse;
 import com.woonjin.blog.application.dto.response.CreateBlogResponse;
 import com.woonjin.blog.application.dto.response.DeleteBlogResponse;
@@ -15,8 +16,10 @@ import com.woonjin.blog.application.dto.response.WriteGuestBookResponse;
 import com.woonjin.blog.application.service.BlogService;
 import com.woonjin.blog.application.dto.request.CreateBlogRequest;
 import com.woonjin.blog.application.dto.request.UpdateBlogRequest;
+import com.woonjin.blog.domain.entity.Follow;
 import io.swagger.annotations.Api;
 import java.io.IOException;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -144,5 +147,20 @@ public class BlogController {
     @ResponseStatus(value = HttpStatus.OK)
     public WriteGuestBookResponse DeleteGuestBook(@PathVariable int id) {
         return blogService.deleteGuestBook(id);
+    }
+
+    @GetMapping("/blog/following/{blog_name}")
+    public FollowingResponse Following(@PathVariable String blog_name) {
+        return this.blogService.Following(blog_name);
+    }
+
+    @GetMapping("/blog/showFollowingList/{blog_name}")
+    public List<Follow> ShowFollowingList(@PathVariable String blog_name) {
+        return this.blogService.showFollowingList(blog_name);
+    }
+
+    @GetMapping("/blog/showFollowerList/{blog_name}")
+    public List<Follow> ShowFollowerList(@PathVariable String blog_name) {
+        return this.blogService.showFollowerList(blog_name);
     }
 }

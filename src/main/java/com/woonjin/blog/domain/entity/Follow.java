@@ -33,10 +33,28 @@ public class Follow {
     private Blog followingBlog;
 
     @OneToOne
-    @JoinColumn(name = "follower_blog_id", foreignKey = @ForeignKey(name = "fk_blog_follower_blog_id"), unique = true)
-    private Blog followerBlog;
+    @JoinColumn(name = "blogger", foreignKey = @ForeignKey(name = "fk_blog_blogger_id"), unique = true)
+    private Blog blogger;
 
     @Column(name = "following_date")
     @CreationTimestamp
     private Timestamp followingDate;
+
+    private Follow(
+        Blog followingBlog,
+        Blog blogger
+    ) {
+        this.followingBlog = followingBlog;
+        this.blogger = blogger;
+    }
+
+    public static Follow of(
+        Blog followingBlog,
+        Blog blogger
+    ) {
+        return new Follow(
+            followingBlog,
+            blogger
+        );
+    }
 }

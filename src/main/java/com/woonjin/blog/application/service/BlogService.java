@@ -4,6 +4,7 @@ import com.woonjin.blog.application.dto.request.CreateBlogRequest;
 import com.woonjin.blog.application.dto.request.UpdateBlogRequest;
 import com.woonjin.blog.application.dto.request.WriteGuestBookRequest;
 import com.woonjin.blog.application.dto.response.ActivateBlogResponse;
+import com.woonjin.blog.application.dto.response.FollowingResponse;
 import com.woonjin.blog.application.dto.response.BlogCheckResponse;
 import com.woonjin.blog.application.dto.response.CreateBlogResponse;
 import com.woonjin.blog.application.dto.response.DeleteBlogResponse;
@@ -17,10 +18,12 @@ import com.woonjin.blog.application.dto.response.UpdateBlogResponse;
 import com.woonjin.blog.application.dto.response.VisitorInfo;
 import com.woonjin.blog.application.dto.response.WriteGuestBookResponse;
 import com.woonjin.blog.domain.entity.Blog;
+import com.woonjin.blog.domain.entity.Follow;
 import com.woonjin.blog.domain.entity.GuestBook;
 import com.woonjin.blog.domain.entity.User;
 import com.woonjin.blog.domain.entity.Visitor;
 import com.woonjin.blog.domain.repository.BlogRepository;
+import com.woonjin.blog.domain.repository.FollowRepository;
 import com.woonjin.blog.domain.repository.GuestBookRepository;
 import com.woonjin.blog.domain.repository.UserRepository;
 import com.woonjin.blog.domain.repository.VisitorRepository;
@@ -43,6 +46,7 @@ public class BlogService {
     private final UserRepository userRepository;
     private final VisitorRepository visitorRepository;
     private final GuestBookRepository guestBookRepository;
+    private final FollowRepository followRepository;
     private final static Logger Log = Logger.getGlobal();
 
     public BlogService(
@@ -50,13 +54,15 @@ public class BlogService {
         BlogRepository blogRepository,
         UserRepository userRepository,
         VisitorRepository visitorRepository,
-        GuestBookRepository guestBookRepository
+        GuestBookRepository guestBookRepository,
+        FollowRepository followRepository
     ) {
         this.identityAppService = identityAppService;
         this.blogRepository = blogRepository;
         this.userRepository = userRepository;
         this.visitorRepository = visitorRepository;
         this.guestBookRepository = guestBookRepository;
+        this.followRepository = followRepository;
     }
 
     @Transactional(readOnly = true)
@@ -127,7 +133,8 @@ public class BlogService {
             String uploadIconFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/iconImages/";
             String uploadLogoFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/logoImages/";
 
-            String prefix1 = icon.getOriginalFilename().substring(icon.getOriginalFilename().lastIndexOf("."));
+            String prefix1 = icon.getOriginalFilename()
+                .substring(icon.getOriginalFilename().lastIndexOf("."));
             String filename1 = UUID.randomUUID().toString().replaceAll("-", "") + prefix1;
 
 //            File folder = new File(uploadFilePath);
@@ -139,7 +146,8 @@ public class BlogService {
             File dest1 = new File(pathname1);
             icon.transferTo(dest1);
 
-            String prefix2 = logo.getOriginalFilename().substring(logo.getOriginalFilename().lastIndexOf("."));
+            String prefix2 = logo.getOriginalFilename()
+                .substring(logo.getOriginalFilename().lastIndexOf("."));
             String filename2 = UUID.randomUUID().toString().replaceAll("-", "") + prefix2;
             String pathname2 = uploadLogoFilePath + filename2;
             File dest2 = new File(pathname2);
@@ -149,9 +157,9 @@ public class BlogService {
             Blog blog = this.blogRepository.findByUser_Id(user.getId());
             String iconImgSrc = "/resources/iconImages/";
             String logoImgSrc = "/resources/logoImages/";
-            blog.setIconImage(iconImgSrc+filename1);
-            blog.setLogoImage(logoImgSrc+filename2);
-            System.out.println(blog.getIconImage() + "/"+blog.getLogoImage());
+            blog.setIconImage(iconImgSrc + filename1);
+            blog.setLogoImage(logoImgSrc + filename2);
+            System.out.println(blog.getIconImage() + "/" + blog.getLogoImage());
 
             this.blogRepository.save(blog);
 
@@ -162,46 +170,48 @@ public class BlogService {
 
     @Transactional
     public String saveIconFile(MultipartFile icon) throws IOException {
-            String uploadIconFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/iconImages/";
+        String uploadIconFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/iconImages/";
 
-            String prefix = icon.getOriginalFilename().substring(icon.getOriginalFilename().lastIndexOf("."));
-            String filename = UUID.randomUUID().toString().replaceAll("-", "") + prefix;
+        String prefix = icon.getOriginalFilename()
+            .substring(icon.getOriginalFilename().lastIndexOf("."));
+        String filename = UUID.randomUUID().toString().replaceAll("-", "") + prefix;
 
-            String pathname = uploadIconFilePath + filename;
-            File dest = new File(pathname);
-            icon.transferTo(dest);
+        String pathname = uploadIconFilePath + filename;
+        File dest = new File(pathname);
+        icon.transferTo(dest);
 
-            User user = this.identityAppService.getAuthenticationUser();
-            Blog blog = this.blogRepository.findByUser_Id(user.getId());
-            String iconImgSrc = "/resources/iconImages/";
-            blog.setIconImage(iconImgSrc+filename);
+        User user = this.identityAppService.getAuthenticationUser();
+        Blog blog = this.blogRepository.findByUser_Id(user.getId());
+        String iconImgSrc = "/resources/iconImages/";
+        blog.setIconImage(iconImgSrc + filename);
 
-            this.blogRepository.save(blog);
+        this.blogRepository.save(blog);
 
-            Log.info("Save File Success");
-            return "files are saved";
+        Log.info("Save File Success");
+        return "files are saved";
 
     }
 
     @Transactional
     public String saveLogoFile(MultipartFile logo) throws IOException {
-            String uploadLogoFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/logoImages/";
+        String uploadLogoFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/logoImages/";
 
-            String prefix = logo.getOriginalFilename().substring(logo.getOriginalFilename().lastIndexOf("."));
-            String filename = UUID.randomUUID().toString().replaceAll("-", "") + prefix;
-            String pathname = uploadLogoFilePath + filename;
-            File dest = new File(pathname);
-            logo.transferTo(dest);
+        String prefix = logo.getOriginalFilename()
+            .substring(logo.getOriginalFilename().lastIndexOf("."));
+        String filename = UUID.randomUUID().toString().replaceAll("-", "") + prefix;
+        String pathname = uploadLogoFilePath + filename;
+        File dest = new File(pathname);
+        logo.transferTo(dest);
 
-            User user = this.identityAppService.getAuthenticationUser();
-            Blog blog = this.blogRepository.findByUser_Id(user.getId());
-            String logoImgSrc = "/resources/logoImages/";
-            blog.setLogoImage(logoImgSrc+filename);
+        User user = this.identityAppService.getAuthenticationUser();
+        Blog blog = this.blogRepository.findByUser_Id(user.getId());
+        String logoImgSrc = "/resources/logoImages/";
+        blog.setLogoImage(logoImgSrc + filename);
 
-            this.blogRepository.save(blog);
+        this.blogRepository.save(blog);
 
-            Log.info("Save File Success");
-            return "files are saved";
+        Log.info("Save File Success");
+        return "files are saved";
     }
 
     @Transactional
@@ -339,11 +349,57 @@ public class BlogService {
 
         for (int i = 0; i < guestBook.size(); i++) {
             guestBookList.add(i, GuestBookList
-                .of(guestBook.get(i).getId(), guestBook.get(i).getUser().getId(), guestBook.get(i).getComment(), guestBook.get(i).getDate(),
-                    guestBook.get(i).getUser().getNickName(), guestBook.get(i).getUser().getBlog().getIconImage()));
+                .of(guestBook.get(i).getId(), guestBook.get(i).getUser().getId(),
+                    guestBook.get(i).getComment(), guestBook.get(i).getDate(),
+                    guestBook.get(i).getUser().getNickName(),
+                    guestBook.get(i).getUser().getBlog().getIconImage()));
         }
 
         Log.info("Results of ShowGuestBookList");
         return GuestBookListResponse.of("Results of ShowGuestBookList", blogname, guestBookList);
+    }
+
+    @Transactional
+    public FollowingResponse Following(String blog_name) {
+        User user = this.identityAppService.getAuthenticationUser();
+        Blog blogger = user.getBlog();
+        Blog followingBlog = this.blogRepository.findByBlogName(blog_name);
+
+        Follow followingCheck =
+            this.followRepository.findByBloggerAndFollowingBlog(
+                blogger,
+                followingBlog
+            );
+
+        //팔로잉 여부 체크
+        if (followingCheck == null) {
+            Follow following = this.followRepository.save(
+                Follow.of(
+                    followingBlog,
+                    blogger
+                )
+            );
+
+            return FollowingResponse.of("Add Following Success", following);
+        } else {
+            this.followRepository.delete(followingCheck);
+            return FollowingResponse.of("Delete Following Success", null);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Follow> showFollowingList(String blog_name){
+        Blog blogger = this.blogRepository.findByBlogName(blog_name);
+        List<Follow> followingList = this.followRepository.findByBlogger(blogger);
+
+        return followingList;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Follow> showFollowerList(String blog_name){
+        Blog blog = this.blogRepository.findByBlogName(blog_name);
+        List<Follow> followerList = this.followRepository.findByFollowingBlog(blog);
+
+        return followerList;
     }
 }

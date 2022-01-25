@@ -8,6 +8,7 @@ import com.woonjin.blog.application.dto.response.LikeReplyResponse;
 import com.woonjin.blog.application.dto.response.ShowBoardResponse;
 import com.woonjin.blog.application.dto.response.ShowLikeReplyResponse;
 import com.woonjin.blog.application.dto.response.WriteBoardResponse;
+import com.woonjin.blog.application.dto.response.WriteReplyResponse;
 import com.woonjin.blog.domain.entity.Blog;
 import com.woonjin.blog.domain.entity.Board;
 import com.woonjin.blog.domain.entity.Category;
@@ -203,7 +204,8 @@ public class BoardService {
     }
 
     @Transactional
-    public void writeReply(ReplyRequest replyRequest) {
+    public WriteReplyResponse
+    writeReply(ReplyRequest replyRequest) {
         User user = this.identityAppService.getAuthenticationUser();
         Reply reply = this.replyRepository.save(
             Reply.of(
@@ -215,6 +217,7 @@ public class BoardService {
         );
 
         Log.info("Write Reply Success / " + reply);
+        return WriteReplyResponse.of(reply, "Write Reply Success");
     }
 
     @Transactional

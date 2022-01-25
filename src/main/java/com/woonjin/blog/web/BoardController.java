@@ -8,6 +8,7 @@ import com.woonjin.blog.application.dto.response.LikeReplyResponse;
 import com.woonjin.blog.application.dto.response.ShowBoardResponse;
 import com.woonjin.blog.application.dto.response.ShowLikeReplyResponse;
 import com.woonjin.blog.application.dto.response.WriteBoardResponse;
+import com.woonjin.blog.application.dto.response.WriteReplyResponse;
 import com.woonjin.blog.application.service.BoardService;
 import com.woonjin.blog.domain.entity.Board;
 import io.swagger.annotations.Api;
@@ -82,8 +83,8 @@ public class BoardController {
     }
 
     @PostMapping("/write-reply")
-    public void writeReply(@RequestBody ReplyRequest replyRequest) {
-        this.boardService.writeReply(replyRequest);
+    public WriteReplyResponse writeReply(@RequestBody ReplyRequest replyRequest) {
+        return this.boardService.writeReply(replyRequest);
     }
 
     @DeleteMapping("/delete-reply/{reply_id}")

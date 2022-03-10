@@ -1,6 +1,5 @@
 package com.woonjin.blog.web;
 
-import com.woonjin.blog.application.dto.request.LogInCheckRequest;
 import com.woonjin.blog.application.dto.request.UpdateUserRequest;
 import com.woonjin.blog.application.dto.request.WithdrawalRequest;
 import com.woonjin.blog.application.dto.response.LogInCheckResponse;
@@ -14,12 +13,10 @@ import com.woonjin.blog.application.dto.request.LogInRequest;
 import com.woonjin.blog.application.dto.request.SignUpRequest;
 import com.woonjin.blog.domain.entity.User;
 import io.swagger.annotations.Api;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -43,8 +40,8 @@ public class IdentityController {
     }
 
     @PostMapping("/log-in/check")
-    public LogInCheckResponse LogInCheck(@RequestBody LogInCheckRequest token) {
-        return this.identityAppService.loginCheck(token.getToken());
+    public LogInCheckResponse LogInCheck(@RequestBody String token) {
+        return this.identityAppService.loginCheck(token);
     }
 
     @GetMapping("/log-out")

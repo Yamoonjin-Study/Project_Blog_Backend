@@ -95,9 +95,9 @@ public class IdentityAppService {
 
     public LogInCheckResponse loginCheck(String token) {
         if (this.jwtTokenProvider.validateToken(token) == true) {
-            return LogInCheckResponse.of(true, "IsLogin");
+            return LogInCheckResponse.of(true, this.getAuthenticationUser().getNickName(), "IsLogin");
         } else {
-            return LogInCheckResponse.of(false, "IsNotLogin");
+            return LogInCheckResponse.of(false, this.getAuthenticationUser().getNickName(),"IsNotLogin");
         }
     }
 

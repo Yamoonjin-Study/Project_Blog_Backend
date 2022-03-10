@@ -96,6 +96,15 @@ public class BlogService {
         return SearchBlogResponse.of("Results of searching", list);
     }
 
+    @Transactional(readOnly = true)
+    public SearchBlogResponse showBloggersOrderBySignUpDate() {
+
+        List<String> list = this.blogRepository.showBloggersOrderBySignUpDate();
+
+        Log.info("Results of searching");
+        return SearchBlogResponse.of("Results of searching", list);
+    }
+
     @Transactional
     public CreateBlogResponse createBlog(CreateBlogRequest createBlogRequest) {
         User user = this.identityAppService.getAuthenticationUser();
@@ -130,8 +139,8 @@ public class BlogService {
             Log.info("Save File Fail");
             return "file is empty";
         } else {
-            String uploadIconFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/iconImages/";
-            String uploadLogoFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/logoImages/";
+            String uploadIconFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/clients/public/resources/iconImages/";
+            String uploadLogoFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/clients/public/resources/logoImages/";
 
             String prefix1 = icon.getOriginalFilename()
                 .substring(icon.getOriginalFilename().lastIndexOf("."));
@@ -360,7 +369,7 @@ public class BlogService {
     }
 
     @Transactional
-    public FollowingResponse Following(String blog_name) {
+    public FollowingResponse following(String blog_name) {
         User user = this.identityAppService.getAuthenticationUser();
         Blog blogger = user.getBlog();
         Blog followingBlog = this.blogRepository.findByBlogName(blog_name);

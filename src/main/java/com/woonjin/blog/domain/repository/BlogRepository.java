@@ -15,6 +15,9 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
 
     Blog findByBlogName(String blog_name);
 
+    @Query(value = "select blog_name from blogs order by create_date DESC", nativeQuery = true)
+    List<String> showBloggersOrderBySignUpDate();
+
     @Query(value = "select blog_name from blogs where blog_name like %?1% and status like 'ACTIVE'", nativeQuery = true)
     List<String> searchBlog(String blog_name);
     

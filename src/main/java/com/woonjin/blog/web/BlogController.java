@@ -42,6 +42,12 @@ public class BlogController {
         this.blogService = blogService;
     }
 
+    @GetMapping("/blogger/sign-up-date")
+    @ResponseStatus(value = HttpStatus.OK)
+    public SearchBlogResponse ShowBloggersOrderBySignUpDate() {
+        return this.blogService.showBloggersOrderBySignUpDate();
+    }
+
     @GetMapping("/blog-search/{name}")
     @ResponseStatus(value = HttpStatus.OK)
     public SearchBlogResponse SearchBlog(@PathVariable String name) {
@@ -151,7 +157,7 @@ public class BlogController {
 
     @GetMapping("/blog/following/{blog_name}")
     public FollowingResponse Following(@PathVariable String blog_name) {
-        return this.blogService.Following(blog_name);
+        return this.blogService.following(blog_name);
     }
 
     @GetMapping("/blog/showFollowingList/{blog_name}")

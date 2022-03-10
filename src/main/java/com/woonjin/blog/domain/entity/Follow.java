@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -28,12 +29,12 @@ public class Follow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToOne
-    @JoinColumn(name = "following_blog_id", foreignKey = @ForeignKey(name = "fk_blog_following_blog_id"), unique = true)
+    @ManyToOne
+    @JoinColumn(name = "following_blog_id", foreignKey = @ForeignKey(name = "fk_blog_following_blog_id"), unique = false)
     private Blog followingBlog;
 
-    @OneToOne
-    @JoinColumn(name = "blogger", foreignKey = @ForeignKey(name = "fk_blog_blogger_id"), unique = true)
+    @ManyToOne
+    @JoinColumn(name = "blogger", foreignKey = @ForeignKey(name = "fk_blog_blogger_id"), unique = false)
     private Blog blogger;
 
     @Column(name = "following_date")

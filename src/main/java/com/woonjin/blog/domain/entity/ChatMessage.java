@@ -33,10 +33,10 @@ public class ChatMessage {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = @ForeignKey(name="fk_chat_room_chat_message_id"), nullable = false)
+    @JoinColumn(name="chat_rooms_id", foreignKey = @ForeignKey(name="fk_chat_room_chat_message_id"), nullable = false)
     private ChatRoom chatRoom;
 
-    @Column
+    @Column(length = 1000)
     private String message;
 
     @JsonManagedReference

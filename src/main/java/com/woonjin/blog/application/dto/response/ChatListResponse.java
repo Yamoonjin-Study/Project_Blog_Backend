@@ -16,11 +16,11 @@ public class ChatListResponse {
 
     private ChatRoom chatRoom;
 
-    private ChatMessage chatMessage;
+    private ChatMessage lastChatMessage;
 
     private Boolean chatReadingCheck;
 
-    public static ChatListResponse of(ChatRoom chatRoom, ChatMessage chatMessage, Boolean chatReadingCheck) {
-        return new ChatListResponse(chatRoom, chatMessage, chatReadingCheck);
+    public static ChatListResponse of(ChatRoom chatRoom, ChatMessage lastChatMessage, Boolean chatReadingCheck) {
+        return new ChatListResponse(chatRoom, lastChatMessage, chatReadingCheck);
     }
 }

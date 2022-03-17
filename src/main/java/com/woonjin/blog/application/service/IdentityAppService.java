@@ -95,9 +95,9 @@ public class IdentityAppService {
 
     public LogInCheckResponse loginCheck(String token) {
         if (this.jwtTokenProvider.validateToken(token) == true) {
-            return LogInCheckResponse.of(true, this.getAuthenticationUser().getNickName(), "IsLogin");
+            return LogInCheckResponse.of(true, this.getAuthenticationUser().getBlog().getBlogName(), "IsLogin");
         } else {
-            return LogInCheckResponse.of(false, this.getAuthenticationUser().getNickName(),"IsNotLogin");
+            return LogInCheckResponse.of(false, this.getAuthenticationUser().getBlog().getBlogName(),"IsNotLogin");
         }
     }
 
@@ -117,7 +117,6 @@ public class IdentityAppService {
                     signUpRequest.getEmail(),
                     this.passwordEncoder.encode(signUpRequest.getPassword()),
                     signUpRequest.getUsername(),
-                    signUpRequest.getNickName(),
                     signUpRequest.getPhone(),
                     Status.ACTIVE,
                     User.RoleType.USER,
@@ -141,7 +140,6 @@ public class IdentityAppService {
             user.setEmail(updateUserRequest.getEmail());
             user.setPassword(this.passwordEncoder.encode(updateUserRequest.getPassword()));
             user.setUsername(updateUserRequest.getUsername());
-            user.setNickName(updateUserRequest.getNickName());
             user.setPhone(updateUserRequest.getPhone());
 
             this.userRepository.save(user);

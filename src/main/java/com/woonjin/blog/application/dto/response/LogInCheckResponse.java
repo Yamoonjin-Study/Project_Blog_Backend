@@ -14,7 +14,9 @@ import lombok.Setter;
 public class LogInCheckResponse {
 
     private Boolean isLogin;
+
     private String nickName;
+
     private String responseMessage;
 
     public static LogInCheckResponse of(Boolean isLogin, String nickName, String responseMessage) {

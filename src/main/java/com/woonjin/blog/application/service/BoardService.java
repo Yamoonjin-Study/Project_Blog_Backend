@@ -61,7 +61,8 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public List<Board> searchBoardWithWords(String words) {
-        User user = this.userRepository.findByNickName(words);
+        Blog blog = this.blogRepository.findByBlogName(words);
+        User user = this.userRepository.findByBlog(blog);
 
         List<Board> boards = new ArrayList<>();
         int x = 0;
@@ -115,7 +116,8 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public List<Board> searchBoardWithWriter(String writer) {
-        User user = this.userRepository.findByNickName(writer);
+        Blog blog = this.blogRepository.findByBlogName(writer);
+        User user = this.userRepository.findByBlog(blog);
         return this.boardRepository.findByUserOrderByCreateDateDesc(user);
     }
 

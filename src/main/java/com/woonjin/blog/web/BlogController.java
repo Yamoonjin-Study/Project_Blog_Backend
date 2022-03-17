@@ -169,4 +169,9 @@ public class BlogController {
     public List<Follow> ShowFollowerList(@PathVariable String blog_name) {
         return this.blogService.showFollowerList(blog_name);
     }
+
+    @GetMapping("/blog/showFollowList/{blog_name}")
+    public List<Follow> ShowFollowList(@PathVariable String blog_name) {
+        return this.blogService.showFollowList(blog_name);
+    }
 }

@@ -179,7 +179,7 @@ public class BlogService {
 
     @Transactional
     public String saveIconFile(MultipartFile icon) throws IOException {
-        String uploadIconFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/iconImages/";
+        String uploadIconFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/clients/public/resources/iconImages/";
 
         String prefix = icon.getOriginalFilename()
             .substring(icon.getOriginalFilename().lastIndexOf("."));
@@ -203,7 +203,7 @@ public class BlogService {
 
     @Transactional
     public String saveLogoFile(MultipartFile logo) throws IOException {
-        String uploadLogoFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/public/resources/logoImages/";
+        String uploadLogoFilePath = "/home/yamoonjin/바탕화면/Project/Blog_Project/blog_frontend/clients/public/resources/logoImages/";
 
         String prefix = logo.getOriginalFilename()
             .substring(logo.getOriginalFilename().lastIndexOf("."));
@@ -316,7 +316,7 @@ public class BlogService {
 
         for (int i = 0; i < visitorList.size(); i++) {
             visitorInfo.add(i, VisitorInfo
-                .of(visitorList.get(i).getUser().getNickName(), visitorList.get(i).getDate()));
+                .of(visitorList.get(i).getUser().getBlog().getBlogName(), visitorList.get(i).getDate()));
         }
 
         Log.info("Results of ShowVisitorsList");
@@ -360,7 +360,7 @@ public class BlogService {
             guestBookList.add(i, GuestBookList
                 .of(guestBook.get(i).getId(), guestBook.get(i).getUser().getId(),
                     guestBook.get(i).getComment(), guestBook.get(i).getDate(),
-                    guestBook.get(i).getUser().getNickName(),
+                    guestBook.get(i).getUser().getBlog().getBlogName(),
                     guestBook.get(i).getUser().getBlog().getIconImage()));
         }
 
@@ -406,6 +406,14 @@ public class BlogService {
 
     @Transactional(readOnly = true)
     public List<Follow> showFollowerList(String blog_name){
+        Blog blog = this.blogRepository.findByBlogName(blog_name);
+        List<Follow> followerList = this.followRepository.findByFollowingBlog(blog);
+
+        return followerList;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Follow> showFollowList(String blog_name){
         Blog blog = this.blogRepository.findByBlogName(blog_name);
         List<Follow> followerList = this.followRepository.findByFollowingBlog(blog);
 

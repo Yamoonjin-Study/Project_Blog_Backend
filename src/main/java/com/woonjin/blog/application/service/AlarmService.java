@@ -39,18 +39,18 @@ public class AlarmService {
         String alarmMessage;
 
         if (messageType.toString() == "LikeBoard") {
-            alarmMessage = sender.getNickName() + "님이 회원님의 게시글을 좋아합니다.";
+            alarmMessage = sender.getBlog().getBlogName() + "님이 회원님의 게시글을 좋아합니다.";
         } else if (messageType.toString() == "WriteReply") {
             alarmMessage =
-                sender.getNickName() + "님이 회원님의 게시글에 댓글을 남겼습니다. \"" + sendAlarmRequest.getMessage()
+                sender.getBlog().getBlogName() + "님이 회원님의 게시글에 댓글을 남겼습니다. \"" + sendAlarmRequest.getMessage()
                     + "\"";
         } else if (messageType.toString() == "LikeReply") {
-            alarmMessage = sender.getNickName() + "님이 회원님의 댓글을 좋아합니다.";
+            alarmMessage = sender.getBlog().getBlogName() + "님이 회원님의 댓글을 좋아합니다.";
         } else if (messageType.toString() == "OnChatMessage") {
             alarmMessage =
-                sender.getNickName() + "님으로부터 메세지가 왔습니다. \"" + sendAlarmRequest.getMessage() + "\"";
+                sender.getBlog().getBlogName() + "님으로부터 메세지가 왔습니다. \"" + sendAlarmRequest.getMessage() + "\"";
         } else if (messageType.toString() == "LikeChatMessage") {
-            alarmMessage = sender.getNickName() + "님이 회원님의 메세지를 좋아합니다.";
+            alarmMessage = sender.getBlog().getBlogName() + "님이 회원님의 메세지를 좋아합니다.";
         } else {
             alarmMessage = "";
         }

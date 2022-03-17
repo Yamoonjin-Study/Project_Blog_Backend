@@ -9,5 +9,5 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Integer> {
 
     ChatRoom findById(int id);
 
-    List<ChatRoom> findByChatUsersOrderByLastChatDateDesc(User user);
+    List<ChatRoom> findByChatUsersOrderByLastChatMessageDesc(User user);
 }

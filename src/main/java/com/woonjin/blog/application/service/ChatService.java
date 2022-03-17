@@ -1,11 +1,13 @@
 package com.woonjin.blog.application.service;
 
+import com.woonjin.blog.application.dto.request.CreateChatRoomRequest;
 import com.woonjin.blog.application.dto.response.CancelMessageResponse;
 import com.woonjin.blog.application.dto.response.ChatListResponse;
 import com.woonjin.blog.application.dto.response.ChatRoomResponse;
 import com.woonjin.blog.domain.entity.ChatMessage;
 import com.woonjin.blog.domain.entity.ChatRoom;
 import com.woonjin.blog.domain.entity.User;
+import com.woonjin.blog.domain.repository.BlogRepository;
 import com.woonjin.blog.domain.repository.ChatMessageRepository;
 import com.woonjin.blog.domain.repository.ChatRoomRepository;
 import com.woonjin.blog.domain.repository.UserRepository;
@@ -16,6 +18,7 @@ import java.util.logging.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ChatService {
@@ -23,6 +26,7 @@ public class ChatService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
+    private final BlogRepository blogRepository;
     private final IdentityAppService identityAppService;
     private final static Logger Log = Logger.getGlobal();
 
@@ -30,45 +34,24 @@ public class ChatService {
         ChatMessageRepository chatMessageRepository,
         ChatRoomRepository chatRoomRepository,
         UserRepository userRepository,
+        BlogRepository blogRepository,
         IdentityAppService identityAppService
     ) {
         this.chatMessageRepository = chatMessageRepository;
         this.chatRoomRepository = chatRoomRepository;
         this.userRepository = userRepository;
+        this.blogRepository = blogRepository;
         this.identityAppService = identityAppService;
     }
 
     //안읽은 메세지가 있는 채팅방부터 마지막 메세지가 온 시간 순으로 정렬되어야 함.
-    public List<ChatListResponse> showChatList() {
+    @Transactional(readOnly = true)
+    public List<ChatRoom> showChatList() {
         User user = this.identityAppService.getAuthenticationUser(); //유저
-        List<ChatRoom> chatRooms = this.chatRoomRepository.findByChatUsersOrderByLastChatDateDesc(
-            user); //유저의 채팅방들 시간순 정렬
-        List<ChatListResponse> chatRoomInfos = new ArrayList<>();
-
-        for (int i = 0; i < chatRooms.size(); i++) {
-
-            ChatMessage lastChatMessage =
-                this.chatMessageRepository.findFirstByChatRoomOrderBySendDateDesc(chatRooms.get(i));
-            Boolean chatReadingCheck;
-
-            if (lastChatMessage.getReaders().contains(user)) {
-                chatReadingCheck = true;
-            } else {
-                chatReadingCheck = false;
-            }
-
-            ChatListResponse chatRoomInfo = ChatListResponse.of(
-                chatRooms.get(i), //가장 최근까지 채팅 했었던 채팅방
-                lastChatMessage, //해당 채팅방의 가장 마지막 채팅
-                chatReadingCheck //해당 채팅의 읽음 여부
-            );
-
-            chatRoomInfos.add(chatRoomInfo);
-        }
-
-        return chatRoomInfos;
+        return this.chatRoomRepository.findByChatUsersOrderByLastChatMessageDesc(user);
     }
 
+    @Transactional(readOnly = true)
     public ChatRoomResponse showChatRoom(int id) {
         User user = this.identityAppService.getAuthenticationUser();
         ChatRoom chatRoom = this.chatRoomRepository.findById(id);
@@ -91,6 +74,27 @@ public class ChatService {
         return ChatRoomResponse.of("", chatRoom, chatMessages);
     }
 
+    @Transactional
+    public void createChatRoom(CreateChatRoomRequest createChatRoomRequest) {
+
+        User user = this.identityAppService.getAuthenticationUser();
+        List<User> chatUserList = new ArrayList<>();
+        for (int i = 0; i < createChatRoomRequest.getChatRoomBloggerName().size(); i++) {
+            chatUserList.add(this.userRepository.findByBlog(this.blogRepository.findByBlogName(
+                createChatRoomRequest.getChatRoomBloggerName().get(i))));
+        }
+        chatUserList.add(user);
+
+        this.chatRoomRepository.save(
+            ChatRoom.of(
+                createChatRoomRequest.getChatRoomName(),
+                null,
+                chatUserList
+            )
+        );
+    }
+
+    @Transactional
     public ChatMessage sendMessage(String message, ChatRoom chatRoom) {
         User sender = this.identityAppService.getAuthenticationUser();
 
@@ -124,6 +128,7 @@ public class ChatService {
         }
     }
 
+    @Transactional
     public CancelMessageResponse cancelMessage(int id) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         ChatMessage cancelSendingMessage = this.chatMessageRepository.findById(id);

@@ -1,5 +1,6 @@
 package com.woonjin.blog.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -47,9 +49,6 @@ public class User implements UserDetails {
     @Column(nullable = false, length = 100)
     private String password;
 
-    @Column(name = "nick_name", nullable = false, length = 30, unique = true)
-    private String nickName;
-
     @Column(nullable = false, length = 50, unique = true)
     private String email;
 
@@ -75,7 +74,6 @@ public class User implements UserDetails {
         String email,
         String password,
         String username,
-        String nickName,
         String phone,
         Status status,
         RoleType role,
@@ -84,7 +82,6 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.username = username;
-        this.nickName = nickName;
         this.phone = phone;
         this.status = status;
         this.role = role;
@@ -95,7 +92,6 @@ public class User implements UserDetails {
         String email,
         String password,
         String username,
-        String nickName,
         String phone,
         Status status,
         RoleType role,
@@ -105,7 +101,6 @@ public class User implements UserDetails {
             email,
             password,
             username,
-            nickName,
             phone,
             status,
             role,
@@ -118,7 +113,7 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collectors = new ArrayList<>();
 
-        collectors.add(() -> "ROLE_"+this.getRole());
+        collectors.add(() -> "ROLE_" + this.getRole());
 
         return collectors;
     }

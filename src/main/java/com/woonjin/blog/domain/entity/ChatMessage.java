@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -44,43 +45,36 @@ public class ChatMessage {
     @JoinColumn(name = "sender", foreignKey = @ForeignKey(name = "fk_sender_chatMessage_id"), nullable = false)
     private User sender;
 
-
     @CreationTimestamp
     private Timestamp sendDate;
 
-    @OneToMany
+    @JsonManagedReference
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<User> readers;
-
-    @OneToMany
-    private List<User> likeUsers;
 
     private ChatMessage(
         User sender,
         String message,
         ChatRoom chatRoom,
-        List<User> readers,
-        List<User> likeUsers
+        List<User> readers
     ) {
         this.sender = sender;
         this.message = message;
         this.chatRoom = chatRoom;
         this.readers = readers;
-        this.likeUsers = likeUsers;
     }
 
     public static ChatMessage of(
         User sender,
         String contents,
         ChatRoom chatRoom,
-        List<User> readers,
-        List<User> likeUsers
+        List<User> readers
     ){
         return new ChatMessage(
             sender,
             contents,
             chatRoom,
-            readers,
-            likeUsers
+            readers
         );
     }
 }

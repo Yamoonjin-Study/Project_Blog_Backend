@@ -1,6 +1,7 @@
 package com.woonjin.blog.application.service;
 
 import com.woonjin.blog.application.dto.request.CreateChatRoomRequest;
+import com.woonjin.blog.application.dto.request.SendChatMessageRequest;
 import com.woonjin.blog.application.dto.response.CancelMessageResponse;
 import com.woonjin.blog.application.dto.response.ChatListResponse;
 import com.woonjin.blog.application.dto.response.ChatRoomResponse;
@@ -48,30 +49,44 @@ public class ChatService {
     @Transactional(readOnly = true)
     public List<ChatRoom> showChatList() {
         User user = this.identityAppService.getAuthenticationUser(); //유저
-        return this.chatRoomRepository.findByChatUsersOrderByLastChatMessageDesc(user);
+        return this.chatRoomRepository.findByChatUsersOrderByLastChatMessageDateDesc(user);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public ChatRoomResponse showChatRoom(int id) {
         User user = this.identityAppService.getAuthenticationUser();
         ChatRoom chatRoom = this.chatRoomRepository.findById(id);
-        List<ChatMessage> chatMessages = this.chatMessageRepository.findByChatRoomOrderBySendDateAsc(
-            chatRoom);
+        List<ChatMessage> chatMessages
+            = this.chatMessageRepository.findByChatRoomOrderBySendDateAsc(chatRoom);
+
+        Log.info("Success");
+        return ChatRoomResponse.of("Success", chatRoom, chatMessages);
+    }
+
+    @Transactional
+    public void readChatRoom(int id) {
+        User user = this.identityAppService.getAuthenticationUser();
+        ChatRoom chatRoom = this.chatRoomRepository.findById(id);
+        List<ChatMessage> chatMessages
+            = this.chatMessageRepository.findByChatRoomOrderBySendDateAsc(chatRoom);
 
         // 해당 채팅방 모두 읽음처리.
-        for (int i = 0; i < chatMessages.size(); i++) {
+        try {
+            for (int i = 0; i < chatMessages.size(); i++) {
+                ChatMessage chatMessage = chatMessages.get(i);
 
-            ChatMessage chatMessage = chatMessages.get(i);
+                List<User> chatReaders = chatMessage.getReaders();
+                if (!chatReaders.contains(user)) {
+                    chatReaders.add(user);
+                    chatMessage.setReaders(chatReaders);
 
-            List<User> chatReaders = chatMessage.getReaders();
-            chatReaders.add(user);
-
-            chatMessage.setReaders(chatReaders);
-
-            this.chatMessageRepository.save(chatMessage);
+                    this.chatMessageRepository.save(chatMessage);
+                }
+            }
+        }catch (Exception e){
+            Log.warning("Error");
         }
-
-        return ChatRoomResponse.of("", chatRoom, chatMessages);
+        Log.info("Success");
     }
 
     @Transactional
@@ -95,22 +110,23 @@ public class ChatService {
     }
 
     @Transactional
-    public ChatMessage sendMessage(String message, ChatRoom chatRoom) {
+    public ChatMessage sendMessage(SendChatMessageRequest sendChatMessageRequest) {
         User sender = this.identityAppService.getAuthenticationUser();
-
+        ChatRoom chatRoom = this.chatRoomRepository.findById(
+            sendChatMessageRequest.getChatRoomId());
         List<User> readers = new ArrayList<>();
         readers.add(sender);
-
         try {
             ChatMessage sendMessage = this.chatMessageRepository.save(
                 ChatMessage.of(
                     sender,
-                    message,
+                    sendChatMessageRequest.getMessage(),
                     chatRoom,
-                    readers,
-                    null
+                    readers
                 )
             );
+
+            chatRoom.setLastChatMessageDate(sendMessage.getSendDate());
 
             this.Log.info("Send Message Success");
             return sendMessage;
@@ -120,10 +136,9 @@ public class ChatService {
             this.Log.warning("Send Message Fail");
             return ChatMessage.of(
                 sender,
-                message,
+                sendChatMessageRequest.getMessage(),
                 chatRoom,
-                readers,
-                null
+                readers
             );
         }
     }

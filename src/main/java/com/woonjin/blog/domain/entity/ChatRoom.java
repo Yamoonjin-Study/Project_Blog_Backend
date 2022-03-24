@@ -37,7 +37,7 @@ public class ChatRoom {
     private String chatRoomName;
 
     @CreationTimestamp
-    private Timestamp lastChatMessage;
+    private Timestamp lastChatMessageDate;
 
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private List<User> chatUsers;
@@ -46,24 +46,26 @@ public class ChatRoom {
     private Timestamp createDate;
 
 
+
+
     private ChatRoom(
         String chatRoomName,
-        Timestamp lastChatMessage,
+        Timestamp lastChatMessageDate,
         List<User> chatUsers
     ) {
         this.chatRoomName = chatRoomName;
-        this.lastChatMessage = lastChatMessage;
+        this.lastChatMessageDate = lastChatMessageDate;
         this.chatUsers = chatUsers;
     }
 
     public static ChatRoom of(
         String chatRoomName,
-        Timestamp lastChatMessage,
+        Timestamp lastChatMessageDate,
         List<User> chatUsers
     ) {
         return new ChatRoom(
             chatRoomName,
-            lastChatMessage,
+            lastChatMessageDate,
             chatUsers
         );
     }

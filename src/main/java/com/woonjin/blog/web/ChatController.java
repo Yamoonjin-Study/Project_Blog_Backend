@@ -1,6 +1,7 @@
 package com.woonjin.blog.web;
 
 import com.woonjin.blog.application.dto.request.CreateChatRoomRequest;
+import com.woonjin.blog.application.dto.request.SendChatMessageRequest;
 import com.woonjin.blog.application.dto.response.CancelMessageResponse;
 import com.woonjin.blog.application.dto.response.ChatListResponse;
 import com.woonjin.blog.application.dto.response.ChatRoomResponse;
@@ -40,6 +41,12 @@ public class ChatController {
         return this.chatService.showChatRoom(id);
     }
 
+    @PutMapping("/read-chat-room/{id}")
+    public void readChatRoom(@PathVariable int id) {
+//      읽음 처리
+        this.chatService.readChatRoom(id);
+    }
+
     @PostMapping("/create-chat-room")
     public void createChatRoom(@RequestBody CreateChatRoomRequest createChatRoomRequest) {
 //
@@ -47,9 +54,9 @@ public class ChatController {
     }
 
     @PostMapping("/chat-send")
-    public ChatMessage sendMessage(String message, ChatRoom chatRoom) {
+    public ChatMessage sendMessage(@RequestBody SendChatMessageRequest sendChatMessageRequest) {
 //
-        return this.chatService.sendMessage(message, chatRoom);
+        return this.chatService.sendMessage(sendChatMessageRequest);
     }
 
     @PutMapping("/chat-delete/{id}")

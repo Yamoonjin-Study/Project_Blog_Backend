@@ -19,13 +19,13 @@ public class ChatRoomResponse {
 
     private ChatRoom chatRoom;
 
-    private List<ChatMessage> chatMessage;
+    private List<ChatMessage> chatMessages;
 
     public static ChatRoomResponse of(
         String responseMessage,
         ChatRoom chatRoom,
-        List<ChatMessage> chatMessage
+        List<ChatMessage> chatMessages
     ) {
-        return new ChatRoomResponse(responseMessage, chatRoom, chatMessage);
+        return new ChatRoomResponse(responseMessage, chatRoom, chatMessages);
     }
 }
